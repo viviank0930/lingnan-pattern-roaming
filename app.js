@@ -5,7 +5,6 @@
   const nameEl = document.querySelector('#pattern-name'), periodEl = document.querySelector('#pattern-period');
   const flowEl = document.querySelector('#flow-state'), hintEl = document.querySelector('#interaction-hint');
   const announcement = document.querySelector('#selection-announcement');
-  const sourceEl = document.querySelector('#pattern-source');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const gold = '#c5ae72', sprites = new Map(), pointers = new Map();
   const world = { width: 2800, height: 1900 };
@@ -135,12 +134,10 @@
     flowEl.textContent = stopped ? '已停驻' : reducedMotion.matches ? '静态浏览' : '缓缓流动';
     hintEl.innerHTML = stopped ? '点击空白处 <span>·</span> 继续漫游' : '拖动浏览 <span>·</span> 点击纹饰停驻';
     if (selected) {
-      nameEl.textContent = selected.pattern.name; periodEl.textContent = selected.pattern.period;
-      const p = selected.pattern;
-      sourceEl.textContent = p.photos ? `对应照片 ${p.photos.map(n => String(n).padStart(2, '0')).join('、')} · ${p.source}。${p.note}` : '';
-      sourceEl.hidden = !p.photos;
+      const p = selected.pattern, displayPeriod = p.displayPeriod || p.period;
+      nameEl.textContent = p.name; periodEl.textContent = displayPeriod;
       detail.hidden = false; updateDetail();
-      announcement.textContent = selected.pattern.name + '，' + selected.pattern.period + '。所有纹饰已暂停。';
+      announcement.textContent = p.name + '，' + displayPeriod + '。所有纹饰已暂停。';
     } else { detail.hidden = true; announcement.textContent = '已取消选中，继续漫游。'; }
     dirty = true;
   }
@@ -221,7 +218,7 @@
   async function start() {
     try {
       const [response, image] = await Promise.all([
-        fetch('patterns.json?v=photo-patterns-1').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
+        fetch('patterns.json?v=compact-details-1').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
         new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>resolve(null);img.src='assets/ink-pigment.png';})
       ]);
       patterns=response; texture=image; makeNodes(); prepareSprites(); resize();
