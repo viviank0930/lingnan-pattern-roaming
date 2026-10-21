@@ -1,0 +1,222 @@
+{
+  "added": [
+    {
+      "sourceNumber": 101,
+      "name": "人形舞蹈纹",
+      "period": "新石器时代晚期",
+      "photos": [
+        1,
+        2,
+        10
+      ],
+      "source": "现场展签及原文展品95",
+      "note": "纹饰题材有原文依据；按浮雕外形作展示用线描。",
+      "isNew": true
+    },
+    {
+      "sourceNumber": 102,
+      "name": "狩猎场景纹",
+      "period": "战国时期",
+      "photos": [
+        3,
+        11,
+        12
+      ],
+      "source": "原文展品122",
+      "note": "依据狩猎纹陶盆及其线描；不包含线描落款。",
+      "isNew": true
+    },
+    {
+      "sourceNumber": 103,
+      "name": "多重半椭圆纹",
+      "period": "新石器时代晚期（图04）",
+      "photos": [
+        4,
+        13
+      ],
+      "source": "原文展品96；图13第24、25项",
+      "note": "图04器物时代明确；图13的彩虹状及半椭圆弧线例作为同类资料合并，其具体年代待核。",
+      "isNew": true,
+      "aliases": [
+        "彩虹纹"
+      ]
+    },
+    {
+      "sourceNumber": 104,
+      "name": "爪形折线纹及组合",
+      "period": "新石器时代晚期（图05）",
+      "photos": [
+        5,
+        13,
+        16
+      ],
+      "source": "原文展品92；图13第26项；图16第6项",
+      "note": "图05为已核实器物。另两张参考表的爪形纹及戳印组合并入本类，参考表各例的时期仍待核。",
+      "isNew": true,
+      "aliases": [
+        "爪形纹内戳印",
+        "折线弦纹与爪形纹组合"
+      ]
+    },
+    {
+      "sourceNumber": 105,
+      "name": "圆弧纹与水波纹组合",
+      "period": "新石器时代晚期（图06）",
+      "photos": [
+        6,
+        15,
+        16
+      ],
+      "source": "原文展品93；图15；图16第3项",
+      "note": "图06时代明确；图15的圆弧刻划组合并入相关类型，其器物时代待核。",
+      "isNew": true,
+      "aliases": [
+        "圆弧与刻划线组合"
+      ]
+    },
+    {
+      "sourceNumber": 106,
+      "name": "竖向曲折纹与弦纹组合",
+      "period": "新石器时代晚期",
+      "photos": [
+        7,
+        16
+      ],
+      "source": "原文展品94及图16第5项",
+      "note": "本例含戳印短痕及三重竖向曲折线。",
+      "isNew": true
+    },
+    {
+      "sourceNumber": 107,
+      "name": "S形弧线纹",
+      "period": "时期待核",
+      "photos": [
+        8,
+        13,
+        16
+      ],
+      "source": "图08；图13第21项；图16第8项",
+      "note": "三重S形与单组S形曲线合并为一个类型，三处参考例均缺少独立的时代依据。",
+      "isNew": true,
+      "aliases": [
+        "S形曲线"
+      ]
+    },
+    {
+      "sourceNumber": 108,
+      "name": "戳印短线纹与弦纹组合",
+      "period": "新石器时代晚期",
+      "photos": [
+        9,
+        10
+      ],
+      "source": "原文展品91",
+      "note": "按原始陶片可见纹路整理，不采白色补配线。",
+      "isNew": true
+    },
+    {
+      "sourceNumber": 109,
+      "name": "多重直角曲折纹",
+      "period": "时期待核",
+      "photos": [
+        13
+      ],
+      "source": "图13第22项",
+      "note": "分类表未标注时期。",
+      "isNew": true
+    },
+    {
+      "sourceNumber": 110,
+      "name": "双重括号纹内双水波纹",
+      "period": "时期待核",
+      "photos": [
+        13
+      ],
+      "source": "图13第23项",
+      "note": "名称据参考表；本例时期未标注。",
+      "isNew": true
+    },
+    {
+      "sourceNumber": 113,
+      "name": "圈内高山形刻划纹",
+      "period": "时期待核",
+      "photos": [
+        14,
+        16
+      ],
+      "source": "图14及图16第4项",
+      "note": "同图纹饰名称有依据，器物时代待核。",
+      "isNew": true
+    },
+    {
+      "sourceNumber": 115,
+      "name": "弦纹与圆角曲折纹组合",
+      "period": "时期待核",
+      "photos": [
+        16
+      ],
+      "source": "图16第1项",
+      "note": "上下多重弦纹与中部圆角曲折线；本例时代未标注。",
+      "isNew": true
+    },
+    {
+      "sourceNumber": 117,
+      "name": "回纹内连续半圆",
+      "period": "时期待核",
+      "photos": [
+        16
+      ],
+      "source": "图16第7项",
+      "note": "名称据参考表；本例时期未标注。",
+      "isNew": true
+    },
+    {
+      "sourceNumber": 120,
+      "name": "附加堆纹与水波回纹组合",
+      "period": "时期待核",
+      "photos": [
+        16
+      ],
+      "source": "图16第10项",
+      "note": "本例还含圆弧纹和菱形纹，部分小字按形态转述。",
+      "isNew": true
+    }
+  ],
+  "merged": [
+    {
+      "candidate_id": 111,
+      "name": "彩虹纹",
+      "merged_into": 103
+    },
+    {
+      "candidate_id": 112,
+      "name": "爪形纹内戳印",
+      "merged_into": 104
+    },
+    {
+      "candidate_id": 114,
+      "name": "圆弧与刻划线组合",
+      "merged_into": 105
+    },
+    {
+      "candidate_id": 116,
+      "name": "大小水波纹与弦纹组合",
+      "merged_into": 17
+    },
+    {
+      "candidate_id": 118,
+      "name": "S形曲线",
+      "merged_into": 107
+    },
+    {
+      "candidate_id": 119,
+      "name": "附加堆纹与工字纹组合",
+      "merged_into": 19
+    },
+    {
+      "candidate_id": 121,
+      "name": "折线弦纹与爪形纹组合",
+      "merged_into": 104
+    }
+  ]
+}

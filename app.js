@@ -5,10 +5,12 @@
   const nameEl = document.querySelector('#pattern-name'), periodEl = document.querySelector('#pattern-period');
   const flowEl = document.querySelector('#flow-state'), hintEl = document.querySelector('#interaction-hint');
   const announcement = document.querySelector('#selection-announcement');
+  const sourceEl = document.querySelector('#pattern-source');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const gold = '#c5ae72', sprites = new Map(), pointers = new Map();
   const world = { width: 2800, height: 1900 };
   const camera = { x: 0, y: 0, zoom: 1 };
+  let primarySpan = { width: 1520, height: 1040 };
   let patterns = [], nodes = [], screenNodes = [], selected = null, hover = null;
   let width = innerWidth, height = innerHeight, dpr = 1, clock = 0, lastFrame = 0, lastTrace = 0;
   let drag = null, pinch = null, dirty = true, raf = 0, ready = false, texture = null, focusedIndex = -1;
@@ -27,17 +29,23 @@
 
   function makeNodes() {
     const main = [];
-    for (let i = 0; i < 25; i++) {
+    const spread = Math.sqrt(patterns.length / 25);
+    const layoutWidth = 1200 * spread, layoutHeight = 590 * spread;
+    primarySpan = { width: layoutWidth + 320, height: layoutHeight + 450 };
+    world.width = Math.max(2800, primarySpan.width + 500);
+    world.height = Math.max(1900, primarySpan.height + 500);
+    const ordered = [...patterns.filter(p => p.isNew), ...patterns.filter(p => !p.isNew)];
+    for (let i = 0; i < ordered.length; i++) {
       let best, distance = -1;
       for (let k = 0; k < 90; k++) {
-        const candidate = { x: (random() - .5) * 1200, y: (random() - .5) * 590 };
+        const candidate = { x: (random() - .5) * layoutWidth, y: (random() - .5) * layoutHeight };
         const nearest = main.length ? Math.min(...main.map(n => Math.hypot(n.x - candidate.x, n.y - candidate.y))) : 1000;
         if (nearest > distance) { distance = nearest; best = candidate; }
       }
-      main.push({ ...best, id: i, pattern: patterns[i], size: 92 + random() * 30, depth: .75 + random() * .25,
+      main.push({ ...best, id: i, pattern: ordered[i], size: (ordered[i].sourceNumber === 102 ? 156 : 92) + random() * 30, depth: .75 + random() * .25,
         phase: random() * Math.PI * 2, speed: .75 + random() * .4, turn: (random() - .5) * .18, opacity: .73 + random() * .24, primary: true });
     }
-    const ambient = Array.from({ length: 65 }, (_, i) => ({ id: i + 25, pattern: patterns[(i * 7 + 4) % 25],
+    const ambient = Array.from({ length: 65 }, (_, i) => ({ id: i + patterns.length, pattern: patterns[(i * 7 + 4) % patterns.length],
       x: (random() - .5) * world.width, y: (random() - .5) * world.height, size: 28 + random() * 58,
       depth: .35 + random() * .4, phase: random() * Math.PI * 2, speed: .5 + random() * .5,
       turn: (random() - .5) * .28, opacity: .12 + random() * .27, primary: false }));
@@ -72,8 +80,8 @@
   function project(node) {
     const scale = fit() * camera.zoom;
     const drift = clock * 12 * node.speed;
-    const x = wrap(node.x + Math.sin(clock * .22 * node.speed + node.phase) * 32 + drift - camera.x * (node.primary ? 1 : node.depth), node.primary ? 1520 : world.width);
-    const y = wrap(node.y + Math.cos(clock * .21 * node.speed + node.phase) * 28 - camera.y * (node.primary ? 1 : node.depth), node.primary ? 1040 : world.height);
+    const x = wrap(node.x + Math.sin(clock * .22 * node.speed + node.phase) * 32 + drift - camera.x * (node.primary ? 1 : node.depth), node.primary ? primarySpan.width : world.width);
+    const y = wrap(node.y + Math.cos(clock * .21 * node.speed + node.phase) * 28 - camera.y * (node.primary ? 1 : node.depth), node.primary ? primarySpan.height : world.height);
     return { node, x: width / 2 + x * scale, y: height / 2 + 24 + y * scale,
       size: node.size * scale, angle: node.turn + Math.sin(clock * .15 + node.phase) * .035 };
   }
@@ -128,6 +136,9 @@
     hintEl.innerHTML = stopped ? '点击空白处 <span>·</span> 继续漫游' : '拖动浏览 <span>·</span> 点击纹饰停驻';
     if (selected) {
       nameEl.textContent = selected.pattern.name; periodEl.textContent = selected.pattern.period;
+      const p = selected.pattern;
+      sourceEl.textContent = p.photos ? `对应照片 ${p.photos.map(n => String(n).padStart(2, '0')).join('、')} · ${p.source}。${p.note}` : '';
+      sourceEl.hidden = !p.photos;
       detail.hidden = false; updateDetail();
       announcement.textContent = selected.pattern.name + '，' + selected.pattern.period + '。所有纹饰已暂停。';
     } else { detail.hidden = true; announcement.textContent = '已取消选中，继续漫游。'; }
@@ -210,7 +221,7 @@
   async function start() {
     try {
       const [response, image] = await Promise.all([
-        fetch('patterns.json?v=ink-only-1').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
+        fetch('patterns.json?v=photo-patterns-1').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
         new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>resolve(null);img.src='assets/ink-pigment.png';})
       ]);
       patterns=response; texture=image; makeNodes(); prepareSprites(); resize();
