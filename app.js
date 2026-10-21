@@ -6,13 +6,12 @@
   const flowEl = document.querySelector('#flow-state'), hintEl = document.querySelector('#interaction-hint');
   const announcement = document.querySelector('#selection-announcement');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-  const gold = '#c5ae72', caches = new Map(), pointers = new Map();
+  const gold = '#c5ae72', sprites = new Map(), pointers = new Map();
   const world = { width: 2800, height: 1900 };
   const camera = { x: 0, y: 0, zoom: 1 };
-  let patterns = [], nodes = [], screenNodes = [], mode = 'line', selected = null, hover = null;
+  let patterns = [], nodes = [], screenNodes = [], selected = null, hover = null;
   let width = innerWidth, height = innerHeight, dpr = 1, clock = 0, lastFrame = 0, lastTrace = 0;
   let drag = null, pinch = null, dirty = true, raf = 0, ready = false, texture = null, focusedIndex = -1;
-  let previousMode = null, modeChangedAt = -1000;
   let seed = 47219;
   const random = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -49,14 +48,13 @@
     return new Path2D(path);
   }
 
-  function buildSprite(pattern, kind) {
+  function buildSprite(pattern) {
     const c = document.createElement('canvas'); c.width = c.height = 320;
     const g = c.getContext('2d'); g.translate(16, 16); g.scale(2.72, 2.72);
-    const path = normalizePath(pattern[kind]);
+    const path = normalizePath(pattern.ink);
     g.fillStyle = gold; g.strokeStyle = gold; g.lineJoin = 'round'; g.lineCap = 'round';
-    if (kind === 'line') { g.lineWidth = 1.12; g.stroke(path); }
-    else { g.fill(path, 'nonzero'); }
-    if (kind === 'ink' && texture) {
+    g.fill(path, 'nonzero');
+    if (texture) {
       g.setTransform(1, 0, 0, 1, 0, 0);
       g.globalCompositeOperation = 'destination-in';
       const w = texture.naturalWidth, h = texture.naturalHeight;
@@ -67,8 +65,8 @@
     return c;
   }
 
-  function prepareStyle(kind) {
-    if (!caches.has(kind)) caches.set(kind, new Map(patterns.map(p => [p.sourceNumber, buildSprite(p, kind)])));
+  function prepareSprites() {
+    for (const pattern of patterns) sprites.set(pattern.sourceNumber, buildSprite(pattern));
   }
 
   function project(node) {
@@ -80,11 +78,11 @@
       size: node.size * scale, angle: node.turn + Math.sin(clock * .15 + node.phase) * .035 };
   }
 
-  function drawSprite(item, kind, alpha) {
-    const n = item.node, sprite = caches.get(kind)?.get(n.pattern.sourceNumber);
-    if (!sprite || alpha < .005) return;
+  function drawSprite(item) {
+    const n = item.node, sprite = sprites.get(n.pattern.sourceNumber);
+    if (!sprite) return;
     ctx.save(); ctx.translate(item.x, item.y); ctx.rotate(item.angle);
-    ctx.globalAlpha = alpha * n.opacity * (selected && selected !== n ? .5 : 1);
+    ctx.globalAlpha = n.opacity * (selected && selected !== n ? .5 : 1);
     if (selected === n || hover === n) { ctx.filter = 'brightness(1.4)'; ctx.shadowColor = 'rgba(218,192,121,.35)'; ctx.shadowBlur = selected === n ? 15 : 7; }
     ctx.drawImage(sprite, -item.size / 2, -item.size / 2, item.size, item.size);
     ctx.restore();
@@ -101,24 +99,19 @@
     ctx.stroke(); ctx.restore();
   }
 
-  function draw(now) {
+  function draw() {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, width, height);
-    const mix = clamp((now - modeChangedAt) / 320, 0, 1);
     screenNodes = nodes.map(project).filter(n => n.x > -n.size && n.x < width + n.size && n.y > -n.size && n.y < height + n.size);
-    for (const item of screenNodes) {
-      if (previousMode && mix < 1) drawSprite(item, previousMode, 1 - mix);
-      drawSprite(item, mode, mix);
-    }
+    for (const item of screenNodes) drawSprite(item);
     const chosen = screenNodes.find(n => n.node === selected);
     if (chosen) drawFocus(chosen);
     if (selected) updateDetail(chosen);
-    if (mix === 1) previousMode = null;
   }
 
   function frame(now) {
     const dt = lastFrame ? Math.min((now - lastFrame) / 1000, .05) : 0; lastFrame = now;
     if (ready && !paused()) { clock += dt; dirty = true; }
-    if (ready && (dirty || previousMode)) { draw(now); dirty = false; }
+    if (ready && dirty) { draw(); dirty = false; }
     if (now - lastTrace > 350) { canvas.dataset.phase = clock.toFixed(3); lastTrace = now; }
     raf = requestAnimationFrame(frame);
   }
@@ -154,13 +147,6 @@
 
   function select(node) { selected = selected === node ? null : node; hover = null; updateState(); }
   function cancel() { selected = null; updateState(); }
-
-  function setMode(kind) {
-    if (kind === mode || !ready) return;
-    prepareStyle(kind); previousMode = mode; mode = kind; modeChangedAt = performance.now(); root.dataset.style = kind;
-    document.querySelectorAll('[data-mode]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === kind)));
-    dirty = true;
-  }
 
   canvas.addEventListener('pointerdown', e => {
     if (!ready || (e.pointerType === 'mouse' && e.button !== 0)) return;
@@ -205,7 +191,6 @@
     const px=(e.clientX-width/2)/fit(),py=(e.clientY-height/2-24)/fit();
     camera.x+=px/old-px/next; camera.y+=py/old-py/next; camera.zoom=next;dirty=true;
   },{passive:false});
-  document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));
   document.querySelector('#close-detail').addEventListener('click',()=>{cancel();canvas.focus({preventScroll:true});});
   document.querySelector('#reset-view').addEventListener('click',()=>{camera.x=0;camera.y=0;camera.zoom=1;clock=0;cancel();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape')cancel();});
@@ -225,13 +210,11 @@
   async function start() {
     try {
       const [response, image] = await Promise.all([
-        fetch('patterns.json').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
+        fetch('patterns.json?v=ink-only-1').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
         new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>resolve(null);img.src='assets/ink-pigment.png';})
       ]);
-      patterns=response; texture=image; makeNodes(); prepareStyle('line'); resize();
+      patterns=response; texture=image; makeNodes(); prepareSprites(); resize();
       ready=true; document.querySelector('#loading').hidden=true; updateState();
-      const idle=window.requestIdleCallback||((f)=>setTimeout(f,250));
-      idle(()=>{prepareStyle('ink');idle(()=>prepareStyle('mosaic'));});
       raf=requestAnimationFrame(frame);
     } catch(error) {document.querySelector('#loading').hidden=true;document.querySelector('#error').hidden=false;console.error('纹饰加载失败',error);}
   }

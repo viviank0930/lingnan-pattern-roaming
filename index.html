@@ -4,25 +4,21 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#16140e">
-  <meta name="description" content="在流动的岭南陶器纹饰中漫游。拖动探索，点选查看纹饰名称与时期，切换线稿、水墨拓印与马赛克形态。">
+  <meta name="description" content="在流动的岭南陶器纹饰中漫游。拖动探索，点选查看纹饰名称与时期，以水墨拓印呈现。">
   <title>纹饰漫游</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%2316140e' d='M0 0h64v64H0z'/%3E%3Cpath fill='none' stroke='%23c5ae72' stroke-width='3' d='M12 50V12h38v28H24V24h14v5'/%3E%3C/svg%3E">
   <link rel="preload" href="assets/huiwen.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css">
-  <script src="app.js" defer></script>
+  <link rel="stylesheet" href="styles.css?v=ink-only-1">
+  <script src="app.js?v=ink-only-1" defer></script>
 </head>
 <body>
-  <main id="experience" data-style="line" data-flow="moving">
+  <main id="experience" data-style="ink" data-flow="moving">
     <div class="paper" aria-hidden="true"></div>
     <div class="grain" aria-hidden="true"></div>
     <canvas id="field" tabindex="0" role="application" aria-label="纹饰漫游。拖动浏览；点击或按方向键选择纹饰，按Esc取消选中。"></canvas>
     <header class="masthead">
       <div class="identity"><h1>纹饰漫游</h1><span>岭南陶器纹饰</span></div>
-      <div class="style-switch" role="group" aria-label="切换纹饰形态">
-        <button type="button" data-mode="line" aria-pressed="true">线稿</button>
-        <button type="button" data-mode="ink" aria-pressed="false">水墨拓印</button>
-        <button type="button" data-mode="mosaic" aria-pressed="false">马赛克</button>
-      </div>
+      <span class="style-label">水墨拓印</span>
     </header>
     <section class="detail" id="detail" aria-label="选中纹饰" hidden>
       <button id="close-detail" class="close" type="button" aria-label="取消选中，继续流动">×</button>
