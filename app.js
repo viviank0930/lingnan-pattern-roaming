@@ -4,13 +4,13 @@
   const root = document.querySelector('#experience'), detail = document.querySelector('#detail');
   const nameEl = document.querySelector('#pattern-name'), periodEl = document.querySelector('#pattern-period');
   const descriptionEl = document.querySelector('#pattern-description');
+  const artifactEl = document.querySelector('#pattern-artifact'), artifactImage = document.querySelector('#artifact-image');
   const flowEl = document.querySelector('#flow-state'), hintEl = document.querySelector('#interaction-hint');
   const announcement = document.querySelector('#selection-announcement');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-  const gold = '#c5ae72', sprites = new Map(), pointers = new Map();
+  const gold = '#c5ae72', sprites = new Map(), hitMasks = new Map(), pointers = new Map();
   const world = { width: 2800, height: 1900 };
   const camera = { x: 0, y: 0, zoom: 1 };
-  let primarySpan = { width: 1520, height: 1040 };
   let patterns = [], nodes = [], screenNodes = [], selected = null, hover = null;
   let width = innerWidth, height = innerHeight, dpr = 1, clock = 0, lastFrame = 0, lastTrace = 0;
   let drag = null, pinch = null, dirty = true, raf = 0, ready = false, texture = null, focusedIndex = -1;
@@ -28,28 +28,49 @@
   }
 
   function makeNodes() {
-    const main = [];
-    const spread = Math.sqrt(patterns.length / 25);
-    const layoutWidth = 1200 * spread, layoutHeight = 590 * spread;
-    primarySpan = { width: layoutWidth + 320, height: layoutHeight + 450 };
-    world.width = Math.max(2800, primarySpan.width + 500);
-    world.height = Math.max(1900, primarySpan.height + 500);
+    // Irregular, evenly distributed anchors avoid very large voids without
+    // turning the field into a grid. A few companions create looser clusters.
+    world.width = 2688; world.height = 1940;
     const ordered = [...patterns.filter(p => p.isNew), ...patterns.filter(p => !p.isNew)];
-    for (let i = 0; i < ordered.length; i++) {
-      let best, distance = -1;
-      for (let k = 0; k < 90; k++) {
-        const candidate = { x: (random() - .5) * layoutWidth, y: (random() - .5) * layoutHeight };
-        const nearest = main.length ? Math.min(...main.map(n => Math.hypot(n.x - candidate.x, n.y - candidate.y))) : 1000;
-        if (nearest > distance) { distance = nearest; best = candidate; }
+    let bag = [], bagIndex = 0;
+    const nextPattern = () => {
+      if (bagIndex >= bag.length) {
+        bag = [...ordered];
+        for (let i = bag.length - 1; i > 0; i--) {
+          const j = Math.floor(random() * (i + 1)); [bag[i], bag[j]] = [bag[j], bag[i]];
+        }
+        bagIndex = 0;
       }
-      main.push({ ...best, id: i, pattern: ordered[i], size: (ordered[i].motifRole === 'hunting' ? 156 : 92) + random() * 30, depth: .75 + random() * .25,
-        phase: random() * Math.PI * 2, speed: .75 + random() * .4, turn: (random() - .5) * .18, opacity: .73 + random() * .24, primary: true });
+      return bag[bagIndex++];
+    };
+    const main = [];
+    const distance = (a, b) => {
+      const dx = Math.min(Math.abs(a.x - b.x), world.width - Math.abs(a.x - b.x));
+      const dy = Math.min(Math.abs(a.y - b.y), world.height - Math.abs(a.y - b.y));
+      return Math.hypot(dx, dy);
+    };
+    for (let i = 0; i < 145; i++) {
+      let best = i === 0 ? {x:-175,y:-90} : i === 1 ? {x:205,y:125} : null, bestDistance = -1;
+      if (!best) for (let k = 0; k < 65; k++) {
+        const point = {x:(random()-.5)*world.width,y:(random()-.5)*world.height};
+        const nearest = Math.min(...main.map(n=>distance(point,n)));
+        if (nearest > bestDistance) { best = point; bestDistance = nearest; }
+      }
+      const pattern = i < 2 ? patterns.find(p=>p.sourceNumber===(i===0?2005:2007)) || nextPattern() : nextPattern();
+      main.push({...best,id:i,pattern,size:(pattern.motifRole==='hunting'?143:90)+random()*31,
+        phase:random()*Math.PI*2,turn:(random()-.5)*.24,opacity:.7+random()*.27,depth:1,primary:true});
     }
-    const ambient = Array.from({ length: 65 }, (_, i) => ({ id: i + patterns.length, pattern: patterns[(i * 7 + 4) % patterns.length],
-      x: (random() - .5) * world.width, y: (random() - .5) * world.height, size: 28 + random() * 58,
-      depth: .35 + random() * .4, phase: random() * Math.PI * 2, speed: .5 + random() * .5,
-      turn: (random() - .5) * .28, opacity: .12 + random() * .27, primary: false }));
-    nodes = [...ambient, ...main];
+    const companions = [];
+    for (let i=0;i<12;i++) {
+      const anchor=main[2+Math.floor(random()*(main.length-2))],angle=random()*Math.PI*2,spacing=65+random()*35;
+      companions.push({id:145+i,pattern:nextPattern(),x:wrap(anchor.x+Math.cos(angle)*spacing,world.width),
+        y:wrap(anchor.y+Math.sin(angle)*spacing,world.height),size:78+random()*28,phase:random()*Math.PI*2,
+        turn:(random()-.5)*.24,opacity:.5+random()*.27,depth:1,primary:true});
+    }
+    const ambient = Array.from({length:70},(_,i)=>({id:157+i,pattern:nextPattern(),x:(random()-.5)*world.width,
+      y:(random()-.5)*world.height,size:28+random()*42,depth:.45+random()*.3,phase:random()*Math.PI*2,
+      turn:(random()-.5)*.28,opacity:.12+random()*.2,primary:false}));
+    nodes=[...ambient,...main,...companions];
   }
 
   function normalizePath(path) {
@@ -74,16 +95,22 @@
   }
 
   function prepareSprites() {
-    for (const pattern of patterns) sprites.set(pattern.sourceNumber, buildSprite(pattern));
+    for (const pattern of patterns) {
+      const sprite = buildSprite(pattern);
+      sprites.set(pattern.sourceNumber, sprite);
+      const pixels = sprite.getContext('2d').getImageData(0, 0, 320, 320).data;
+      const mask = new Uint8Array(320 * 320);
+      for (let i = 0; i < mask.length; i++) mask[i] = pixels[i * 4 + 3];
+      hitMasks.set(pattern.sourceNumber, mask);
+    }
   }
 
   function project(node) {
     const scale = fit() * camera.zoom;
-    const drift = clock * 12 * node.speed;
-    const x = wrap(node.x + Math.sin(clock * .22 * node.speed + node.phase) * 32 + drift - camera.x * (node.primary ? 1 : node.depth), node.primary ? primarySpan.width : world.width);
-    const y = wrap(node.y + Math.cos(clock * .21 * node.speed + node.phase) * 28 - camera.y * (node.primary ? 1 : node.depth), node.primary ? primarySpan.height : world.height);
+    const x = wrap(node.x + clock * (node.primary?11:7) + Math.sin(clock*.13+node.phase)*14 - camera.x*node.depth, world.width);
+    const y = wrap(node.y + Math.cos(clock*.11+node.phase)*16 - camera.y*node.depth, world.height);
     return { node, x: width / 2 + x * scale, y: height / 2 + 24 + y * scale,
-      size: node.size * scale, angle: node.turn + Math.sin(clock * .15 + node.phase) * .035 };
+      size: node.size * scale, angle: node.turn + Math.sin(clock * .15 + node.phase) * .018 };
   }
 
   function drawSprite(item) {
@@ -109,7 +136,16 @@
 
   function draw() {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, width, height);
-    screenNodes = nodes.map(project).filter(n => n.x > -n.size && n.x < width + n.size && n.y > -n.size && n.y < height + n.size);
+    screenNodes = [];
+    const spanX = world.width * fit() * camera.zoom, spanY = world.height * fit() * camera.zoom;
+    for (const node of nodes) {
+      const item = project(node);
+      const firstX = Math.ceil((-item.size - item.x) / spanX), lastX = Math.floor((width + item.size - item.x) / spanX);
+      const firstY = Math.ceil((-item.size - item.y) / spanY), lastY = Math.floor((height + item.size - item.y) / spanY);
+      for (let x = firstX; x <= lastX; x++) for (let y = firstY; y <= lastY; y++) {
+        screenNodes.push({ ...item, x: item.x + x * spanX, y: item.y + y * spanY });
+      }
+    }
     for (const item of screenNodes) drawSprite(item);
     const chosen = screenNodes.find(n => n.node === selected);
     if (chosen) drawFocus(chosen);
@@ -124,9 +160,21 @@
     raf = requestAnimationFrame(frame);
   }
 
-  function hitAt(x, y) {
-    const options = screenNodes.filter(s => Math.hypot(s.x - x, s.y - y) < Math.max(s.size * .58, 19));
-    return options.sort((a, b) => Math.hypot(a.x-x,a.y-y)/a.size - Math.hypot(b.x-x,b.y-y)/b.size)[0]?.node || null;
+  function hitAt(x, y, tolerance = 5) {
+    const options = screenNodes.filter(s => Math.hypot(s.x - x, s.y - y) < Math.max(s.size * .75 + tolerance, 19));
+    options.sort((a, b) => Math.hypot(a.x-x,a.y-y)/a.size - Math.hypot(b.x-x,b.y-y)/b.size);
+    for (const item of options) {
+      const dx = x - item.x, dy = y - item.y, cos = Math.cos(item.angle), sin = Math.sin(item.angle);
+      const px = 160 + (dx * cos + dy * sin) * 320 / item.size;
+      const py = 160 + (-dx * sin + dy * cos) * 320 / item.size;
+      const radius = tolerance * 320 / item.size, mask = hitMasks.get(item.node.pattern.sourceNumber);
+      for (let yy = Math.max(0, Math.floor(py - radius)); yy <= Math.min(319, py + radius); yy += 2) {
+        for (let xx = Math.max(0, Math.floor(px - radius)); xx <= Math.min(319, px + radius); xx += 2) {
+          if (mask[yy * 320 + xx] > 32) return item.node;
+        }
+      }
+    }
+    return null;
   }
 
   function updateState() {
@@ -139,6 +187,13 @@
       nameEl.textContent = p.name; periodEl.textContent = displayPeriod;
       descriptionEl.textContent = p.description || '';
       descriptionEl.hidden = !p.description;
+      const artifact = p.artifact;
+      artifactEl.hidden = !artifact;
+      detail.classList.toggle('has-artifact', !!artifact);
+      if (artifact) {
+        artifactImage.src = artifact.src; artifactImage.alt = artifact.alt;
+        artifactEl.dataset.shape = artifact.shape || 'portrait';
+      } else { artifactImage.removeAttribute('src'); artifactImage.alt = ''; }
       detail.hidden = false; updateDetail();
       announcement.textContent = p.name + '，' + displayPeriod + '。' + (p.description || '') + '所有纹饰已暂停。';
     } else { detail.hidden = true; announcement.textContent = '已取消选中，继续漫游。'; }
@@ -188,7 +243,7 @@
     if (!pointers.has(e.pointerId)) return;
     const shouldClick=!cancelled && drag && !drag.moved && !drag.pinched && pointers.size===1;
     pointers.delete(e.pointerId);
-    if (shouldClick) { const hit=hitAt(e.clientX,e.clientY); hit ? select(hit) : cancel(); }
+    if (shouldClick) { const hit=hitAt(e.clientX,e.clientY,e.pointerType==='touch'?9:5); hit ? select(hit) : cancel(); }
     if (!pointers.size) {drag=null;pinch=null;canvas.classList.remove('is-dragging');}
     dirty=true;
   }
@@ -217,15 +272,20 @@
   document.addEventListener('visibilitychange',()=>{lastFrame=0;});
   new ResizeObserver(resize).observe(root);
   document.querySelector('#retry').addEventListener('click',()=>location.reload());
+  artifactImage.addEventListener('load',()=>{if(selected)updateDetail();});
 
   async function start() {
     try {
       const [response, image] = await Promise.all([
-        fetch('patterns.json?v=table-20261022-1').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
+        fetch('patterns.json?v=continuous-20261022-1').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
         new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>resolve(null);img.src='assets/ink-pigment.png';})
       ]);
       patterns=response; texture=image; makeNodes(); prepareSprites(); resize();
-      ready=true; document.querySelector('#loading').hidden=true; updateState();
+      ready=true; document.querySelector('#loading').hidden=true;
+      const requested = Number(new URLSearchParams(location.search).get('motif'));
+      const sample = nodes.find(n => n.primary && n.pattern.sourceNumber === requested);
+      if (sample) { camera.x = sample.x; camera.y = sample.y; selected = sample; }
+      updateState();
       raf=requestAnimationFrame(frame);
     } catch(error) {document.querySelector('#loading').hidden=true;document.querySelector('#error').hidden=false;console.error('纹饰加载失败',error);}
   }

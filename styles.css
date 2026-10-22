@@ -1,4 +1,4 @@
-@font-face{font-family:Huiwen;src:url('assets/huiwen.woff2?v=table-20261022-1') format('woff2');font-display:swap;font-weight:400}
+@font-face{font-family:Huiwen;src:url('assets/huiwen.woff2?v=continuous-20261022-1') format('woff2');font-display:swap;font-weight:400}
 :root{color-scheme:dark;--paper:#16140e;--gold:#c5ae72;--light:#e5d19a;--muted:#918364;--line:rgba(197,174,114,.27);font-family:Huiwen,"Songti SC","STSong","SimSun",serif}
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--paper)}body{overscroll-behavior:none}button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}button:focus-visible,canvas:focus-visible{outline:1px solid var(--light);outline-offset:5px}button{touch-action:manipulation}button:disabled{opacity:.5;cursor:wait}[hidden]{display:none!important}
 #experience{position:relative;width:100%;height:100dvh;min-height:360px;isolation:isolate;color:var(--gold);overflow:hidden}
@@ -16,3 +16,11 @@
 
 
 .detail .pattern-description{font-size:14px;line-height:1.75;color:var(--muted);margin-top:18px;max-width:260px;overflow-wrap:anywhere}
+.detail.has-artifact{width:320px;max-height:calc(100dvh - 190px);overflow:auto;scrollbar-width:thin;background:#1b1810}
+.pattern-artifact{margin:18px 0 0;width:100%;background:none}
+.pattern-artifact img{display:block;width:100%;height:210px;object-fit:contain}
+.pattern-artifact[data-shape=wide] img{height:120px}
+@media(max-width:700px){.detail.has-artifact{width:280px;max-height:calc(100dvh - 190px)}.pattern-artifact{margin-top:14px}.pattern-artifact img{height:185px}.pattern-artifact[data-shape=wide] img{height:105px}}
+.masthead:before,.controls:before{content:"";position:absolute;z-index:-1;pointer-events:none;left:-42px;right:-42px}
+.masthead:before{top:-30px;bottom:-25px;background:linear-gradient(rgba(22,20,14,.98),rgba(22,20,14,.78) 58%,transparent)}
+.controls:before{top:-25px;bottom:-40px;background:linear-gradient(transparent,rgba(22,20,14,.86) 55%,rgba(22,20,14,.98))}
