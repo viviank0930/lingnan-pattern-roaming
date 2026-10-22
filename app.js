@@ -3,6 +3,7 @@
   const canvas = document.querySelector('#field'), ctx = canvas.getContext('2d');
   const root = document.querySelector('#experience'), detail = document.querySelector('#detail');
   const nameEl = document.querySelector('#pattern-name'), periodEl = document.querySelector('#pattern-period');
+  const descriptionEl = document.querySelector('#pattern-description');
   const flowEl = document.querySelector('#flow-state'), hintEl = document.querySelector('#interaction-hint');
   const announcement = document.querySelector('#selection-announcement');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -41,7 +42,7 @@
         const nearest = main.length ? Math.min(...main.map(n => Math.hypot(n.x - candidate.x, n.y - candidate.y))) : 1000;
         if (nearest > distance) { distance = nearest; best = candidate; }
       }
-      main.push({ ...best, id: i, pattern: ordered[i], size: (ordered[i].sourceNumber === 102 ? 156 : 92) + random() * 30, depth: .75 + random() * .25,
+      main.push({ ...best, id: i, pattern: ordered[i], size: (ordered[i].motifRole === 'hunting' ? 156 : 92) + random() * 30, depth: .75 + random() * .25,
         phase: random() * Math.PI * 2, speed: .75 + random() * .4, turn: (random() - .5) * .18, opacity: .73 + random() * .24, primary: true });
     }
     const ambient = Array.from({ length: 65 }, (_, i) => ({ id: i + patterns.length, pattern: patterns[(i * 7 + 4) % patterns.length],
@@ -136,8 +137,10 @@
     if (selected) {
       const p = selected.pattern, displayPeriod = p.displayPeriod || p.period;
       nameEl.textContent = p.name; periodEl.textContent = displayPeriod;
+      descriptionEl.textContent = p.description || '';
+      descriptionEl.hidden = !p.description;
       detail.hidden = false; updateDetail();
-      announcement.textContent = p.name + '，' + displayPeriod + '。所有纹饰已暂停。';
+      announcement.textContent = p.name + '，' + displayPeriod + '。' + (p.description || '') + '所有纹饰已暂停。';
     } else { detail.hidden = true; announcement.textContent = '已取消选中，继续漫游。'; }
     dirty = true;
   }
@@ -218,7 +221,7 @@
   async function start() {
     try {
       const [response, image] = await Promise.all([
-        fetch('patterns.json?v=verified-four-1').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
+        fetch('patterns.json?v=table-20261022-1').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
         new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>resolve(null);img.src='assets/ink-pigment.png';})
       ]);
       patterns=response; texture=image; makeNodes(); prepareSprites(); resize();

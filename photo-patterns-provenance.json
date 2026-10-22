@@ -1,71 +1,169 @@
 {
-  "scope": "本批只保留4组名称或特征与时期均能对应的新增条目；原有25个样本保留。",
-  "added_count": 4,
+  "source": "用户提供的十项纹饰表（2026-10-22）",
+  "scope": "撤下上批四组新增记录，按新表逐项重建。本批两项标黄者名称确认，其余八项名称显示问号，时期均按表保留。原有25个样本保留。",
   "existing_count": 25,
-  "total_count": 29,
-  "retained": [
+  "added_count": 10,
+  "total_count": 35,
+  "confirmed_name_count": 2,
+  "unconfirmed_name_count": 8,
+  "withdrawn_previous_ids": [
+    101,
+    102,
+    103,
+    106
+  ],
+  "first_discovery_wording_source": "按用户本次提供的发布文案",
+  "records": [
     {
-      "sourceNumber": 101,
-      "name": "人形舞蹈浮雕纹",
+      "sourceNumber": 2001,
+      "name": "？",
       "period": "新石器时代晚期",
-      "photos": [
-        1,
-        2,
-        10
-      ],
-      "source": "现场展签；互动素材展品95",
-      "note": "原文记载人形舞蹈浮雕纹饰；此图为展示用简笔图。",
-      "isNew": true
+      "isNew": true,
+      "tableRow": 1,
+      "exhibitNumber": 91,
+      "artifactName": "陶釜",
+      "location": "台山神头上湾遗址",
+      "nameConfirmed": false,
+      "highlighted": false,
+      "description": "该纹饰在广东首次发现，名称尚未确定。",
+      "motifRole": "other",
+      "source": "用户提供的十项纹饰表（2026-10-22），以黄色标注作为名称确认依据"
     },
     {
-      "sourceNumber": 102,
+      "sourceNumber": 2002,
+      "name": "？",
+      "period": "新石器时代晚期",
+      "isNew": true,
+      "tableRow": 2,
+      "exhibitNumber": 92,
+      "artifactName": "陶釜",
+      "location": "台山神头上湾遗址",
+      "nameConfirmed": false,
+      "highlighted": false,
+      "description": "该纹饰在广东首次发现，名称尚未确定。",
+      "motifRole": "other",
+      "source": "用户提供的十项纹饰表（2026-10-22），以黄色标注作为名称确认依据"
+    },
+    {
+      "sourceNumber": 2003,
+      "name": "？",
+      "period": "新石器时代晚期",
+      "isNew": true,
+      "tableRow": 3,
+      "exhibitNumber": 93,
+      "artifactName": "陶釜",
+      "location": "台山神头上湾遗址",
+      "nameConfirmed": false,
+      "highlighted": false,
+      "description": "该纹饰在广东首次发现，名称尚未确定。",
+      "motifRole": "other",
+      "source": "用户提供的十项纹饰表（2026-10-22），以黄色标注作为名称确认依据"
+    },
+    {
+      "sourceNumber": 2004,
+      "name": "？",
+      "period": "新石器时代晚期",
+      "isNew": true,
+      "tableRow": 4,
+      "exhibitNumber": 94,
+      "artifactName": "陶釜",
+      "location": "台山神头上湾遗址",
+      "nameConfirmed": false,
+      "highlighted": false,
+      "description": "该纹饰在广东首次发现，名称尚未确定。",
+      "motifRole": "other",
+      "source": "用户提供的十项纹饰表（2026-10-22），以黄色标注作为名称确认依据"
+    },
+    {
+      "sourceNumber": 2005,
+      "name": "人形舞蹈纹",
+      "period": "新石器时代晚期",
+      "isNew": true,
+      "tableRow": 5,
+      "exhibitNumber": 95,
+      "artifactName": "陶鼓形器",
+      "location": "台山神头上湾遗址",
+      "nameConfirmed": true,
+      "highlighted": true,
+      "description": "",
+      "motifRole": "other",
+      "source": "用户提供的十项纹饰表（2026-10-22），以黄色标注作为名称确认依据"
+    },
+    {
+      "sourceNumber": 2006,
+      "name": "？",
+      "period": "新石器时代晚期",
+      "isNew": true,
+      "tableRow": 6,
+      "exhibitNumber": 96,
+      "artifactName": "陶鼓形器",
+      "location": "台山神头上湾遗址",
+      "nameConfirmed": false,
+      "highlighted": false,
+      "description": "该纹饰在广东首次发现，名称尚未确定。",
+      "motifRole": "other",
+      "source": "用户提供的十项纹饰表（2026-10-22），以黄色标注作为名称确认依据"
+    },
+    {
+      "sourceNumber": 2007,
       "name": "狩猎纹",
       "period": "战国时期",
-      "photos": [
-        3,
-        11,
-        12
-      ],
-      "source": "互动素材展品122 狩猎纹陶盆",
-      "note": "器物名称及时期有原文依据；图形取自图12线描。",
-      "isNew": true
+      "isNew": true,
+      "tableRow": 7,
+      "exhibitNumber": 122,
+      "artifactName": "狩猎纹陶盆",
+      "location": "博罗罗阳遗址",
+      "nameConfirmed": true,
+      "highlighted": true,
+      "description": "",
+      "motifRole": "hunting",
+      "source": "用户提供的十项纹饰表（2026-10-22），以黄色标注作为名称确认依据"
     },
     {
-      "sourceNumber": 103,
-      "name": "多重半椭圆纹",
+      "sourceNumber": 2008,
+      "name": "？",
       "period": "新石器时代晚期",
-      "photos": [
-        4,
-        13
-      ],
-      "source": "图13第25项与图04同图；互动素材展品96",
-      "note": "主纹名称及时期均可对应。",
-      "isNew": true
+      "isNew": true,
+      "tableRow": 8,
+      "exhibitNumber": 195,
+      "artifactName": "陶器",
+      "location": "台山神头上湾遗址",
+      "nameConfirmed": false,
+      "highlighted": false,
+      "description": "该纹饰在广东首次发现，名称尚未确定。",
+      "motifRole": "other",
+      "source": "用户提供的十项纹饰表（2026-10-22），以黄色标注作为名称确认依据"
     },
     {
-      "sourceNumber": 106,
-      "name": "戳印、三重弦纹与三重竖向曲折纹",
+      "sourceNumber": 2009,
+      "name": "？",
       "period": "新石器时代晚期",
-      "photos": [
-        7,
-        16
-      ],
-      "source": "图16第5项与图07同图；互动素材展品94",
-      "note": "名称按表中纹饰特征整理。",
-      "isNew": true
+      "isNew": true,
+      "tableRow": 9,
+      "exhibitNumber": 196,
+      "artifactName": "陶釜（残）",
+      "location": "台山神头上湾遗址",
+      "nameConfirmed": false,
+      "highlighted": false,
+      "description": "该纹饰在广东首次发现，名称尚未确定。",
+      "motifRole": "other",
+      "source": "用户提供的十项纹饰表（2026-10-22），以黄色标注作为名称确认依据"
+    },
+    {
+      "sourceNumber": 2010,
+      "name": "？",
+      "period": "新石器时代晚期",
+      "isNew": true,
+      "tableRow": 10,
+      "exhibitNumber": 197,
+      "artifactName": "圈足罐",
+      "location": "台山神头上湾遗址",
+      "nameConfirmed": false,
+      "highlighted": false,
+      "description": "该纹饰在广东首次发现，名称尚未确定。",
+      "motifRole": "other",
+      "source": "用户提供的十项纹饰表（2026-10-22），以黄色标注作为名称确认依据"
     }
   ],
-  "withdrawn_ids": [
-    104,
-    105,
-    107,
-    108,
-    109,
-    110,
-    113,
-    115,
-    117,
-    120
-  ],
-  "note": "未确认的新增条目及关联参考例先撤下；原始核对记录保留在本地。纹样为展示用简笔图。"
+  "illustration_note": "沿用同一批照片的展示用线描，图形本身不作为正式命名或独立断代的依据。"
 }
