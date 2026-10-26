@@ -3,10 +3,12 @@
   const canvas = document.querySelector('#field'), ctx = canvas.getContext('2d');
   const root = document.querySelector('#experience'), detail = document.querySelector('#detail');
   const nameEl = document.querySelector('#pattern-name'), periodEl = document.querySelector('#pattern-period');
-  const descriptionEl = document.querySelector('#pattern-description');
   const artifactEl = document.querySelector('#pattern-artifact'), artifactImage = document.querySelector('#artifact-image');
   const flowEl = document.querySelector('#flow-state'), hintEl = document.querySelector('#interaction-hint');
   const announcement = document.querySelector('#selection-announcement');
+  const discoveryNote = document.querySelector('#pattern-discovery-note');
+  const catalog = document.querySelector('#pattern-catalog'), browseButton = document.querySelector('#browse-patterns');
+  const catalogRows = document.querySelector('#catalog-rows');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const gold = '#c5ae72', sprites = new Map(), hitMasks = new Map(), pointers = new Map();
   const world = { width: 2800, height: 1900 };
@@ -19,7 +21,7 @@
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   const wrap = (v, span) => ((v + span / 2) % span + span) % span - span / 2;
   const fit = () => width < 700 ? Math.max(.6, Math.min(width / 1150, height / 860)) : Math.min(width / 1440, height / 860);
-  const paused = () => selected !== null || pointers.size > 0 || reducedMotion.matches;
+  const paused = () => selected !== null || catalog.open || pointers.size > 0 || reducedMotion.matches;
 
   function resize() {
     width = root.clientWidth; height = root.clientHeight; dpr = Math.min(devicePixelRatio || 1, 2);
@@ -60,6 +62,22 @@
       main.push({...best,id:i,pattern,size:(pattern.motifRole==='hunting'?143:90)+random()*31,
         phase:random()*Math.PI*2,turn:(random()-.5)*.24,opacity:.7+random()*.27,depth:1,primary:true});
     }
+    // Keep the latest five stamps in the opening view, using existing anchors.
+    // Their copies elsewhere still join the same drifting field and hit testing.
+    const openingSamples = [
+      [3001, -130, -310], [3002, 130, -175], [3003, -80, 70],
+      [3004, 110, 210], [3005, -120, 330]
+    ];
+    const openingAnchors = main.filter(n => n.id > 1 && Math.abs(n.x) < 180 && n.y > -360 && n.y < 360);
+    const assigned = new Set();
+    for (const [id, x, y] of openingSamples) {
+      const pattern = patterns.find(p => p.sourceNumber === id);
+      const node = openingAnchors.filter(n => !assigned.has(n)).sort((a, b) => Math.hypot(a.x-x, a.y-y) - Math.hypot(b.x-x, b.y-y))[0];
+      if (!pattern || !node) continue;
+      node.size += 90 - (node.pattern.motifRole === 'hunting' ? 143 : 90);
+      node.pattern = pattern;
+      assigned.add(node);
+    }
     const companions = [];
     for (let i=0;i<12;i++) {
       const anchor=main[2+Math.floor(random()*(main.length-2))],angle=random()*Math.PI*2,spacing=65+random()*35;
@@ -77,18 +95,68 @@
     return new Path2D(path);
   }
 
+  function inkTopology(pixels) {
+    const side = 320, total = side * side, ink = new Uint8Array(total);
+    for (let i = 0; i < total; i++) ink[i] = pixels[i * 4 + 3] >= 128 ? 1 : 0;
+    const queue = new Int32Array(total);
+    const result = [];
+    // Eight-connected ink and four-connected gaps detect joined strokes and
+    // closed counters before pigment is applied to the silhouette.
+    for (const value of [1, 0]) {
+      const seen = new Uint8Array(total); let count = 0;
+      for (let start = 0; start < total; start++) {
+        if (seen[start] || ink[start] !== value) continue;
+        let read = 0, write = 1, touchesEdge = false; queue[0] = start; seen[start] = 1;
+        while (read < write) {
+          const index = queue[read++], x = index % side, y = Math.floor(index / side);
+          if (!x || !y || x === side - 1 || y === side - 1) touchesEdge = true;
+          for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+            if ((!dx && !dy) || (!value && dx && dy)) continue;
+            const nx = x + dx, ny = y + dy;
+            if (nx < 0 || ny < 0 || nx >= side || ny >= side) continue;
+            const next = ny * side + nx;
+            if (!seen[next] && ink[next] === value) { seen[next] = 1; queue[write++] = next; }
+          }
+        }
+        if (write >= 3 && (value || !touchesEdge)) count++;
+      }
+      result.push(count);
+    }
+    return result.join(':');
+  }
+
   function buildSprite(pattern) {
     const c = document.createElement('canvas'); c.width = c.height = 320;
-    const g = c.getContext('2d'); g.translate(16, 16); g.scale(2.72, 2.72);
+    const g = c.getContext('2d', {willReadFrequently:true});
     const path = normalizePath(pattern.ink);
-    g.fillStyle = gold; g.strokeStyle = gold; g.lineJoin = 'round'; g.lineCap = 'round';
-    g.fill(path, 'nonzero');
+    const render = weight => {
+      g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, 320, 320);
+      g.translate(16, 16); g.scale(2.72, 2.72);
+      g.fillStyle = gold; g.strokeStyle = gold; g.lineJoin = 'round'; g.lineCap = 'round';
+      g.fill(path, 'nonzero');
+      if (weight) { g.lineWidth = weight; g.stroke(path); }
+    };
+    render(0);
+    const topology = inkTopology(g.getImageData(0, 0, 320, 320).data);
+    let weight = .24;
+    for (;;) {
+      render(weight);
+      if (inkTopology(g.getImageData(0, 0, 320, 320).data) === topology) break;
+      if (weight <= .06) { weight = 0; render(0); break; }
+      weight /= 2;
+    }
+    c.dataset.inkWeight = String(weight);
     if (texture) {
       g.setTransform(1, 0, 0, 1, 0, 0);
       g.globalCompositeOperation = 'destination-in';
       const w = texture.naturalWidth, h = texture.naturalHeight;
       g.drawImage(texture, w * .11, h * .11, w * .78, h * .78, 0, 0, 320, 320);
       g.globalCompositeOperation = 'source-in'; g.fillStyle = gold; g.fillRect(0, 0, 320, 320);
+      // A light, solid impression under the grain keeps fine incisions legible
+      // at the existing display size without blurring the space between them.
+      g.globalCompositeOperation = 'destination-over'; g.globalAlpha = .18;
+      g.setTransform(2.72, 0, 0, 2.72, 16, 16); g.fill(path, 'nonzero');
+      g.globalAlpha = 1;
       g.globalCompositeOperation = 'source-over';
     }
     return c;
@@ -104,6 +172,82 @@
       hitMasks.set(pattern.sourceNumber, mask);
     }
   }
+
+  // Order broad and overlapping labels by their earliest named stage. Group
+  // equal-start labels together without assigning a new date to any object.
+  const catalogPeriods = new Map([
+    ['新石器时代', [0, 0]],
+    ['新石器晚期', [1, 0]], ['新石器时代晚期', [1, 0]],
+    ['夏商时期', [2, 0]],
+    ['商代', [3, 0]], ['商至战国早期', [3, 1]],
+    ['商周之际', [4, 0]],
+    ['西周—春秋时期', [5, 0]], ['西周晚期', [6, 0]],
+    ['春秋时期', [7, 0]], ['春秋晚期—战国早期', [8, 0]],
+    ['战国时期', [9, 0]],
+    ['战国晚期', [10, 0]], ['战国晚期—西汉早期', [10, 1]],
+    ['汉代', [11, 0]], ['西汉早期', [11, 1]], ['西汉时期', [11, 2]],
+    ['南越国时期', [12, 0]]
+  ]);
+
+  function buildCatalog() {
+    const rows = document.createDocumentFragment();
+    const orderedPatterns = [...patterns].sort((a, b) => {
+      const first = catalogPeriods.get(a.displayPeriod || a.period) || [Infinity, 0];
+      const second = catalogPeriods.get(b.displayPeriod || b.period) || [Infinity, 0];
+      return first[0] - second[0] || first[1] - second[1];
+    });
+    for (const p of orderedPatterns) {
+      const row = document.createElement('tr');
+      row.dataset.patternId = String(p.sourceNumber);
+      const imageCell = document.createElement('td'), nameCell = document.createElement('td'), periodCell = document.createElement('td');
+      const thumbnail = document.createElement('canvas');
+      thumbnail.width = thumbnail.height = 128;
+      thumbnail.className = 'catalog-thumbnail'; thumbnail.setAttribute('aria-hidden', 'true');
+      thumbnail.getContext('2d').drawImage(sprites.get(p.sourceNumber), 0, 0, 128, 128);
+      imageCell.append(thumbnail);
+      const button = document.createElement('button');
+      button.type = 'button'; button.className = 'catalog-name'; button.textContent = p.name;
+      button.setAttribute('aria-label', '查看' + p.name + '，' + (p.displayPeriod || p.period));
+      nameCell.append(button); periodCell.textContent = p.displayPeriod || p.period;
+      row.append(imageCell, nameCell, periodCell); rows.append(row);
+    }
+    catalogRows.replaceChildren(rows);
+    document.querySelector('#catalog-count').textContent = '共收录 ' + patterns.length + ' 项 · 按时期从早到晚';
+    browseButton.disabled = false;
+  }
+
+  function openCatalog() {
+    if (!ready || catalog.open) return;
+    browseButton.focus({preventScroll:true});
+    catalog.showModal(); browseButton.setAttribute('aria-expanded', 'true');
+    updateState(); document.querySelector('#catalog-title').focus({preventScroll:true});
+  }
+
+  function chooseCatalogPattern(id) {
+    const node = nodes.find(n => n.primary && n.pattern.sourceNumber === id);
+    if (!node) return;
+    const point = project(node), scale = fit() * camera.zoom;
+    camera.x += (point.x - width / 2) / scale;
+    camera.y += (point.y - height / 2 - 24) / scale;
+    selected = node; hover = null;
+    catalog.close(); updateState(); canvas.focus({preventScroll:true});
+  }
+
+  browseButton.addEventListener('click', openCatalog);
+  document.querySelector('#close-catalog').addEventListener('click', () => catalog.close());
+  catalog.addEventListener('close', () => {
+    browseButton.setAttribute('aria-expanded', 'false'); updateState();
+  });
+  catalog.addEventListener('cancel', e => { e.preventDefault(); catalog.close(); });
+  catalog.addEventListener('click', e => {
+    if (e.target !== catalog) return;
+    const box = catalog.getBoundingClientRect();
+    if (e.clientX < box.left || e.clientX > box.right || e.clientY < box.top || e.clientY > box.bottom) catalog.close();
+  });
+  catalogRows.addEventListener('click', e => {
+    const row = e.target.closest('tr[data-pattern-id]');
+    if (row) chooseCatalogPattern(Number(row.dataset.patternId));
+  });
 
   function project(node) {
     const scale = fit() * camera.zoom;
@@ -161,6 +305,9 @@
   }
 
   function hitAt(x, y, tolerance = 5) {
+    const bounds = canvas.getBoundingClientRect();
+    x = (x - bounds.left) * width / bounds.width;
+    y = (y - bounds.top) * height / bounds.height;
     const options = screenNodes.filter(s => Math.hypot(s.x - x, s.y - y) < Math.max(s.size * .75 + tolerance, 19));
     options.sort((a, b) => Math.hypot(a.x-x,a.y-y)/a.size - Math.hypot(b.x-x,b.y-y)/b.size);
     for (const item of options) {
@@ -178,15 +325,16 @@
   }
 
   function updateState() {
-    const stopped = selected !== null;
+    const stopped = selected !== null || catalog.open;
     root.dataset.flow = stopped ? 'paused' : 'moving'; canvas.dataset.selected = selected ? String(selected.pattern.sourceNumber) : '';
     flowEl.textContent = stopped ? '已停驻' : reducedMotion.matches ? '静态浏览' : '缓缓流动';
     hintEl.innerHTML = stopped ? '点击空白处 <span>·</span> 继续漫游' : '拖动浏览 <span>·</span> 点击纹饰停驻';
     if (selected) {
       const p = selected.pattern, displayPeriod = p.displayPeriod || p.period;
       nameEl.textContent = p.name; periodEl.textContent = displayPeriod;
-      descriptionEl.textContent = p.description || '';
-      descriptionEl.hidden = !p.description;
+      const isUnnamed = p.name === '？' || p.name === '?';
+      discoveryNote.hidden = !isUnnamed;
+      discoveryNote.textContent = isUnnamed ? '该纹饰在广东首次发现，名称尚未确定。' : '';
       const artifact = p.artifact;
       artifactEl.hidden = !artifact;
       detail.classList.toggle('has-artifact', !!artifact);
@@ -195,7 +343,7 @@
         artifactEl.dataset.shape = artifact.shape || 'portrait';
       } else { artifactImage.removeAttribute('src'); artifactImage.alt = ''; }
       detail.hidden = false; updateDetail();
-      announcement.textContent = p.name + '，' + displayPeriod + '。' + (p.description || '') + '所有纹饰已暂停。';
+      announcement.textContent = p.name + '，' + displayPeriod + '。' + '所有纹饰已暂停。';
     } else { detail.hidden = true; announcement.textContent = '已取消选中，继续漫游。'; }
     dirty = true;
   }
@@ -258,8 +406,7 @@
     camera.x+=px/old-px/next; camera.y+=py/old-py/next; camera.zoom=next;dirty=true;
   },{passive:false});
   document.querySelector('#close-detail').addEventListener('click',()=>{cancel();canvas.focus({preventScroll:true});});
-  document.querySelector('#reset-view').addEventListener('click',()=>{camera.x=0;camera.y=0;camera.zoom=1;clock=0;cancel();});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')cancel();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape' && !catalog.open)cancel();});
   canvas.addEventListener('keydown',e=>{
     if (!['ArrowRight','ArrowLeft','ArrowUp','ArrowDown','Enter',' '].includes(e.key)) return;
     e.preventDefault();
@@ -277,11 +424,11 @@
   async function start() {
     try {
       const [response, image] = await Promise.all([
-        fetch('patterns.json?v=continuous-20261022-1').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
+        fetch('patterns.json?v=catalog-20261026-2').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
         new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>resolve(null);img.src='assets/ink-pigment.png';})
       ]);
       patterns=response; texture=image; makeNodes(); prepareSprites(); resize();
-      ready=true; document.querySelector('#loading').hidden=true;
+      ready=true; buildCatalog(); document.querySelector('#loading').hidden=true;
       const requested = Number(new URLSearchParams(location.search).get('motif'));
       const sample = nodes.find(n => n.primary && n.pattern.sourceNumber === requested);
       if (sample) { camera.x = sample.x; camera.y = sample.y; selected = sample; }

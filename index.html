@@ -7,9 +7,9 @@
   <meta name="description" content="在流动的岭南陶器纹饰中漫游。拖动探索，点选查看纹饰名称与时期，以水墨拓印呈现。">
   <title>纹饰漫游</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%2316140e' d='M0 0h64v64H0z'/%3E%3Cpath fill='none' stroke='%23c5ae72' stroke-width='3' d='M12 50V12h38v28H24V24h14v5'/%3E%3C/svg%3E">
-  <link rel="preload" href="assets/huiwen.woff2?v=continuous-20261022-1" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=continuous-20261022-1">
-  <script src="app.js?v=continuous-20261022-1" defer></script>
+  <link rel="preload" href="assets/huiwen.woff2?v=catalog-20261026-2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css?v=catalog-20261026-2">
+  <script src="app.js?v=catalog-20261026-2" defer></script>
 </head>
 <body>
   <main id="experience" data-style="ink" data-flow="moving">
@@ -18,7 +18,7 @@
     <canvas id="field" tabindex="0" role="application" aria-label="纹饰漫游。拖动浏览；点击或按方向键选择纹饰，按Esc取消选中。"></canvas>
     <header class="masthead">
       <div class="identity"><h1>纹饰漫游</h1><span>岭南陶器纹饰</span></div>
-      <span class="style-label">水墨拓印</span>
+      <button id="browse-patterns" class="browse-patterns" type="button" aria-haspopup="dialog" aria-controls="pattern-catalog" aria-expanded="false" disabled>全部纹样</button>
     </header>
     <section class="detail" id="detail" aria-label="选中纹饰" hidden>
       <button id="close-detail" class="close" type="button" aria-label="取消选中，继续流动">×</button>
@@ -28,12 +28,26 @@
       <figure id="pattern-artifact" class="pattern-artifact" hidden>
         <img id="artifact-image" alt="" decoding="async">
       </figure>
-      <p id="pattern-description" class="pattern-description" hidden></p>
-      <span class="detail-note">点击空白处，继续漫游</span>
+      <p id="pattern-discovery-note" class="pattern-discovery-note" hidden></p>
     </section>
+    <dialog id="pattern-catalog" class="pattern-catalog" aria-labelledby="catalog-title">
+      <header class="catalog-header">
+        <h2 id="catalog-title" tabindex="-1">全部纹样</h2>
+        <p id="catalog-count"></p>
+        <button id="close-catalog" class="close catalog-close" type="button" aria-label="关闭全部纹样">×</button>
+      </header>
+      <div class="catalog-scroll">
+        <table class="catalog-table">
+          <caption class="sr-only">已收录纹样，点击条目查看图片</caption>
+          <colgroup><col class="catalog-image-col"><col><col class="catalog-period-col"></colgroup>
+          <thead><tr><th scope="col">图形</th><th scope="col">名称</th><th scope="col" aria-sort="ascending">时期</th></tr></thead>
+          <tbody id="catalog-rows"></tbody>
+        </table>
+      </div>
+    </dialog>
     <footer class="controls">
       <p id="interaction-hint">拖动浏览 <span>·</span> 点击纹饰停驻</p>
-      <div class="utility"><span class="flow-state" id="flow-state" role="status" aria-live="polite">缓缓流动</span><button id="reset-view" type="button">回到初始位置</button></div>
+      <div class="utility"><span class="flow-state" id="flow-state" role="status" aria-live="polite">缓缓流动</span></div>
     </footer>
     <div class="loading" id="loading" role="status">纹饰正在铺开<span>……</span></div>
     <div class="error" id="error" hidden><p>纹饰暂时未能载入</p><button type="button" id="retry">重新载入</button></div>
