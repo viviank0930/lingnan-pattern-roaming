@@ -424,12 +424,15 @@
   async function start() {
     try {
       const [response, image] = await Promise.all([
-        fetch('patterns.json?v=catalog-20261026-2').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
+        fetch('patterns.json?v=catalog-20261029-1').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
         new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>resolve(null);img.src='assets/ink-pigment.png';})
       ]);
       patterns=response; texture=image; makeNodes(); prepareSprites(); resize();
       ready=true; buildCatalog(); document.querySelector('#loading').hidden=true;
-      const requested = Number(new URLSearchParams(location.search).get('motif'));
+      // Old specimen links resolve to the single retained representative.
+      const legacyPatternIds = new Map([[3, 1], [6, 1], [4, 11], [12, 11], [5, 10], [4015, 8], [4016, 8], [22, 18], [16, 26], [4017, 13], [6005, 3004], [6006, 3004], [6008, 6007], [6010, 6009]]);
+      const requestedId = Number(new URLSearchParams(location.search).get('motif'));
+      const requested = legacyPatternIds.get(requestedId) || requestedId;
       const sample = nodes.find(n => n.primary && n.pattern.sourceNumber === requested);
       if (sample) { camera.x = sample.x; camera.y = sample.y; selected = sample; }
       updateState();
