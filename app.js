@@ -176,17 +176,23 @@
   // Order broad and overlapping labels by their earliest named stage. Group
   // equal-start labels together without assigning a new date to any object.
   const catalogPeriods = new Map([
-    ['新石器时代', [0, 0]],
-    ['新石器晚期', [1, 0]], ['新石器时代晚期', [1, 0]],
-    ['夏商时期', [2, 0]],
-    ['商代', [3, 0]], ['商至战国早期', [3, 1]],
-    ['商周之际', [4, 0]],
-    ['西周—春秋时期', [5, 0]], ['西周晚期', [6, 0]],
-    ['春秋时期', [7, 0]], ['春秋晚期—战国早期', [8, 0]],
-    ['战国时期', [9, 0]],
-    ['战国晚期', [10, 0]], ['战国晚期—西汉早期', [10, 1]],
-    ['汉代', [11, 0]], ['西汉早期', [11, 1]], ['西汉时期', [11, 2]],
-    ['南越国时期', [12, 0]]
+    ["新石器时代", [0, 0]],
+    ["新石器时代晚期", [1, 0]],
+    ["夏商时期", [2, 0]],
+    ["商代", [3, 0]],
+    ["商代至战国早期", [3, 1]],
+    ["商周之际", [4, 0]],
+    ["西周至春秋时期", [5, 0]],
+    ["西周晚期", [6, 0]],
+    ["春秋时期", [7, 0]],
+    ["春秋晚期至战国早期", [8, 0]],
+    ["战国时期", [9, 0]],
+    ["战国晚期", [10, 0]],
+    ["战国晚期至西汉早期", [10, 1]],
+    ["汉代", [11, 0]],
+    ["西汉早期", [11, 1]],
+    ["西汉时期", [11, 2]],
+    ["南越国时期", [12, 0]]
   ]);
 
   function buildCatalog() {
@@ -424,7 +430,7 @@
   async function start() {
     try {
       const [response, image] = await Promise.all([
-        fetch('patterns.json?v=catalog-20261029-1').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
+        fetch('patterns.json?v=periods-20261029-1').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
         new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>resolve(null);img.src='assets/ink-pigment.png';})
       ]);
       patterns=response; texture=image; makeNodes(); prepareSprites(); resize();
