@@ -344,8 +344,11 @@
       const artifact = p.artifact;
       artifactEl.hidden = !artifact;
       detail.classList.toggle('has-artifact', !!artifact);
+      detail.classList.toggle('has-annotation', !!artifact?.annotationSrc);
       if (artifact) {
-        artifactImage.src = artifact.src; artifactImage.alt = artifact.alt;
+        artifactImage.src = artifact.annotationSrc || artifact.src;
+        artifactImage.alt = artifact.alt + (artifact.annotationSrc ? '，金色细线标示原图上对应的纹饰位置' : '');
+        artifactEl.classList.toggle('is-annotated', !!artifact.annotationSrc);
         artifactEl.dataset.shape = artifact.shape || 'portrait';
       } else { artifactImage.removeAttribute('src'); artifactImage.alt = ''; }
       detail.hidden = false; updateDetail();
@@ -430,7 +433,7 @@
   async function start() {
     try {
       const [response, image] = await Promise.all([
-        fetch('patterns.json?v=periods-20261029-1').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
+        fetch('patterns.json?v=matched-20261029-1').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
         new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>resolve(null);img.src='assets/ink-pigment.png';})
       ]);
       patterns=response; texture=image; makeNodes(); prepareSprites(); resize();
