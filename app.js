@@ -95,6 +95,50 @@
     return new Path2D(path);
   }
 
+  function addStampSurroundings(pattern, impression) {
+    const context = pattern.stampContext;
+    if (!context) return impression;
+    const c = document.createElement('canvas'); c.width = c.height = 320;
+    const g = c.getContext('2d', {willReadFrequently:true});
+    let grainSeed = (pattern.sourceNumber * 2654435761) >>> 0;
+    const noise = () => { grainSeed = (grainSeed * 1664525 + 1013904223) >>> 0; return grainSeed / 4294967296; };
+    const spacing = context.spacing || 21;
+    g.save(); g.translate(160,160); g.rotate((context.tilt || 0) * Math.PI / 180);
+    g.strokeStyle = gold; g.lineCap = 'round'; g.lineJoin = 'round';
+    for (const vertical of [false,true]) {
+      for (let band=-180;band<=180;band+=spacing) {
+        const offset = band + (noise()-.5)*3;
+        g.beginPath(); g.lineWidth=1.7+noise()*1.2;
+        let pen=false;
+        for(let run=-200;run<=200;run+=8) {
+          const across=offset+(noise()-.5)*2.6+Math.sin(run*.018+band)*1.5;
+          const x=vertical?across:run,y=vertical?run:across;
+          if(!pen||noise()<.055)g.moveTo(x,y);else g.lineTo(x,y);
+          pen=true;
+        }
+        g.stroke();
+      }
+    }
+    g.restore();
+    if(texture){
+      g.globalCompositeOperation='destination-in';
+      g.drawImage(texture,0,0,texture.naturalWidth,texture.naturalHeight,0,0,320,320);
+      g.globalCompositeOperation='source-over';
+    }
+    const pixels=g.getImageData(0,0,320,320),radius=context.radii||[108,108],center=context.center||[160,160];
+    const smooth=(a,b,v)=>{const t=clamp((v-a)/(b-a),0,1);return t*t*(3-2*t);};
+    for(let y=0;y<320;y++)for(let x=0;x<320;x++){
+      const dx=Math.abs(x-center[0])/radius[0],dy=Math.abs(y-center[1])/radius[1];
+      const distance=context.shape==='square'?Math.max(dx,dy):context.shape==='diamond'?dx+dy:Math.hypot(dx,dy);
+      const fade=(context.opacity||.48)*smooth(1,1.065,distance)*(1-smooth(1.065,context.fadeEnd||1.48,distance));
+      pixels.data[(y*320+x)*4+3]*=fade;
+    }
+    g.putImageData(pixels,0,0);
+    g.drawImage(impression,48,48,224,224);
+    c.dataset.inkWeight=impression.dataset.inkWeight;
+    return c;
+  }
+
   function inkTopology(pixels) {
     const side = 320, total = side * side, ink = new Uint8Array(total);
     for (let i = 0; i < total; i++) ink[i] = pixels[i * 4 + 3] >= 128 ? 1 : 0;
@@ -159,7 +203,7 @@
       g.globalAlpha = 1;
       g.globalCompositeOperation = 'source-over';
     }
-    return c;
+    return addStampSurroundings(pattern,c);
   }
 
   function prepareSprites() {
@@ -433,7 +477,7 @@
   async function start() {
     try {
       const [response, image] = await Promise.all([
-        fetch('patterns.json?v=audit49-20261029-2').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
+        fetch('patterns.json?v=brush-20261030-1').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
         new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>resolve(null);img.src='assets/ink-pigment.png';})
       ]);
       patterns=response; texture=image; makeNodes(); prepareSprites(); resize();
