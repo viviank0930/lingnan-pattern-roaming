@@ -485,9 +485,9 @@
     comparisonToggle.hidden = false;
     comparisonToggle.setAttribute('aria-pressed', String(showArtifactComparison));
     comparisonToggle.textContent = showArtifactComparison ? '查看原图' : '显示对照';
-    comparisonMethod.textContent = !showArtifactComparison ? '原图' : comparison.mode === 'registered' ? '原纹叠印' : comparison.mode === 'schematic' ? '叠印示意' : '原图与形态参考';
+    comparisonMethod.textContent = !showArtifactComparison ? '原图' : '纹饰位置与提炼';
     if (showArtifactComparison) {
-      window.MotifComparison.render(comparisonCanvas, pattern, artifactImage);
+      window.MotifComparison.render(comparisonCanvas, pattern, artifactImage, texture);
       comparisonCanvas.setAttribute('aria-label', pattern.name + '，' + comparisonMethod.textContent);
       comparisonCanvas.hidden = false; artifactImage.hidden = true;
     } else { comparisonCanvas.hidden = true; artifactImage.hidden = false; }
@@ -500,7 +500,7 @@
   async function start() {
     try {
       const [response, image] = await Promise.all([
-        fetch('patterns.json?v=sourceunits-20261030-1').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
+        fetch('patterns.json?v=refinedline-20261030-1').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
         new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>resolve(null);img.src='assets/ink-pigment.png';})
       ]);
       patterns=response; texture=image; makeNodes(); prepareSprites(); resize();

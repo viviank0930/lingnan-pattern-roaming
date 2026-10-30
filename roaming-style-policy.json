@@ -57,39 +57,24 @@
   "popupRule": "小窗叠印或形态参考必须使用现有ink；同源位置可叠印，概括示意须标明，证据不足保留原图并列参考，不另描曲线。",
   "latestAuthorizedRevision": {
     "date": "2026-10-30",
-    "version": "sourceunits-20261030-1",
+    "version": "refinedline-20261030-1",
     "ids": [
+      1,
       8,
       11,
       13,
       14,
       18,
       20,
+      26,
       2001,
       2002,
       2003,
       2004,
       2008,
       2009,
-      1,
-      26
+      3003
     ],
-    "reason": "按用户最新要求以原文单元与同源照片像素纠正不准确几何形状。其余原始ink及拓印风格保留。",
-    "newInkSha256": {
-      "1": "e726e5342373f4cdb67a23406371dd9d117e5a6aa0b84e43280c7c1fd33fcb60",
-      "8": "b8582002a29f7ba453f53bdbdad90ae4eff1d4ab4772799a878f88078ed212a9",
-      "11": "ac694024a90315f360bba1e1a7f0bc781d9d40b9513002966e92ac42f231cd53",
-      "13": "97762928030f0d267b199a5e675ddd12bb137790afacff7ddc38702b772a486e",
-      "14": "49ece0d584b8acebd8db94fba8f2a099a646c30ee36c0eea30d03ceb00607dfa",
-      "18": "b7c2d96828e42db8cecfbbffdce51db0bafff82e2824d367dedbdab2f3a1e3d3",
-      "20": "1ddd4bcdbaab9d3025f081e149516ff74bcc6b0173718d6ff6e73e2a40a51e3f",
-      "26": "13885b1dd34ba0d577472c4cfd72518eedb777d739a1b417cfc77e001992bb56",
-      "2001": "4cf9fcade745793207c0265e4d4c63dc38c59a710ba8464129cfe5773c258afc",
-      "2002": "e8a0ce5377dae9ecb8002a369dfb1adfaf7e0b0eea4ca4017cca7471d1435fdb",
-      "2003": "50178dd2e0e7bda86b28fe4d6f5df354dfa0568c7716d0026cba44e3162af0e2",
-      "2004": "95c81d37a5124dd5efa8041ab616ff1248c9dfa549ceadb83fe878d7b1c54a89",
-      "2008": "38121071e73168feafa8cc7760e31a7059cf6a8552a535243739597ad7f8201f",
-      "2009": "b16a812a4113a6a2f4d0cfba77015a88d2629e49bbea3dd30439fd37f3ee6993"
-    }
+    "reason": "用户本轮明确要求适度补齐与线条提炼，去掉像素马赛克；保留金色拓印笔触。"
   }
 }

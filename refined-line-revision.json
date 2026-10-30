@@ -1,0 +1,616 @@
+{
+  "date": "2026-10-30",
+  "version": "refinedline-20261030-1",
+  "authorization": "用户要求去掉马赛克式像素轮廓，可按原形适度提炼补齐；原图上统一用暖金线描、定位点和直引线标示。",
+  "sourcePhotosUnchanged": true,
+  "roamingColorUnchanged": true,
+  "mainGeometryChanges": [
+    1,
+    8,
+    11,
+    13,
+    14,
+    18,
+    20,
+    26,
+    2001,
+    2002,
+    2003,
+    2004,
+    2008,
+    2009,
+    3003
+  ],
+  "allAnnotations": 49,
+  "annotationMeaning": "提炼示意，非原始拓片或考古复原。",
+  "records": [
+    {
+      "id": 1,
+      "name": "米字纹",
+      "source": "assets/artifacts/composite-1.webp",
+      "mainShapeRefined": true,
+      "annotationPaths": 9,
+      "anchor": [
+        60.56521739130435,
+        77.06521739130434
+      ],
+      "note": "按论文图3-20的四格交叉结构提炼，以同类纹饰的透视示意定位于陶片纹带。"
+    },
+    {
+      "id": 7,
+      "name": "方格纹",
+      "source": "assets/artifacts/composite-7.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 6,
+      "anchor": [
+        37.57777777777778,
+        35.63333333333333
+      ],
+      "note": "改选陶片左上方较完整的两行两列刻纹小格，依据原器壁透视保留轻微弧度，不沿用原先中央磨损区的大曲线。"
+    },
+    {
+      "id": 8,
+      "name": "绳纹",
+      "source": "assets/artifacts/composite-8.webp",
+      "mainShapeRefined": true,
+      "annotationPaths": 4,
+      "anchor": [
+        71.58620689655173,
+        60.179310344827584
+      ],
+      "note": "沿四道可辨绳纹调整弯曲和末端位置，滚动图形同样保留器壁倾角，取消另画的规则波浪。"
+    },
+    {
+      "id": 9,
+      "name": "篦划纹（原始青瓷）",
+      "source": "assets/artifacts/composite-9.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 6,
+      "anchor": [
+        47.910714285714285,
+        24.1
+      ],
+      "note": "选择左上方清晰的一组平行篦划线。 滚动图形改由这一组实物描线路径生成，保留原来的斜度、折角与取样数量。"
+    },
+    {
+      "id": 10,
+      "name": "勾连云雷纹",
+      "source": "assets/artifacts/composite-10.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 4,
+      "anchor": [
+        78.94,
+        48.86
+      ],
+      "note": "沿中央清晰的勾连转折线连续分组标示。 滚动图形改由这一组实物描线路径生成，保留原来的斜度、折角与取样数量。"
+    },
+    {
+      "id": 11,
+      "name": "夔纹",
+      "source": "assets/artifacts/composite-11.webp",
+      "mainShapeRefined": true,
+      "annotationPaths": 2,
+      "anchor": [
+        59.076084,
+        37.037037
+      ],
+      "note": "按中央单个夔纹的原有刻槽取样，内外两道勾转来自同一单元；滚动图形使用同一组路径。"
+    },
+    {
+      "id": 13,
+      "name": "菱格纹",
+      "source": "assets/artifacts/composite-13.webp",
+      "mainShapeRefined": true,
+      "annotationPaths": 3,
+      "anchor": [
+        32.36923076923077,
+        54.98461538461539
+      ],
+      "note": "以完整双层菱形与中间小环提炼，补接短缺口，去除像素杂点。"
+    },
+    {
+      "id": 14,
+      "name": "交错曲折纹",
+      "source": "assets/artifacts/composite-14.webp",
+      "mainShapeRefined": true,
+      "annotationPaths": 5,
+      "anchor": [
+        47.32222222222222,
+        65.87333333333333
+      ],
+      "note": "选择中央相邻两组可辨认的完整转折：上组两道斜竖线转向左，下组三道横线转向下，保留陶片原有斜度与取样范围。"
+    },
+    {
+      "id": 18,
+      "name": "云雷纹",
+      "source": "assets/artifacts/composite-18.webp",
+      "mainShapeRefined": true,
+      "annotationPaths": 3,
+      "anchor": [
+        80.28529411764706,
+        54.28529411764706
+      ],
+      "note": "沿中央偏右的一组方折回旋纹路描线。 滚动图形改由这一组实物描线路径生成，保留原来的斜度、折角与取样数量。"
+    },
+    {
+      "id": 20,
+      "name": "水波纹",
+      "source": "assets/artifacts/composite-20.webp",
+      "mainShapeRefined": true,
+      "annotationPaths": 4,
+      "anchor": [
+        57.65416666666667,
+        66.72916666666667
+      ],
+      "note": "按原陶片透视，顺着连续波折状纹路描示。 滚动图形改由这一组实物描线路径生成，保留原来的斜度、折角与取样数量。"
+    },
+    {
+      "id": 25,
+      "name": "长方格纹",
+      "source": "assets/artifacts/composite-25.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 10,
+      "anchor": [
+        54.89523809523809,
+        60.357142857142854
+      ],
+      "note": "依原图中央小片格纹修正两向线条倾角；只标示局部，不将低清纹格扩成理想网格。 滚动图形改由这一组实物描线路径生成，保留原来的斜度、折角与取样数量。"
+    },
+    {
+      "id": 26,
+      "name": "曲折纹",
+      "source": "assets/artifacts/composite-26.webp",
+      "mainShapeRefined": true,
+      "annotationPaths": 8,
+      "anchor": [
+        64.94238683127571,
+        62.08820301783265
+      ],
+      "note": "原先连续折线跨过磨蚀区，已删去推测的中间连接；改为上下两组仍可辨的斜刻线，保留缺失范围。原图低清，滚动图保留曲折纹类型参考，不将残存斜线重命名为完整纹式。"
+    },
+    {
+      "id": 2001,
+      "name": "？",
+      "source": "assets/artifacts/fu-91.webp",
+      "mainShapeRefined": true,
+      "annotationPaths": 7,
+      "anchor": [
+        68.35,
+        48.650000000000006
+      ],
+      "note": "仅取上部仍可辨认的七个短竖弧刻痕，移除并不存在的横向连接线以及落在下方拼缝附近的误描；不描裂缝，不补整条纹带。"
+    },
+    {
+      "id": 2002,
+      "name": "？",
+      "source": "assets/artifacts/fu-92.webp",
+      "mainShapeRefined": true,
+      "annotationPaths": 4,
+      "anchor": [
+        62.3,
+        46.5
+      ],
+      "note": "保留名称待定；描绘器腹中部可辨的平行横线和连续折线，至断裂处收笔。"
+    },
+    {
+      "id": 2003,
+      "name": "？",
+      "source": "assets/artifacts/fu-93.webp",
+      "mainShapeRefined": true,
+      "annotationPaths": 7,
+      "anchor": [
+        65.93634748542274,
+        49.69435131195335
+      ],
+      "note": "弧口按照片朝上保留，不使用旧滚动中朝左的理想圆弧；移除横跨左侧疑似裂口的整条波形，改取右侧可辨小弧及下方横线。"
+    },
+    {
+      "id": 2004,
+      "name": "？",
+      "source": "assets/artifacts/fu-94.webp",
+      "mainShapeRefined": true,
+      "annotationPaths": 6,
+      "anchor": [
+        57.5,
+        56.5
+      ],
+      "note": "保留名称待定；描绘中央连续折角纹的一段及下方横向纹带，避开白色修复和裂隙。"
+    },
+    {
+      "id": 2005,
+      "name": "人形舞蹈纹",
+      "source": "assets/artifacts/taogu-2005-user-20261030.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 15,
+      "anchor": [
+        80.3104176,
+        41.486666719999995
+      ],
+      "note": "依用户新照片，在真实人形浮雕的脸、双臂、胸腹圆纹及双腿踝足上独立叠加荧光金线，白色修复及不可辨处留空；主页保持原手绘风格。"
+    },
+    {
+      "id": 2006,
+      "name": "？",
+      "source": "assets/artifacts/taogu-96.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 6,
+      "anchor": [
+        74.71234567901234,
+        35.696296296296296
+      ],
+      "note": "左侧三段原有拱弧保留；右侧重定位至实际刻槽并按白色修复分成外弧残段和内弧，不把缺损处补成整组四重拱。"
+    },
+    {
+      "id": 2007,
+      "name": "狩猎纹",
+      "source": "assets/artifacts/hunting-basin-122.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 6,
+      "anchor": [
+        50.795398399999996,
+        60.6161664
+      ],
+      "note": "只取中央可辨动物的原有背腹弧、角枝与下部线段；贴回浅色刻痕，删除落在右邻纹样上的连接线，不将整幅狩猎场景缩到这一个局部。"
+    },
+    {
+      "id": 2008,
+      "name": "？",
+      "source": "assets/artifacts/pottery-195.webp",
+      "mainShapeRefined": true,
+      "annotationPaths": 3,
+      "anchor": [
+        61,
+        72
+      ],
+      "note": "按用户要求连贯提炼两道拱线，并恢复下缘半圆弧；保留名称待定，不补成整圆。"
+    },
+    {
+      "id": 2009,
+      "name": "？",
+      "source": "assets/artifacts/fu-fragment-196.webp",
+      "mainShapeRefined": true,
+      "annotationPaths": 3,
+      "anchor": [
+        38.2,
+        82.5
+      ],
+      "note": "保留名称待定；描绘两组完整度较高的拱弧，不跨越中央裂口补线。"
+    },
+    {
+      "id": 2010,
+      "name": "？",
+      "source": "assets/artifacts/ring-foot-197.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 4,
+      "anchor": [
+        70.54178232286341,
+        71.2199780861943
+      ],
+      "note": "保留名称待定；仅描绘下部已确认的四条弦线，避开纵向裂缝。"
+    },
+    {
+      "id": 3001,
+      "name": "四叶纹",
+      "source": "assets/artifacts/han-stamp-3001.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 12,
+      "anchor": [
+        82.27407407407408,
+        48.46666666666666
+      ],
+      "note": "四瓣及双环与原拓片一致；复核后闭合原图中连续的中央双环，消除此前描线人为留出的两处小缝，周围网格不描。"
+    },
+    {
+      "id": 3002,
+      "name": "卷云纹",
+      "source": "assets/artifacts/han-stamp-3002.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 4,
+      "anchor": [
+        68.10598182331422,
+        50.59243498650296
+      ],
+      "note": "描中央圆环与三曲卷云的浅色轮廓，未描网格底纹。"
+    },
+    {
+      "id": 3003,
+      "name": "重菱形纹",
+      "source": "assets/artifacts/han-stamp-3003.webp",
+      "mainShapeRefined": true,
+      "annotationPaths": 2,
+      "anchor": [
+        87.8,
+        54.481818181818184
+      ],
+      "note": "补齐外、内两重菱形的四边和闭合点，不描方格底纹。"
+    },
+    {
+      "id": 3004,
+      "name": "等分圆形纹",
+      "source": "assets/artifacts/han-stamp-3004.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 10,
+      "anchor": [
+        87.58489300720706,
+        47.402245596460475
+      ],
+      "note": "描等分轮形外环及八瓣浅色边线，缺损处不补齐。"
+    },
+    {
+      "id": 3005,
+      "name": "五铢钱纹",
+      "source": "assets/artifacts/han-stamp-3005.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 5,
+      "anchor": [
+        81.72231475827547,
+        52.01517393385651
+      ],
+      "note": "沿钱纹外缘、方孔及可辨认五铢字形细描，金线不填满钱面；上下模糊小印痕不重绘。"
+    },
+    {
+      "id": 4001,
+      "name": "叶脉纹",
+      "source": "assets/artifacts/pottery-doc-9.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 12,
+      "anchor": [
+        55.42727272727273,
+        56.39090909090909
+      ],
+      "note": "沿中央叶脉与两侧可辨斜向纹脉描线，不勾勒陶片外缘。"
+    },
+    {
+      "id": 4002,
+      "name": "弦纹",
+      "source": "assets/artifacts/preqin-4002.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 5,
+      "anchor": [
+        89.85625,
+        52.3875
+      ],
+      "note": "仅描器腹正面弦纹装饰带及带内波线；不描器物剖面和外轮廓。"
+    },
+    {
+      "id": 4004,
+      "name": "席纹",
+      "source": "assets/artifacts/preqin-4004.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 9,
+      "anchor": [
+        84.89565217391305,
+        65.17826086956521
+      ],
+      "note": "沿中央一组席编式折线的黑色刻划描绘，碎裂间隙留空。"
+    },
+    {
+      "id": 4005,
+      "name": "多线方格纹",
+      "source": "assets/artifacts/preqin-4005.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 10,
+      "anchor": [
+        86.58,
+        83.11999999999999
+      ],
+      "note": "仅描器腹右下纹饰区两组多线菱格；器形线与剖面线未标注。"
+    },
+    {
+      "id": 4007,
+      "name": "篦梳纹",
+      "source": "assets/artifacts/pottery-doc-25.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 9,
+      "anchor": [
+        43.4,
+        57.7
+      ],
+      "note": "取中央偏下原陶片上前后两排完整篦梳单元：上组四齿向上折弯、下组五齿向下折弯；滚动纹样直接使用这两组路径，不再显示另一个四方大纹样。"
+    },
+    {
+      "id": 5001,
+      "name": "条纹",
+      "source": "assets/artifacts/pottery-doc-4.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 7,
+      "anchor": [
+        61.97919358431722,
+        58.92958342615282
+      ],
+      "note": "沿器腹原有的斜向条纹描绘代表性的一束，不跨越白色补配区域。"
+    },
+    {
+      "id": 5004,
+      "name": "重菱格纹",
+      "source": "assets/artifacts/pottery-doc-10-cutout-v2.png",
+      "mainShapeRefined": false,
+      "annotationPaths": 6,
+      "anchor": [
+        50.52941176470588,
+        53.82941176470589
+      ],
+      "note": "在原陶罐中央两处重菱格描线，提炼嵌套层次并以定位点引出。"
+    },
+    {
+      "id": 5005,
+      "name": "回纹",
+      "source": "assets/artifacts/pottery-doc-23.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 4,
+      "anchor": [
+        82.26666666666667,
+        68.53333333333333
+      ],
+      "note": "描绘右腹完整陶片内四个可辨回纹单元，标注集中于局部以免遮住满器纹理。"
+    },
+    {
+      "id": 5006,
+      "name": "回形戳印纹",
+      "source": "assets/artifacts/pottery-doc-41.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 17,
+      "anchor": [
+        80.25945945945946,
+        55.71351351351352
+      ],
+      "note": "沿中央四象限回形白线逐条描绘，未标注外圈网格和图版文字。"
+    },
+    {
+      "id": 5007,
+      "name": "“常御”文字戳印纹",
+      "source": "assets/artifacts/pottery-doc-50.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 9,
+      "anchor": [
+        58.14736842105263,
+        50.0578947368421
+      ],
+      "note": "标注器腹中央真实“常御”印戳边框与能辨认的字线，经过裂口的边框和字画留空；未重写字体。"
+    },
+    {
+      "id": 6001,
+      "name": "对角线方形纹",
+      "source": "assets/artifacts/han-figure-6001.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 6,
+      "anchor": [
+        86.23243243243243,
+        50.11171171171172
+      ],
+      "note": "描中央方框和四个三角浅色区的边线；左上缺损边框不补。"
+    },
+    {
+      "id": 6002,
+      "name": "田字方形纹",
+      "source": "assets/artifacts/han-figure-6002.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 7,
+      "anchor": [
+        76.16052631578948,
+        56.86578947368422
+      ],
+      "note": "沿田字方形浅色外框、内十字和四格边线描绘；未描外围网格。"
+    },
+    {
+      "id": 6003,
+      "name": "同心圆形纹",
+      "source": "assets/artifacts/han-figure-6003.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 4,
+      "anchor": [
+        71.4,
+        55.1
+      ],
+      "note": "描同心圆中央三重环；右侧断口和底部残缺保留。"
+    },
+    {
+      "id": 6004,
+      "name": "圆点圆形纹",
+      "source": "assets/artifacts/han-figure-6004.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 8,
+      "anchor": [
+        73.94060356652949,
+        47.56680384087792
+      ],
+      "note": "描双环与环内六点的边线；圆点仅勾轮廓，不涂成金色。"
+    },
+    {
+      "id": 6007,
+      "name": "网格圆形纹",
+      "source": "assets/artifacts/han-figure-6007.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 6,
+      "anchor": [
+        70.15599999999999,
+        43.348
+      ],
+      "note": "保留原拓片提取的网格圆形滚动纹样；金线保留可辨圆缘及五道横向格带，去掉原先偏斜且跨入黑带的纵向短线，不重建磨损的纵线。"
+    },
+    {
+      "id": 6009,
+      "name": "弧线圆形纹",
+      "source": "assets/artifacts/han-figure-6009.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 5,
+      "anchor": [
+        67.16687640871525,
+        51.74104996243426
+      ],
+      "note": "描中央圆环和圆内可辨认弧线；上方横带及外围网格不描。"
+    },
+    {
+      "id": 6011,
+      "name": "火焰纹",
+      "source": "assets/artifacts/han-figure-6011.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 7,
+      "anchor": [
+        74.10022524628344,
+        56.64529575262009
+      ],
+      "note": "描火焰状中心曲线和残存圆框；残断处停笔，不重建缺失环段。"
+    },
+    {
+      "id": 6012,
+      "name": "四等分菱形纹",
+      "source": "assets/artifacts/han-figure-6012.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 16,
+      "anchor": [
+        66.33333333333333,
+        63
+      ],
+      "note": "中心磨损较重；删去原描线跨越缺损区形成的理想完整边、补角与长连接，只留下原拓片中可辨认的短亮线段。原有碎片状滚动ink直接取自该拓片，继续保留。"
+    },
+    {
+      "id": 6013,
+      "name": "太阳纹",
+      "source": "assets/artifacts/han-figure-6013.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 9,
+      "anchor": [
+        57.226063100137175,
+        46.02085048010974
+      ],
+      "note": "描太阳纹残存圆框、左侧光芒和可见中心分区，右上缺损不补。"
+    },
+    {
+      "id": 6014,
+      "name": "半月纹",
+      "source": "assets/artifacts/han-figure-6014.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 4,
+      "anchor": [
+        60,
+        54.8
+      ],
+      "note": "描中央半月形浅色弧边与内部短弧，未描背景网格或推补上边。"
+    },
+    {
+      "id": 7001,
+      "name": "篦点纹",
+      "source": "assets/artifacts/comb-dot-reference.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 10,
+      "anchor": [
+        70.18,
+        31.86
+      ],
+      "note": "篦点滚动ink原本已正确排除长弧分隔线；金线同步只标中部两排可辨的独立篦点，去掉两条长分隔曲线，不把点痕连接成连续纹。"
+    },
+    {
+      "id": 7002,
+      "name": "交错条纹",
+      "source": "assets/artifacts/pottery-doc-6.webp",
+      "mainShapeRefined": false,
+      "annotationPaths": 15,
+      "anchor": [
+        38.25454545454545,
+        48.396694214876035
+      ],
+      "note": "以左侧真实条纹为同源组，保留弯曲、高低、长短、缺口和侧边折接，不描右侧椭圆纹；滚动纹样须直接用这组线生成。"
+    }
+  ]
+}
