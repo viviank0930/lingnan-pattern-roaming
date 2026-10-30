@@ -10,7 +10,7 @@
       "shape": "portrait",
       "kind": "photo",
       "caption": "实物照片",
-      "annotationSrc": "assets/annotations/1.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/1.svg?v=brush-20261030-2"
     }
   },
   {
@@ -24,7 +24,7 @@
       "shape": "portrait",
       "kind": "photo",
       "caption": "实物照片",
-      "annotationSrc": "assets/annotations/7.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/7.svg?v=brush-20261030-2"
     }
   },
   {
@@ -38,7 +38,7 @@
       "shape": "portrait",
       "kind": "photo",
       "caption": "实物照片",
-      "annotationSrc": "assets/annotations/8.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/8.svg?v=brush-20261030-2"
     }
   },
   {
@@ -52,7 +52,7 @@
       "shape": "portrait",
       "kind": "photo",
       "caption": "实物照片",
-      "annotationSrc": "assets/annotations/9.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/9.svg?v=brush-20261030-2"
     }
   },
   {
@@ -66,7 +66,7 @@
       "shape": "wide",
       "kind": "photo",
       "caption": "实物照片",
-      "annotationSrc": "assets/annotations/10.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/10.svg?v=brush-20261030-2"
     },
     "motifIllustrationNote": "沿对应原陶片上可见刻槽整理为局部线描；保留残片可见范围，不补全缺失纹路。"
   },
@@ -81,7 +81,7 @@
       "shape": "square",
       "kind": "photo",
       "caption": "实物照片",
-      "annotationSrc": "assets/annotations/11.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/11.svg?v=brush-20261030-2"
     }
   },
   {
@@ -95,7 +95,7 @@
       "shape": "portrait",
       "kind": "photo",
       "caption": "实物照片",
-      "annotationSrc": "assets/annotations/13.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/13.svg?v=brush-20261030-2"
     }
   },
   {
@@ -109,7 +109,7 @@
       "shape": "portrait",
       "kind": "photo",
       "caption": "实物照片",
-      "annotationSrc": "assets/annotations/14.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/14.svg?v=brush-20261030-2"
     }
   },
   {
@@ -123,7 +123,7 @@
       "shape": "square",
       "kind": "photo",
       "caption": "实物照片",
-      "annotationSrc": "assets/annotations/18.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/18.svg?v=brush-20261030-2"
     }
   },
   {
@@ -137,7 +137,7 @@
       "shape": "square",
       "kind": "photo",
       "caption": "实物照片",
-      "annotationSrc": "assets/annotations/20.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/20.svg?v=brush-20261030-2"
     }
   },
   {
@@ -151,7 +151,7 @@
       "shape": "wide",
       "kind": "photo",
       "caption": "实物照片",
-      "annotationSrc": "assets/annotations/25.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/25.svg?v=brush-20261030-2"
     }
   },
   {
@@ -165,7 +165,7 @@
       "shape": "portrait",
       "kind": "photo",
       "caption": "实物照片",
-      "annotationSrc": "assets/annotations/26.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/26.svg?v=brush-20261030-2"
     }
   },
   {
@@ -187,7 +187,7 @@
       "alt": "陶釜，台山神头上湾遗址出土",
       "shape": "portrait",
       "caption": "实物照片",
-      "annotationSrc": "assets/annotations/2001.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/2001.svg?v=brush-20261030-2"
     }
   },
   {
@@ -209,7 +209,7 @@
       "alt": "陶釜，台山神头上湾遗址出土",
       "shape": "wide",
       "caption": "实物照片",
-      "annotationSrc": "assets/annotations/2002.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/2002.svg?v=brush-20261030-2"
     }
   },
   {
@@ -231,7 +231,7 @@
       "alt": "陶釜，台山神头上湾遗址出土",
       "shape": "wide",
       "caption": "实物照片",
-      "annotationSrc": "assets/annotations/2003.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/2003.svg?v=brush-20261030-2"
     }
   },
   {
@@ -253,7 +253,7 @@
       "alt": "陶釜，台山神头上湾遗址出土",
       "shape": "square",
       "caption": "实物照片",
-      "annotationSrc": "assets/annotations/2004.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/2004.svg?v=brush-20261030-2"
     }
   },
   {
@@ -271,11 +271,11 @@
     "motifRole": "other",
     "source": "用户提供的十项纹饰表（2026-10-22），以黄色标注作为名称确认依据",
     "artifact": {
-      "src": "assets/artifacts/taogu-95.webp",
-      "alt": "人形舞蹈纹对应的陶鼓形器，台山神头上湾遗址出土",
+      "src": "assets/artifacts/taogu-2005-user-20261030.webp",
+      "alt": "用户提供的人形舞蹈纹陶鼓形器实物照片，透明背景，标出人形和双腿",
       "shape": "portrait",
       "caption": "实物照片",
-      "annotationSrc": "assets/annotations/2005.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/2005.svg?v=brush-20261030-2"
     }
   },
   {
@@ -297,7 +297,7 @@
       "alt": "陶鼓形器，台山神头上湾遗址出土",
       "shape": "portrait",
       "caption": "实物照片",
-      "annotationSrc": "assets/annotations/2006.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/2006.svg?v=brush-20261030-2"
     }
   },
   {
@@ -319,7 +319,7 @@
       "alt": "狩猎纹对应的狩猎纹陶盆，博罗罗阳遗址出土",
       "shape": "wide",
       "caption": "实物照片",
-      "annotationSrc": "assets/annotations/2007.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/2007.svg?v=brush-20261030-2"
     }
   },
   {
@@ -341,7 +341,7 @@
       "alt": "陶器，台山神头上湾遗址出土",
       "shape": "square",
       "caption": "实物照片",
-      "annotationSrc": "assets/annotations/2008.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/2008.svg?v=brush-20261030-2"
     }
   },
   {
@@ -363,7 +363,7 @@
       "alt": "陶釜（残）纹饰细部，台山神头上湾遗址出土",
       "shape": "wide",
       "caption": "实物照片",
-      "annotationSrc": "assets/annotations/2009.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/2009.svg?v=brush-20261030-2"
     }
   },
   {
@@ -385,7 +385,7 @@
       "alt": "圈足罐纹饰细部，台山神头上湾遗址出土",
       "shape": "portrait",
       "caption": "实物照片",
-      "annotationSrc": "assets/annotations/2010.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/2010.svg?v=brush-20261030-2"
     },
     "motifIllustrationNote": "仅按原表对应照片下部可辨横向刻槽整理局部示意；名称未确认，保留问号。"
   },
@@ -407,7 +407,7 @@
       "caption": "纹样拓片",
       "alt": "四叶纹黑白拓片",
       "shape": "square",
-      "annotationSrc": "assets/annotations/3001.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/3001.svg?v=brush-20261030-2"
     },
     "stampContext": {
       "shape": "diamond",
@@ -443,7 +443,7 @@
       "caption": "纹样拓片",
       "alt": "卷云纹黑白拓片",
       "shape": "square",
-      "annotationSrc": "assets/annotations/3002.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/3002.svg?v=brush-20261030-2"
     },
     "stampContext": {
       "shape": "circle",
@@ -479,7 +479,7 @@
       "caption": "纹样拓片",
       "alt": "重菱形纹黑白拓片",
       "shape": "square",
-      "annotationSrc": "assets/annotations/3003.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/3003.svg?v=brush-20261030-2"
     },
     "stampContext": {
       "shape": "diamond",
@@ -515,7 +515,7 @@
       "caption": "纹样拓片",
       "alt": "等分圆形纹黑白拓片",
       "shape": "square",
-      "annotationSrc": "assets/annotations/3004.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/3004.svg?v=brush-20261030-2"
     },
     "stampContext": {
       "shape": "circle",
@@ -551,7 +551,7 @@
       "caption": "纹样拓片",
       "alt": "五铢钱纹黑白拓片",
       "shape": "square",
-      "annotationSrc": "assets/annotations/3005.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/3005.svg?v=brush-20261030-2"
     },
     "stampContext": {
       "shape": "circle",
@@ -587,7 +587,7 @@
       "caption": "实物照片",
       "alt": "叶脉纹陶片实物照片",
       "shape": "square",
-      "annotationSrc": "assets/annotations/4001.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/4001.svg?v=brush-20261030-2"
     },
     "sourceDocx": "/Users/wangyukun/Library/Containers/com.tencent.xinWeChat/Data/Documents/xwechat_files/wxid_rvzadypjrx1912_5eee/msg/file/2026-10/第二节 陶瓷技术.docx",
     "artifactName": "叶脉纹陶片",
@@ -612,7 +612,7 @@
       "shape": "portrait",
       "kind": "drawing",
       "caption": "文献线图（非实物照片）",
-      "annotationSrc": "assets/annotations/4002.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/4002.svg?v=brush-20261030-2"
     }
   },
   {
@@ -633,7 +633,7 @@
       "shape": "wide",
       "kind": "rubbing",
       "caption": "文献纹样拓片（非实物照片）",
-      "annotationSrc": "assets/annotations/4004.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/4004.svg?v=brush-20261030-2"
     }
   },
   {
@@ -654,7 +654,7 @@
       "shape": "square",
       "kind": "drawing",
       "caption": "文献线图（非实物照片）",
-      "annotationSrc": "assets/annotations/4005.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/4005.svg?v=brush-20261030-2"
     }
   },
   {
@@ -675,7 +675,7 @@
       "caption": "实物照片",
       "alt": "篦梳纹陶口沿残件实物照片",
       "shape": "wide",
-      "annotationSrc": "assets/annotations/4007.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/4007.svg?v=brush-20261030-2"
     },
     "sourceDocx": "/Users/wangyukun/Library/Containers/com.tencent.xinWeChat/Data/Documents/xwechat_files/wxid_rvzadypjrx1912_5eee/msg/file/2026-10/第二节 陶瓷技术.docx",
     "artifactName": "篦梳纹陶口沿残件",
@@ -701,7 +701,7 @@
       "caption": "实物照片",
       "alt": "条纹圜底陶釜实物照片",
       "shape": "square",
-      "annotationSrc": "assets/annotations/5001.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/5001.svg?v=brush-20261030-2"
     },
     "motifIllustrationNote": "依据照片中可辨识的纹饰结构整理为展示示意，实物以原照片为准。"
   },
@@ -725,7 +725,7 @@
       "alt": "重菱格纹陶罐实物照片",
       "shape": "square",
       "cutout": true,
-      "annotationSrc": "assets/annotations/5004.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/5004.svg?v=brush-20261030-2"
     },
     "motifIllustrationNote": "依据照片中可辨识的纹饰结构整理为展示示意，实物以原照片为准。"
   },
@@ -748,7 +748,7 @@
       "caption": "实物照片",
       "alt": "回纹陶罐实物照片",
       "shape": "square",
-      "annotationSrc": "assets/annotations/5005.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/5005.svg?v=brush-20261030-2"
     },
     "motifIllustrationNote": "依据照片中可辨识的纹饰结构整理为展示示意，实物以原照片为准。"
   },
@@ -771,7 +771,7 @@
       "caption": "文献纹样拓片（非实物照片）",
       "alt": "回形戳印纹黑白拓片",
       "shape": "square",
-      "annotationSrc": "assets/annotations/5006.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/5006.svg?v=brush-20261030-2"
     },
     "motifIllustrationNote": "只展示拓片中央的回形戳印主体，去除周边网格衬纹。",
     "stampContext": {
@@ -809,7 +809,7 @@
       "caption": "实物照片",
       "alt": "“常御”戳印纹陶罐实物照片",
       "shape": "square",
-      "annotationSrc": "assets/annotations/5007.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/5007.svg?v=brush-20261030-2"
     },
     "stampContext": {
       "shape": "square",
@@ -837,7 +837,7 @@
       "alt": "对角线方形纹文献拓片，张倩《汉代岭南硬陶戳印纹饰的初步研究》图3第1项",
       "kind": "rubbing",
       "shape": "landscape",
-      "annotationSrc": "assets/annotations/6001.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/6001.svg?v=brush-20261030-2"
     },
     "stampContext": {
       "shape": "square",
@@ -865,7 +865,7 @@
       "alt": "田字方形纹文献拓片，张倩《汉代岭南硬陶戳印纹饰的初步研究》图3第8项",
       "kind": "rubbing",
       "shape": "landscape",
-      "annotationSrc": "assets/annotations/6002.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/6002.svg?v=brush-20261030-2"
     },
     "stampContext": {
       "shape": "diamond",
@@ -893,7 +893,7 @@
       "alt": "同心圆形纹文献拓片，张倩《汉代岭南硬陶戳印纹饰的初步研究》图3第12项",
       "kind": "rubbing",
       "shape": "landscape",
-      "annotationSrc": "assets/annotations/6003.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/6003.svg?v=brush-20261030-2"
     },
     "stampContext": {
       "shape": "circle",
@@ -921,7 +921,7 @@
       "alt": "圆点圆形纹文献拓片，张倩《汉代岭南硬陶戳印纹饰的初步研究》图3第13项",
       "kind": "rubbing",
       "shape": "landscape",
-      "annotationSrc": "assets/annotations/6004.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/6004.svg?v=brush-20261030-2"
     },
     "stampContext": {
       "shape": "circle",
@@ -949,7 +949,7 @@
       "alt": "网格圆形纹文献拓片，张倩《汉代岭南硬陶戳印纹饰的初步研究》图3第18项",
       "kind": "rubbing",
       "shape": "landscape",
-      "annotationSrc": "assets/annotations/6007.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/6007.svg?v=brush-20261030-2"
     },
     "stampContext": {
       "shape": "circle",
@@ -977,7 +977,7 @@
       "alt": "弧线圆形纹文献拓片，张倩《汉代岭南硬陶戳印纹饰的初步研究》图3第20项",
       "kind": "rubbing",
       "shape": "landscape",
-      "annotationSrc": "assets/annotations/6009.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/6009.svg?v=brush-20261030-2"
     },
     "stampContext": {
       "shape": "circle",
@@ -1005,7 +1005,7 @@
       "alt": "火焰纹文献拓片，张倩《汉代岭南硬陶戳印纹饰的初步研究》图3第23项",
       "kind": "rubbing",
       "shape": "landscape",
-      "annotationSrc": "assets/annotations/6011.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/6011.svg?v=brush-20261030-2"
     },
     "stampContext": {
       "shape": "circle",
@@ -1033,7 +1033,7 @@
       "alt": "四等分菱形纹文献拓片，张倩《汉代岭南硬陶戳印纹饰的初步研究》图3第24项",
       "kind": "rubbing",
       "shape": "landscape",
-      "annotationSrc": "assets/annotations/6012.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/6012.svg?v=brush-20261030-2"
     },
     "stampContext": {
       "shape": "diamond",
@@ -1061,7 +1061,7 @@
       "alt": "太阳纹文献拓片，张倩《汉代岭南硬陶戳印纹饰的初步研究》图4第3项",
       "kind": "rubbing",
       "shape": "landscape",
-      "annotationSrc": "assets/annotations/6013.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/6013.svg?v=brush-20261030-2"
     },
     "stampContext": {
       "shape": "circle",
@@ -1089,7 +1089,7 @@
       "alt": "半月纹文献拓片，张倩《汉代岭南硬陶戳印纹饰的初步研究》图4第4项",
       "kind": "rubbing",
       "shape": "landscape",
-      "annotationSrc": "assets/annotations/6014.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/6014.svg?v=brush-20261030-2"
     },
     "stampContext": {
       "shape": "circle",
@@ -1119,7 +1119,7 @@
       "alt": "图版97明确标注的篦点纹黑白纹样图",
       "kind": "drawing",
       "shape": "wide",
-      "annotationSrc": "assets/annotations/7001.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/7001.svg?v=brush-20261030-2"
     },
     "sourceDocx": "第二节 陶瓷技术.docx",
     "sourceFigure": "图版97：商至战国早期印纹硬陶纹饰",
@@ -1137,7 +1137,7 @@
       "alt": "从化狮象遗址展品278交错条纹陶片实物照片",
       "kind": "photo",
       "shape": "square",
-      "annotationSrc": "assets/annotations/7002.svg?v=audit49-20261029-2"
+      "annotationSrc": "assets/annotations/7002.svg?v=brush-20261030-2"
     },
     "sourceDocx": "第二节 陶瓷技术.docx",
     "sourceFigure": "展品278交错条纹附加堆纹陶片",
