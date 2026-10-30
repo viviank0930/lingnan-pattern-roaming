@@ -57,10 +57,12 @@
   "popupRule": "每份标记绑定原图路径、尺寸和文件校验值；线描沿原有纹路走，残缺、修复和不可辨处停笔。原纹蒙版绑定取样图形指纹，图像或图形改变后须重新核对。",
   "latestAuthorizedRevision": {
     "date": "2026-10-31",
-    "version": "sourcetrace-20261031-1",
-    "reason": "用户明确纠正：文物标记必须沿原纹，不能任意覆盖提炼图；只改小窗，保留漫游图形和密度。",
+    "version": "kui-source-20261031-2",
+    "reason": "用户指出夔纹只标出三道弯线仍不相像；仅修正夔纹的小窗描线和右侧同源局部参考。",
     "roamingInkUnchanged": true,
     "sourceBoundPhotoTraces": 28,
-    "lockedSameSourceMasks": 21
+    "lockedSameSourceMasks": 21,
+    "other48PopupsUnchanged": true,
+    "kuiReferenceUsesSourceTrace": true
   }
 }

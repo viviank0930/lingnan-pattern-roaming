@@ -1,7 +1,7 @@
 {
-  "version": "sourcetrace-20261031-1",
+  "version": "kui-source-20261031-2",
   "date": "2026-10-31",
-  "scope": "只修正文物原纹标记",
+  "scope": "只修正夔纹（11）原位描线与同源局部参考",
   "sourcePhotoTraces": 28,
   "lockedSameSourceMasks": 21,
   "genericPlacementsRemoved": true,
@@ -12,13 +12,9 @@
   "patternsSha256": "88e1e833ec60972b8f92e6c9f0d8b467f30213c5dffb40ca02a513ebaedda28c",
   "appSha256": "961799c1b9c1466af6803f064299a51ced12ac4306be562c9716f4548f56002f",
   "focus": [
-    2004,
-    11,
-    25,
-    8,
-    1
+    11
   ],
-  "limits": "原图低清、残损或修复处只标可辨现存部分，不补作完整纹样。",
+  "limits": "夔纹根据当前低清照片可辨的刻槽整理局部线描；同源描线与文献类型图分开，不作为器物纹样的精确复原。",
   "sourceValidation": [
     {
       "id": 1,
@@ -314,5 +310,22 @@
       "source": "assets/artifacts/pottery-doc-6.webp",
       "sha256": "aa83478d38b31d99d51ee083a7da39f30df4c3e275e16f977cd9e398ec3e8a72"
     }
-  ]
+  ],
+  "kuiReferenceUsesSameSourcePaths": true,
+  "other48PopupsUnchanged": true,
+  "kuiCorrection": {
+    "source": "assets/artifacts/composite-4.webp",
+    "sourceSize": [
+      276,
+      279
+    ],
+    "traces": 6,
+    "features": [
+      "左上内卷",
+      "斜向连接",
+      "右下长回勾",
+      "内侧支路"
+    ],
+    "reference": "小窗使用同一组原位坐标描线；漫游页保留文献线图。"
+  }
 }
