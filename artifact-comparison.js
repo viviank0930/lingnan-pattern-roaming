@@ -75,7 +75,8 @@
     const scale=Math.min(bw/(b[2]-b[0]),bh/(b[3]-b[1]));
     g.save();g.translate(bx+(bw-(b[2]-b[0])*scale)/2-b[0]*scale,by+(bh-(b[3]-b[1])*scale)/2-b[1]*scale);g.scale(scale,scale);g.fillStyle=referenceColor;g.fill(pathFor(pattern));g.restore();
     g.textAlign='center';g.fillStyle='#c1af83';g.font='34px Huiwen,serif';
-    g.fillText(mark.mode==='reference'?'形态参考':'同一纹样',bx+bw/2,by-28,bw+35);
+    g.fillText(mark.referenceLabel||(mark.mode==='reference'?'形态参考':'同一纹样'),bx+bw/2,by-28,bw+35);
+    if(mark.sourceLabel){g.font='24px Huiwen,serif';g.fillStyle='#918364';g.fillText(mark.sourceLabel,bx+bw/2,by+bh+45,bw+35);}
     if(mark.mode==='schematic'){g.font='28px Huiwen,serif';g.fillStyle='#918364';g.fillText('叠印示意',bx+bw/2,by+bh+45,bw+35);}
     canvas.dataset.comparisonMode=mark.mode;
     return {mode:mark.mode,sourceSize:[iw,ih],outputSize:[canvas.width,canvas.height]};

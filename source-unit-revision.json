@@ -1,0 +1,401 @@
+{
+  "date": "2026-10-30",
+  "version": "sourceunits-20261030-1",
+  "authorization": "用户要求按原文单元分析及文物实际纹路修正截图五项，并复核其他项；本次授权替换不准确的主体ink，仍保留原水墨拓印渲染与色系。",
+  "priority": [
+    1,
+    13,
+    14,
+    2003,
+    2004
+  ],
+  "additional": [
+    8,
+    11,
+    18,
+    20,
+    26,
+    2001,
+    2002,
+    2008,
+    2009
+  ],
+  "sourcePdf": "任诗仪《岭南地区出土先秦时期印纹硬陶初探》",
+  "notes": [
+    "文献单元与照片同类对照不冒称同器物精确叠印",
+    "照片取样只是可见暗槽选取，不是考古纹饰复原；低清源不提升为高清证据",
+    "未改名称、时期、未知命名状态、文物原图或金色水墨拓印渲染"
+  ],
+  "records": [
+    {
+      "id": 8,
+      "method": "原图暗槽像素提取；手动限定纹饰范围，仅保留范围内实际暗像素，不以定位线稿代替纹路",
+      "source": "assets/artifacts/composite-8.webp",
+      "sourceSha256": "039683af32af352f00f4115460907abda504383a6b15685f3e277dfcdb83884a",
+      "pixels": 568,
+      "size": [
+        131,
+        169
+      ],
+      "guideOnlySelectsPixels": true,
+      "rawBounds": [
+        31,
+        75,
+        102,
+        126
+      ],
+      "inkBounds": [
+        5,
+        18.52112579345703,
+        101,
+        87.47887420654297
+      ],
+      "newInkSha256": "b8582002a29f7ba453f53bdbdad90ae4eff1d4ab4772799a878f88078ed212a9",
+      "boundaryTreatment": "合并像素内边，0.4源像素圆角抗锯齿，不补接缺口"
+    },
+    {
+      "id": 11,
+      "method": "原图暗槽像素提取；手动限定纹饰范围，仅保留范围内实际暗像素，不以定位线稿代替纹路",
+      "source": "assets/artifacts/composite-11.webp",
+      "sourceSha256": "9ad97b42a3d499643c505d3c86563b7bc77898db6e6aad8e4779f4575eb81b96",
+      "pixels": 463,
+      "size": [
+        184,
+        162
+      ],
+      "guideOnlySelectsPixels": true,
+      "rawBounds": [
+        67,
+        47,
+        112,
+        85
+      ],
+      "inkBounds": [
+        5,
+        12.466667175292969,
+        101.00001525878906,
+        93.53334045410156
+      ],
+      "newInkSha256": "ac694024a90315f360bba1e1a7f0bc781d9d40b9513002966e92ac42f231cd53",
+      "boundaryTreatment": "合并像素内边，0.4源像素圆角抗锯齿，不补接缺口"
+    },
+    {
+      "id": 13,
+      "method": "原图暗槽像素提取；手动限定纹饰范围，仅保留范围内实际暗像素，不以定位线稿代替纹路",
+      "source": "assets/artifacts/composite-13.webp",
+      "sourceSha256": "8fb9789e03a456f8d5761e6ea11009c93bcb7e9c73d1f9e2fd021eb3ff08baf1",
+      "pixels": 308,
+      "size": [
+        152,
+        144
+      ],
+      "guideOnlySelectsPixels": true,
+      "rawBounds": [
+        17,
+        65,
+        53,
+        98
+      ],
+      "inkBounds": [
+        5.000003814697266,
+        9.000015258789062,
+        101.00001525878906,
+        97.00001525878906
+      ],
+      "newInkSha256": "97762928030f0d267b199a5e675ddd12bb137790afacff7ddc38702b772a486e",
+      "boundaryTreatment": "合并像素内边，0.4源像素圆角抗锯齿，不补接缺口"
+    },
+    {
+      "id": 14,
+      "method": "原图暗槽像素提取；手动限定纹饰范围，仅保留范围内实际暗像素，不以定位线稿代替纹路",
+      "source": "assets/artifacts/composite-14.webp",
+      "sourceSha256": "6f2cd62a64eb47d58e68ba9c5cf28dddc66878a11a8c85f17617036e184684b6",
+      "pixels": 515,
+      "size": [
+        145,
+        142
+      ],
+      "guideOnlySelectsPixels": true,
+      "rawBounds": [
+        13,
+        39,
+        72,
+        133
+      ],
+      "inkBounds": [
+        22.87234115600586,
+        5,
+        83.12765502929688,
+        101
+      ],
+      "newInkSha256": "49ece0d584b8acebd8db94fba8f2a099a646c30ee36c0eea30d03ceb00607dfa",
+      "boundaryTreatment": "合并像素内边，0.4源像素圆角抗锯齿，不补接缺口"
+    },
+    {
+      "id": 18,
+      "method": "原图暗槽像素提取；手动限定纹饰范围，仅保留范围内实际暗像素，不以定位线稿代替纹路",
+      "source": "assets/artifacts/composite-18.webp",
+      "sourceSha256": "23386ca435cfb7b6c3dc15953c308d38310fbb45f8e40383491c6eb87556fb06",
+      "pixels": 764,
+      "size": [
+        160,
+        145
+      ],
+      "guideOnlySelectsPixels": true,
+      "rawBounds": [
+        79,
+        41,
+        139,
+        102
+      ],
+      "inkBounds": [
+        5.786888122558594,
+        5,
+        100.21311950683594,
+        101.00000762939453
+      ],
+      "newInkSha256": "b7c2d96828e42db8cecfbbffdce51db0bafff82e2824d367dedbdab2f3a1e3d3",
+      "boundaryTreatment": "合并像素内边，0.4源像素圆角抗锯齿，不补接缺口"
+    },
+    {
+      "id": 20,
+      "method": "原图暗槽像素提取；手动限定纹饰范围，仅保留范围内实际暗像素，不以定位线稿代替纹路",
+      "source": "assets/artifacts/composite-20.webp",
+      "sourceSha256": "da5682ed3986fc7d11535ba54f52c5ec01f0ace821fb95ffd6ec0cc4f3e56a90",
+      "pixels": 1117,
+      "size": [
+        190,
+        168
+      ],
+      "guideOnlySelectsPixels": true,
+      "rawBounds": [
+        30,
+        75,
+        124,
+        146
+      ],
+      "inkBounds": [
+        5,
+        16.744678497314453,
+        101,
+        89.25532531738281
+      ],
+      "newInkSha256": "1ddd4bcdbaab9d3025f081e149516ff74bcc6b0173718d6ff6e73e2a40a51e3f",
+      "boundaryTreatment": "合并像素内边，0.4源像素圆角抗锯齿，不补接缺口"
+    },
+    {
+      "id": 2001,
+      "method": "原图暗槽像素提取；手动限定纹饰范围，仅保留范围内实际暗像素，不以定位线稿代替纹路",
+      "source": "assets/artifacts/fu-91.webp",
+      "sourceSha256": "6c65f97529533b2813a3c60023fa7e804b0d99dfb878fccc80211c9a7dd740ff",
+      "pixels": 1559,
+      "size": [
+        829,
+        1000
+      ],
+      "guideOnlySelectsPixels": true,
+      "rawBounds": [
+        440,
+        475,
+        583,
+        507
+      ],
+      "inkBounds": [
+        5,
+        42.25872802734375,
+        101,
+        63.74127197265625
+      ],
+      "newInkSha256": "4cf9fcade745793207c0265e4d4c63dc38c59a710ba8464129cfe5773c258afc",
+      "boundaryTreatment": "合并像素内边，0.4源像素圆角抗锯齿，不补接缺口"
+    },
+    {
+      "id": 2002,
+      "method": "原图暗槽像素提取；手动限定纹饰范围，仅保留范围内实际暗像素，不以定位线稿代替纹路",
+      "source": "assets/artifacts/fu-92.webp",
+      "sourceSha256": "2a4c90aec47b74517334637aeefc483b9cf7cc9fb374909f1dd38007b4abe69b",
+      "pixels": 6152,
+      "size": [
+        900,
+        606
+      ],
+      "guideOnlySelectsPixels": true,
+      "rawBounds": [
+        311,
+        217,
+        743,
+        373
+      ],
+      "inkBounds": [
+        5,
+        35.666664123535156,
+        101,
+        70.33333587646484
+      ],
+      "newInkSha256": "e8a0ce5377dae9ecb8002a369dfb1adfaf7e0b0eea4ca4017cca7471d1435fdb",
+      "boundaryTreatment": "合并像素内边，0.4源像素圆角抗锯齿，不补接缺口"
+    },
+    {
+      "id": 2003,
+      "method": "原图暗槽像素提取；手动限定纹饰范围，仅保留范围内实际暗像素，不以定位线稿代替纹路",
+      "source": "assets/artifacts/fu-93.webp",
+      "sourceSha256": "e60ca13f46ac9751992ce96ea8da7b1dcbbe4e201a26f677d4a1af1b7b3436f5",
+      "pixels": 4065,
+      "size": [
+        900,
+        625
+      ],
+      "guideOnlySelectsPixels": true,
+      "rawBounds": [
+        364,
+        246,
+        623,
+        432
+      ],
+      "inkBounds": [
+        5,
+        18.528953552246094,
+        101,
+        87.47103881835938
+      ],
+      "newInkSha256": "50178dd2e0e7bda86b28fe4d6f5df354dfa0568c7716d0026cba44e3162af0e2",
+      "boundaryTreatment": "合并像素内边，0.4源像素圆角抗锯齿，不补接缺口"
+    },
+    {
+      "id": 2004,
+      "method": "原图暗槽像素提取；手动限定纹饰范围，仅保留范围内实际暗像素，不以定位线稿代替纹路",
+      "source": "assets/artifacts/fu-94.webp",
+      "sourceSha256": "dd927122966daa89116f98c30cc7f86fa5879d62b71504527ed0d86307e7f57a",
+      "pixels": 9719,
+      "size": [
+        900,
+        675
+      ],
+      "guideOnlySelectsPixels": true,
+      "rawBounds": [
+        201,
+        310,
+        668,
+        551
+      ],
+      "inkBounds": [
+        5,
+        28.229122161865234,
+        101,
+        77.7708740234375
+      ],
+      "newInkSha256": "95c81d37a5124dd5efa8041ab616ff1248c9dfa549ceadb83fe878d7b1c54a89",
+      "boundaryTreatment": "合并像素内边，0.4源像素圆角抗锯齿，不补接缺口"
+    },
+    {
+      "id": 2008,
+      "method": "原图暗槽像素提取；手动限定纹饰范围，仅保留范围内实际暗像素，不以定位线稿代替纹路",
+      "source": "assets/artifacts/pottery-195.webp",
+      "sourceSha256": "a0e537c4e96041d1ae40b03e6dda79f84677242fa77fe1b8d49150e3eab44a77",
+      "pixels": 4957,
+      "size": [
+        900,
+        676
+      ],
+      "guideOnlySelectsPixels": true,
+      "rawBounds": [
+        255,
+        178,
+        613,
+        492
+      ],
+      "inkBounds": [
+        5.000003814697266,
+        10.899444580078125,
+        101.00001525878906,
+        95.10057067871094
+      ],
+      "newInkSha256": "38121071e73168feafa8cc7760e31a7059cf6a8552a535243739597ad7f8201f",
+      "boundaryTreatment": "合并像素内边，0.4源像素圆角抗锯齿，不补接缺口"
+    },
+    {
+      "id": 2009,
+      "method": "原图暗槽像素提取；手动限定纹饰范围，仅保留范围内实际暗像素，不以定位线稿代替纹路",
+      "source": "assets/artifacts/fu-fragment-196.webp",
+      "sourceSha256": "dd2d6451500c7f311d0e9d0745b8e5825257fb7c866b8ef5f127263050d9a362",
+      "pixels": 2180,
+      "size": [
+        900,
+        289
+      ],
+      "guideOnlySelectsPixels": true,
+      "rawBounds": [
+        125,
+        107,
+        347,
+        242
+      ],
+      "inkBounds": [
+        5,
+        23.81081199645996,
+        101.00000762939453,
+        82.18919372558594
+      ],
+      "newInkSha256": "b16a812a4113a6a2f4d0cfba77015a88d2629e49bbea3dd30439fd37f3ee6993",
+      "boundaryTreatment": "合并像素内边，0.4源像素圆角抗锯齿，不补接缺口"
+    },
+    {
+      "id": 1,
+      "method": "从论文图3-20第二幅四小格大单元直接阈值提取，完整保留方框、十字中位线与对角线",
+      "source": "任诗仪论文图3-20，印刷第46页（PDF第57页）",
+      "image": "page57-3-IM670.jpg",
+      "size": [
+        183,
+        158
+      ],
+      "pixels": 12946,
+      "threshold": 150,
+      "rawBounds": [
+        0,
+        7,
+        164,
+        145
+      ],
+      "inkBounds": [
+        5,
+        12.609756469726562,
+        101,
+        93.39024353027344
+      ],
+      "newInkSha256": "e726e5342373f4cdb67a23406371dd9d117e5a6aa0b84e43280c7c1fd33fcb60",
+      "boundaryTreatment": "合并像素内边，0.4源像素圆角抗锯齿，不补接缺口"
+    },
+    {
+      "id": 26,
+      "method": "从论文图3-3曲折纹样内部直接提取成组折线，排除图框与叠压严重的下部，不画新折角",
+      "source": "任诗仪论文图3-3，印刷第40页（PDF第51页）",
+      "image": "page51-0-IM631.jpg",
+      "crop": [
+        55,
+        35,
+        300,
+        195
+      ],
+      "size": [
+        245,
+        160
+      ],
+      "pixels": 10631,
+      "threshold": 150,
+      "rawBounds": [
+        0,
+        0,
+        245,
+        160
+      ],
+      "inkBounds": [
+        5,
+        21.653060913085938,
+        101,
+        84.34693908691406
+      ],
+      "newInkSha256": "13885b1dd34ba0d577472c4cfd72518eedb777d739a1b417cfc77e001992bb56",
+      "boundaryTreatment": "合并像素内边，0.4源像素圆角抗锯齿，不补接缺口"
+    }
+  ]
+}
