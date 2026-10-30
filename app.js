@@ -55,7 +55,7 @@
       const dy = Math.min(Math.abs(a.y - b.y), world.height - Math.abs(a.y - b.y));
       return Math.hypot(dx, dy);
     };
-    for (let i = 0; i < 145; i++) {
+    for (let i = 0; i < 182; i++) {
       let best = i === 0 ? {x:-175,y:-90} : i === 1 ? {x:205,y:125} : null, bestDistance = -1;
       if (!best) for (let k = 0; k < 65; k++) {
         const point = {x:(random()-.5)*world.width,y:(random()-.5)*world.height};
@@ -83,13 +83,13 @@
       assigned.add(node);
     }
     const companions = [];
-    for (let i=0;i<12;i++) {
+    for (let i=0;i<16;i++) {
       const anchor=main[2+Math.floor(random()*(main.length-2))],angle=random()*Math.PI*2,spacing=65+random()*35;
-      companions.push({id:145+i,pattern:nextPattern(),x:wrap(anchor.x+Math.cos(angle)*spacing,world.width),
+      companions.push({id:main.length+i,pattern:nextPattern(),x:wrap(anchor.x+Math.cos(angle)*spacing,world.width),
         y:wrap(anchor.y+Math.sin(angle)*spacing,world.height),size:78+random()*28,phase:random()*Math.PI*2,
         turn:(random()-.5)*.24,opacity:.5+random()*.27,depth:1,primary:true});
     }
-    const ambient = Array.from({length:70},(_,i)=>({id:157+i,pattern:nextPattern(),x:(random()-.5)*world.width,
+    const ambient = Array.from({length:84},(_,i)=>({id:main.length+companions.length+i,pattern:nextPattern(),x:(random()-.5)*world.width,
       y:(random()-.5)*world.height,size:28+random()*42,depth:.45+random()*.3,phase:random()*Math.PI*2,
       turn:(random()-.5)*.28,opacity:.12+random()*.2,primary:false}));
     nodes=[...ambient,...main,...companions];
@@ -500,7 +500,7 @@
   async function start() {
     try {
       const [response, image] = await Promise.all([
-        fetch('patterns.json?v=refinedline-20261030-1').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
+        fetch('patterns.json?v=documentink-20261031-1').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
         new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>resolve(null);img.src='assets/ink-pigment.png';})
       ]);
       patterns=response; texture=image; makeNodes(); prepareSprites(); resize();

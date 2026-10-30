@@ -1,4 +1,4 @@
-@font-face{font-family:Huiwen;src:url('assets/huiwen.woff2?v=refinedline-20261030-1') format('woff2');font-display:swap;font-weight:400}
+@font-face{font-family:Huiwen;src:url('assets/huiwen.woff2?v=documentink-20261031-1') format('woff2');font-display:swap;font-weight:400}
 :root{color-scheme:dark;--paper:#16140e;--gold:#c5ae72;--light:#e5d19a;--muted:#918364;--line:rgba(197,174,114,.27);font-family:Huiwen,"Songti SC","STSong","SimSun",serif}
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--paper)}body{overscroll-behavior:none}button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}button:focus-visible,canvas:focus-visible{outline:1px solid var(--light);outline-offset:5px}button{touch-action:manipulation}button:disabled{opacity:.5;cursor:wait}[hidden]{display:none!important}
 #experience{position:relative;width:100%;height:100dvh;min-height:360px;isolation:isolate;color:var(--gold);overflow:hidden}

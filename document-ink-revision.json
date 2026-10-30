@@ -1,0 +1,104 @@
+{
+  "date": "2026-10-31",
+  "version": "documentink-20261031-1",
+  "catalogCount": 49,
+  "sameGlyphInRoamingAndOverlay": true,
+  "overlayColor": "#ffe08b",
+  "overlayOpacity": 0.52,
+  "sourcePhotosUnchanged": false,
+  "namesAndPeriodsUnchanged": true,
+  "sourceChecks": {
+    "docxCachedImagesMatch": true,
+    "preqinFigure": "图3-10、图3-20、图3-3",
+    "hanFigure": "表三右栏",
+    "workbook": "纹饰.xlsx G2:G11内嵌图片及展品序号"
+  },
+  "records": [
+    {
+      "id": 8,
+      "method": "恢复原分享包成组结构，经综合图或实物表复查"
+    },
+    {
+      "id": 18,
+      "method": "恢复原分享包成组结构，经综合图或实物表复查"
+    },
+    {
+      "id": 20,
+      "method": "恢复原分享包成组结构，经综合图或实物表复查"
+    },
+    {
+      "id": 2002,
+      "method": "恢复原分享包成组结构，经综合图或实物表复查"
+    },
+    {
+      "id": 2003,
+      "method": "恢复原分享包成组结构，经综合图或实物表复查"
+    },
+    {
+      "id": 2004,
+      "method": "恢复原分享包成组结构，经综合图或实物表复查"
+    },
+    {
+      "id": 1,
+      "method": "直接采用所供文献的原始纹样图，去除图框、标题与白底，等比转为矢量；不重新画成通用符号。",
+      "figure": "图3-20",
+      "crop": null
+    },
+    {
+      "id": 11,
+      "method": "直接采用所供文献的原始纹样图，去除图框、标题与白底，等比转为矢量；不重新画成通用符号。",
+      "figure": "第二节 陶瓷技术：夔纹线图",
+      "crop": [
+        44,
+        92,
+        250,
+        200
+      ]
+    },
+    {
+      "id": 26,
+      "method": "直接采用所供文献的原始纹样图，去除图框、标题与白底，等比转为矢量；不重新画成通用符号。",
+      "figure": "图3-3",
+      "crop": [
+        55,
+        35,
+        245,
+        160
+      ]
+    },
+    {
+      "id": 2001,
+      "method": "依据纹饰.xlsx展品91照片整理戳印短痕及弦纹组成的三条纹带；不以局部七个U形代替整个组合。"
+    },
+    {
+      "id": 2009,
+      "method": "根据纹饰.xlsx展品196照片提炼相邻两组双重拱弧及下缘纹带，不采用四五重套弧。"
+    },
+    {
+      "id": 3003,
+      "method": "采用张倩论文第53页表三右栏的重菱形戳印原纹，不替换为两只规整菱形。"
+    }
+  ],
+  "representativeSourceChange": {
+    "id": 11,
+    "before": "综合图11号夔纹变体",
+    "after": "综合图4号双F式夔纹",
+    "reason": "文献线图与代表性实物的类型对应，示意叠印不冒称精确描摹"
+  },
+  "density": {
+    "previous": {
+      "main": 145,
+      "companions": 12,
+      "ambient": 70,
+      "total": 227
+    },
+    "current": {
+      "main": 182,
+      "companions": 16,
+      "ambient": 84,
+      "total": 282
+    },
+    "worldUnchanged": true,
+    "note": "旧分享包与当前节点数原本相同；恢复成组纹带后再增加约24%的节点，以落实用户更密集的视觉目标。"
+  }
+}
