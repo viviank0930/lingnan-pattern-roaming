@@ -1,0 +1,318 @@
+{
+  "version": "sourcetrace-20261031-1",
+  "date": "2026-10-31",
+  "scope": "只修正文物原纹标记",
+  "sourcePhotoTraces": 28,
+  "lockedSameSourceMasks": 21,
+  "genericPlacementsRemoved": true,
+  "roamingPatternsUnchanged": true,
+  "densityUnchanged": true,
+  "catalogCount": 49,
+  "sourceAssetsUnchanged": true,
+  "patternsSha256": "88e1e833ec60972b8f92e6c9f0d8b467f30213c5dffb40ca02a513ebaedda28c",
+  "appSha256": "961799c1b9c1466af6803f064299a51ced12ac4306be562c9716f4548f56002f",
+  "focus": [
+    2004,
+    11,
+    25,
+    8,
+    1
+  ],
+  "limits": "原图低清、残损或修复处只标可辨现存部分，不补作完整纹样。",
+  "sourceValidation": [
+    {
+      "id": 1,
+      "kind": "source-lines",
+      "source": "assets/artifacts/composite-1.webp",
+      "sha256": "4e524b5a6a7eed15148c0718e2de30551e8e4d3c7e122d6e0dd596014c501d47"
+    },
+    {
+      "id": 7,
+      "kind": "source-lines",
+      "source": "assets/artifacts/composite-7.webp",
+      "sha256": "497f2c9c5b8f786b8428348179a1bd5c3491623259177e5a2cf9fecb6d0014b1"
+    },
+    {
+      "id": 8,
+      "kind": "source-lines",
+      "source": "assets/artifacts/composite-8.webp",
+      "sha256": "039683af32af352f00f4115460907abda504383a6b15685f3e277dfcdb83884a"
+    },
+    {
+      "id": 9,
+      "kind": "source-lines",
+      "source": "assets/artifacts/composite-9.webp",
+      "sha256": "8b2a4d6112f4e70e7a7c73640818b5b281e45bfd926e2fc2ed784e785a96b7fe"
+    },
+    {
+      "id": 10,
+      "kind": "source-lines",
+      "source": "assets/artifacts/composite-10.webp",
+      "sha256": "434d1538462528c53a2f42460be49adcac1efcb2b8aad52b798243d368201673"
+    },
+    {
+      "id": 11,
+      "kind": "source-lines",
+      "source": "assets/artifacts/composite-4.webp",
+      "sha256": "a16ef43a24f3d10ec6b9c7a86d381ac5228efe788647af087b9d7095eea9b8b1"
+    },
+    {
+      "id": 13,
+      "kind": "source-lines",
+      "source": "assets/artifacts/composite-13.webp",
+      "sha256": "8fb9789e03a456f8d5761e6ea11009c93bcb7e9c73d1f9e2fd021eb3ff08baf1"
+    },
+    {
+      "id": 14,
+      "kind": "source-lines",
+      "source": "assets/artifacts/composite-14.webp",
+      "sha256": "6f2cd62a64eb47d58e68ba9c5cf28dddc66878a11a8c85f17617036e184684b6"
+    },
+    {
+      "id": 18,
+      "kind": "source-lines",
+      "source": "assets/artifacts/composite-18.webp",
+      "sha256": "23386ca435cfb7b6c3dc15953c308d38310fbb45f8e40383491c6eb87556fb06"
+    },
+    {
+      "id": 20,
+      "kind": "source-lines",
+      "source": "assets/artifacts/composite-20.webp",
+      "sha256": "da5682ed3986fc7d11535ba54f52c5ec01f0ace821fb95ffd6ec0cc4f3e56a90"
+    },
+    {
+      "id": 25,
+      "kind": "source-lines",
+      "source": "assets/artifacts/composite-25.webp",
+      "sha256": "fbeb5f3fb3f861243e2418c36178895c11e0e2470b485d932c3036828ff450ea"
+    },
+    {
+      "id": 26,
+      "kind": "source-lines",
+      "source": "assets/artifacts/composite-26.webp",
+      "sha256": "48a2b2f56161fb97f23f51939c1c9d2808ea1d382442c1974d1fbd3902155ce8"
+    },
+    {
+      "id": 2001,
+      "kind": "source-lines",
+      "source": "assets/artifacts/fu-91.webp",
+      "sha256": "6c65f97529533b2813a3c60023fa7e804b0d99dfb878fccc80211c9a7dd740ff"
+    },
+    {
+      "id": 2002,
+      "kind": "source-lines",
+      "source": "assets/artifacts/fu-92.webp",
+      "sha256": "2a4c90aec47b74517334637aeefc483b9cf7cc9fb374909f1dd38007b4abe69b"
+    },
+    {
+      "id": 2003,
+      "kind": "source-lines",
+      "source": "assets/artifacts/fu-93.webp",
+      "sha256": "e60ca13f46ac9751992ce96ea8da7b1dcbbe4e201a26f677d4a1af1b7b3436f5"
+    },
+    {
+      "id": 2004,
+      "kind": "source-lines",
+      "source": "assets/artifacts/fu-94.webp",
+      "sha256": "dd927122966daa89116f98c30cc7f86fa5879d62b71504527ed0d86307e7f57a"
+    },
+    {
+      "id": 2005,
+      "kind": "source-lines",
+      "source": "assets/artifacts/taogu-2005-user-20261030.webp",
+      "sha256": "4862fdaf0a04ead8f91c95c3ee70cf648c21e931d648f13a8f20e64332e9e8b4"
+    },
+    {
+      "id": 2006,
+      "kind": "source-lines",
+      "source": "assets/artifacts/taogu-96.webp",
+      "sha256": "1aa96558da396aa183712045e8e8e91526b74ce90ab9bd6c52cdfc3ac041d36e"
+    },
+    {
+      "id": 2007,
+      "kind": "source-lines",
+      "source": "assets/artifacts/hunting-basin-122.webp",
+      "sha256": "c40d8dfd12d5c864a193b7403d6f3da35006f352bd026c42177b895aa0c1fa11"
+    },
+    {
+      "id": 2008,
+      "kind": "source-lines",
+      "source": "assets/artifacts/pottery-195.webp",
+      "sha256": "a0e537c4e96041d1ae40b03e6dda79f84677242fa77fe1b8d49150e3eab44a77"
+    },
+    {
+      "id": 2009,
+      "kind": "source-lines",
+      "source": "assets/artifacts/fu-fragment-196.webp",
+      "sha256": "dd2d6451500c7f311d0e9d0745b8e5825257fb7c866b8ef5f127263050d9a362"
+    },
+    {
+      "id": 2010,
+      "kind": "source-lines",
+      "source": "assets/artifacts/ring-foot-197.webp",
+      "sha256": "1a00f5dee654f1e49b484b3428924f124431f63bd9f89ce78e5f199f27a443b4"
+    },
+    {
+      "id": 3001,
+      "kind": "same-source-mask",
+      "source": "assets/artifacts/han-stamp-3001.webp",
+      "sha256": "e57829ecd078a683100afecb6577567b03caca3cc99cbe09680892a06706ff13"
+    },
+    {
+      "id": 3002,
+      "kind": "same-source-mask",
+      "source": "assets/artifacts/han-stamp-3002.webp",
+      "sha256": "25fb53fc024308dfa1fe8b7e63d282438a7405695ba253666e4bc6604968a5bb"
+    },
+    {
+      "id": 3003,
+      "kind": "same-source-mask",
+      "source": "assets/artifacts/han-stamp-3003.webp",
+      "sha256": "0b7d2069ec720aa45118f05e49b467a257f1ee649831161f24c831ff805e7043"
+    },
+    {
+      "id": 3004,
+      "kind": "same-source-mask",
+      "source": "assets/artifacts/han-stamp-3004.webp",
+      "sha256": "e2eb59217769c3d6c913bb34c9d440cfa90806b22fcf7bb72aedc9b55f24c855"
+    },
+    {
+      "id": 3005,
+      "kind": "same-source-mask",
+      "source": "assets/artifacts/han-stamp-3005.webp",
+      "sha256": "a9d309012472668ba7aea39febe92e0e0932ab99822993e0f37370a5ab5162ff"
+    },
+    {
+      "id": 4001,
+      "kind": "source-lines",
+      "source": "assets/artifacts/pottery-doc-9.webp",
+      "sha256": "acbf0e244c9af1bdc03053bca5227bb6bd05b3f5057696f0ed827c3f23cda77c"
+    },
+    {
+      "id": 4002,
+      "kind": "same-source-mask",
+      "source": "assets/artifacts/preqin-4002.webp",
+      "sha256": "e8ea33bb7480095ab8452f2b3020ffdc6a15dc938135420139f0fbc31b35942f"
+    },
+    {
+      "id": 4004,
+      "kind": "same-source-mask",
+      "source": "assets/artifacts/preqin-4004.webp",
+      "sha256": "61056872113ec8effac45d02efae2a6aee01368d3edbb7c53f1702df849f3316"
+    },
+    {
+      "id": 4005,
+      "kind": "same-source-mask",
+      "source": "assets/artifacts/preqin-4005.webp",
+      "sha256": "44aa35274cc6649b4bfd4bc672eb3a1d0cd7a10ab609ea5066cf11c9dca2d5f9"
+    },
+    {
+      "id": 4007,
+      "kind": "source-lines",
+      "source": "assets/artifacts/pottery-doc-25.webp",
+      "sha256": "4f912f3f08ab2ce0dd85729e851cf30087deeaa179f44edb4d34b2f96d195144"
+    },
+    {
+      "id": 5001,
+      "kind": "source-lines",
+      "source": "assets/artifacts/pottery-doc-4.webp",
+      "sha256": "4f53f836244b3af9ebd304f31378c764bcdbb42b15b9bf25fab59e6a7c30501d"
+    },
+    {
+      "id": 5004,
+      "kind": "source-lines",
+      "source": "assets/artifacts/pottery-doc-10-cutout-v2.png",
+      "sha256": "a4983c7059d8de96e84644d1baac14eb5f47e75983f924c93c0cc9deff2ab68d"
+    },
+    {
+      "id": 5005,
+      "kind": "source-lines",
+      "source": "assets/artifacts/pottery-doc-23.webp",
+      "sha256": "e0526c220de1f837c284f3ae0cc6ed3f2a97b73a67bfd489546b6567f22deab3"
+    },
+    {
+      "id": 5006,
+      "kind": "same-source-mask",
+      "source": "assets/artifacts/pottery-doc-41.webp",
+      "sha256": "9a26638e3c3dfdd01d1eb4690869558a4ed308b469999805629e0a9549b33423"
+    },
+    {
+      "id": 5007,
+      "kind": "same-source-mask",
+      "source": "assets/artifacts/pottery-doc-50.webp",
+      "sha256": "a12098d1ffbcba99cbbbce5de037fea6e41d1331d294180dd606a4f545c1d944"
+    },
+    {
+      "id": 6001,
+      "kind": "same-source-mask",
+      "source": "assets/artifacts/han-figure-6001.webp",
+      "sha256": "cbf208d7d7bea60dc0f4debc6f35eb46cf5efeb54de62bfd1d10d9544f22aa9c"
+    },
+    {
+      "id": 6002,
+      "kind": "same-source-mask",
+      "source": "assets/artifacts/han-figure-6002.webp",
+      "sha256": "669f202df62375280d93aaa1086c2e3a500263995e905de83f46ac6cb41c877b"
+    },
+    {
+      "id": 6003,
+      "kind": "same-source-mask",
+      "source": "assets/artifacts/han-figure-6003.webp",
+      "sha256": "894ce7835b62cc48e63b6809b7798c79adf69e12b627751209847222955c6a07"
+    },
+    {
+      "id": 6004,
+      "kind": "same-source-mask",
+      "source": "assets/artifacts/han-figure-6004.webp",
+      "sha256": "e0b5459c3f69a4f4e03a9304ed7e9275db23bf52d046ba551e8a7c047604213b"
+    },
+    {
+      "id": 6007,
+      "kind": "same-source-mask",
+      "source": "assets/artifacts/han-figure-6007.webp",
+      "sha256": "97e634cfb1e4a089791fbb4516f65fdc285c54ccb0df425ed25c78ab1b1686c7"
+    },
+    {
+      "id": 6009,
+      "kind": "same-source-mask",
+      "source": "assets/artifacts/han-figure-6009.webp",
+      "sha256": "ae743894dbb1a0c3ede96c29d770a3b0e183a8984ded6b16a5e99c6df13feab7"
+    },
+    {
+      "id": 6011,
+      "kind": "same-source-mask",
+      "source": "assets/artifacts/han-figure-6011.webp",
+      "sha256": "a0beebe711b51063e8be381a195ca9299ef24b836e07fb409e98b7896c4926c9"
+    },
+    {
+      "id": 6012,
+      "kind": "same-source-mask",
+      "source": "assets/artifacts/han-figure-6012.webp",
+      "sha256": "8aeadc8ab9cd1fe34f9e679d2064da53ca6db25ee9de9a7d5ab2949fa527a5e8"
+    },
+    {
+      "id": 6013,
+      "kind": "same-source-mask",
+      "source": "assets/artifacts/han-figure-6013.webp",
+      "sha256": "cac7af2b69c46afc6efd2c03c8e50e07b57ebee65e3587221ca3a574da7999f9"
+    },
+    {
+      "id": 6014,
+      "kind": "same-source-mask",
+      "source": "assets/artifacts/han-figure-6014.webp",
+      "sha256": "00c66c4c22ea733b32513226982746aae7c6d5eabb05e7e9b8e36c3ad7feb782"
+    },
+    {
+      "id": 7001,
+      "kind": "same-source-mask",
+      "source": "assets/artifacts/comb-dot-reference.webp",
+      "sha256": "b818cc8e9e2212126e66055fc673d27315c24786a786e14a6041891393cca31d"
+    },
+    {
+      "id": 7002,
+      "kind": "source-lines",
+      "source": "assets/artifacts/pottery-doc-6.webp",
+      "sha256": "aa83478d38b31d99d51ee083a7da39f30df4c3e275e16f977cd9e398ec3e8a72"
+    }
+  ]
+}
