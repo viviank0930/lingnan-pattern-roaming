@@ -58,16 +58,22 @@
     if(!iw||!ih)throw Error('Source image is not loaded');
     canvas.width=portrait?1000:1200;canvas.height=portrait?1100:800;
     const g=canvas.getContext('2d'),areaW=portrait?710:850,areaH=canvas.height-60,s=Math.min(areaW/iw,areaH/ih),ix=20+(areaW-iw*s)/2,iy=30+(areaH-ih*s)/2;
-    const color=['rubbing','drawing'].includes(pattern.artifact.kind)?'#008d84':'#6ee7cf';
+    // Warm gold is limited to artifact markings. The roaming renderer is unchanged.
+    const color='#ffe08b',halo='#e7ad38',referenceColor='#c5ae72';
     g.clearRect(0,0,canvas.width,canvas.height);g.drawImage(image,ix,iy,iw*s,ih*s);
     if(mark.mode!=='reference'){
-      const layer=layerFor(pattern,image,color);g.save();g.globalAlpha=mark.mode==='registered'?.83:.75;g.drawImage(layer,ix,iy,iw*s,ih*s);g.restore();
+      const layer=layerFor(pattern,image,color);
+      g.save();
+      g.shadowColor=halo;g.shadowBlur=16;g.globalAlpha=.38;g.drawImage(layer,ix,iy,iw*s,ih*s);
+      g.shadowBlur=5;g.globalAlpha=.62;g.drawImage(layer,ix,iy,iw*s,ih*s);
+      g.shadowBlur=0;g.globalAlpha=.96;g.drawImage(layer,ix,iy,iw*s,ih*s);
+      g.restore();
     }else if(mark.region){
       const [x,y,w,h]=mark.region;brackets(g,[ix+x*iw*s/100,iy+y*ih*s/100,w*iw*s/100,h*ih*s/100],color);
     }
     const bx=portrait?750:900,by=portrait?290:230,bw=220,bh=240,b=mark.inkBounds;
     const scale=Math.min(bw/(b[2]-b[0]),bh/(b[3]-b[1]));
-    g.save();g.translate(bx+(bw-(b[2]-b[0])*scale)/2-b[0]*scale,by+(bh-(b[3]-b[1])*scale)/2-b[1]*scale);g.scale(scale,scale);g.fillStyle=color;g.fill(pathFor(pattern));g.restore();
+    g.save();g.translate(bx+(bw-(b[2]-b[0])*scale)/2-b[0]*scale,by+(bh-(b[3]-b[1])*scale)/2-b[1]*scale);g.scale(scale,scale);g.fillStyle=referenceColor;g.fill(pathFor(pattern));g.restore();
     g.textAlign='center';g.fillStyle='#c1af83';g.font='34px Huiwen,serif';
     g.fillText(mark.mode==='reference'?'形态参考':'同一纹样',bx+bw/2,by-28,bw+35);
     if(mark.mode==='schematic'){g.font='28px Huiwen,serif';g.fillStyle='#918364';g.fillText('叠印示意',bx+bw/2,by+bh+45,bw+35);}
