@@ -1,4 +1,4 @@
-@font-face{font-family:Huiwen;src:url('assets/huiwen.woff2?v=periods-20261029-1') format('woff2');font-display:swap;font-weight:400}
+@font-face{font-family:Huiwen;src:url('assets/huiwen.woff2?v=sameink-20261030-1') format('woff2');font-display:swap;font-weight:400}
 :root{color-scheme:dark;--paper:#16140e;--gold:#c5ae72;--light:#e5d19a;--muted:#918364;--line:rgba(197,174,114,.27);font-family:Huiwen,"Songti SC","STSong","SimSun",serif}
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--paper)}body{overscroll-behavior:none}button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}button:focus-visible,canvas:focus-visible{outline:1px solid var(--light);outline-offset:5px}button{touch-action:manipulation}button:disabled{opacity:.5;cursor:wait}[hidden]{display:none!important}
 #experience{position:relative;width:100%;height:100dvh;min-height:360px;isolation:isolate;color:var(--gold);overflow:hidden}
@@ -53,3 +53,14 @@
 .catalog-thumbnail{display:block;width:64px;height:64px}
 .catalog-name{display:block;width:100%;min-height:44px;padding:7px 0;border:0;background:none;text-align:left;color:var(--light);font-size:18px;line-height:1.55;overflow-wrap:anywhere}
 @media(max-width:700px){.browse-patterns{font-size:13px;padding:11px 15px}.pattern-catalog{width:calc(100vw - 28px);max-height:calc(100dvh - 28px)}.catalog-header{padding:23px 20px 16px}.catalog-header h2{font-size:25px}.catalog-scroll{padding:0 14px 18px}.catalog-image-col{width:68px}.catalog-period-col{width:112px}.catalog-table th{padding:10px 6px;font-size:12px}.catalog-table td{padding:10px 6px;font-size:13px;line-height:1.65}.catalog-thumbnail{width:48px;height:48px}.catalog-name{font-size:16px}.catalog-close{top:12px;right:9px}}
+
+/* One existing ink path for both roaming and artifact comparison. */
+.pattern-artifact #artifact-comparison{display:block;width:100%;height:auto;max-height:min(49vh,420px);object-fit:contain}
+.artifact-comparison-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px;color:#918364;font-size:12px;line-height:1.5}
+.artifact-comparison-tools button{border:1px solid rgba(197,174,114,.3);background:transparent;padding:6px 10px;color:#c1af83;min-height:32px}
+.artifact-comparison-tools button:hover{border-color:#c5ae72;color:#e5d19a}
+@media(max-width:700px){.artifact-comparison-tools{font-size:11px}.pattern-artifact #artifact-comparison{max-height:min(43vh,350px)}}
+
+.detail.has-artifact.has-annotation{max-height:calc(100dvh - 150px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#716345 #1b1810}
+.pattern-artifact.is-annotated #artifact-image{max-height:min(49vh,420px)}
+@media(max-width:700px){.pattern-artifact.is-annotated #artifact-image{max-height:min(43vh,350px)}}

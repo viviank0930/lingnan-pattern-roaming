@@ -4,6 +4,10 @@
   const root = document.querySelector('#experience'), detail = document.querySelector('#detail');
   const nameEl = document.querySelector('#pattern-name'), periodEl = document.querySelector('#pattern-period');
   const artifactEl = document.querySelector('#pattern-artifact'), artifactImage = document.querySelector('#artifact-image');
+  const comparisonCanvas = document.querySelector('#artifact-comparison');
+  const comparisonToggle = document.querySelector('#toggle-artifact-comparison');
+  const comparisonMethod = document.querySelector('#artifact-comparison-method');
+  let showArtifactComparison = true;
   const flowEl = document.querySelector('#flow-state'), hintEl = document.querySelector('#interaction-hint');
   const announcement = document.querySelector('#selection-announcement');
   const discoveryNote = document.querySelector('#pattern-discovery-note');
@@ -388,11 +392,14 @@
       const artifact = p.artifact;
       artifactEl.hidden = !artifact;
       detail.classList.toggle('has-artifact', !!artifact);
-      detail.classList.toggle('has-annotation', !!artifact?.annotationSrc);
+      detail.classList.toggle('has-annotation', !!artifact?.comparison);
       if (artifact) {
-        artifactImage.src = artifact.annotationSrc || artifact.src;
-        artifactImage.alt = artifact.alt + (artifact.annotationSrc ? '，金色细线标示原图上对应的纹饰位置' : '');
-        artifactEl.classList.toggle('is-annotated', !!artifact.annotationSrc);
+        artifactImage.hidden = false; comparisonCanvas.hidden = true;
+        showArtifactComparison = true;
+        artifactImage.src = artifact.src;
+        artifactImage.alt = artifact.alt;
+        if (artifactImage.complete && artifactImage.naturalWidth) updateArtifactComparison();
+        artifactEl.classList.toggle('is-annotated', !!artifact.comparison);
         artifactEl.dataset.shape = artifact.shape || 'portrait';
       } else { artifactImage.removeAttribute('src'); artifactImage.alt = ''; }
       detail.hidden = false; updateDetail();
@@ -472,12 +479,28 @@
   document.addEventListener('visibilitychange',()=>{lastFrame=0;});
   new ResizeObserver(resize).observe(root);
   document.querySelector('#retry').addEventListener('click',()=>location.reload());
-  artifactImage.addEventListener('load',()=>{if(selected)updateDetail();});
+  function updateArtifactComparison() {
+    const pattern = selected?.pattern, comparison = pattern?.artifact?.comparison;
+    if (!comparison || !artifactImage.complete || !artifactImage.naturalWidth) return;
+    comparisonToggle.hidden = false;
+    comparisonToggle.setAttribute('aria-pressed', String(showArtifactComparison));
+    comparisonToggle.textContent = showArtifactComparison ? '查看原图' : '显示对照';
+    comparisonMethod.textContent = !showArtifactComparison ? '原图' : comparison.mode === 'registered' ? '原纹叠印' : comparison.mode === 'schematic' ? '叠印示意' : '原图与形态参考';
+    if (showArtifactComparison) {
+      window.MotifComparison.render(comparisonCanvas, pattern, artifactImage);
+      comparisonCanvas.setAttribute('aria-label', pattern.name + '，' + comparisonMethod.textContent);
+      comparisonCanvas.hidden = false; artifactImage.hidden = true;
+    } else { comparisonCanvas.hidden = true; artifactImage.hidden = false; }
+    if (selected) updateDetail();
+  }
+  comparisonToggle.addEventListener('click', () => { showArtifactComparison = !showArtifactComparison; updateArtifactComparison(); });
+  artifactImage.addEventListener('load', () => { if (selected) updateArtifactComparison(); });
+  document.fonts?.ready.then(() => { if (selected) updateArtifactComparison(); });
 
   async function start() {
     try {
       const [response, image] = await Promise.all([
-        fetch('patterns.json?v=brush-20261030-2').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
+        fetch('patterns.json?v=sameink-20261030-1').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
         new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>resolve(null);img.src='assets/ink-pigment.png';})
       ]);
       patterns=response; texture=image; makeNodes(); prepareSprites(); resize();

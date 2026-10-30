@@ -1,9 +1,12 @@
 {
   "date": "2026-10-30",
-  "status": "superseded-by-brush-style-restoration",
-  "method": "依据用户要求，主页49项恢复先前认可的粗粝手绘/拓印原始ink路径；2026-10-29的26项平滑同源滚动图形已撤回。实物上的荧光定位层保留独立路径，不再声称与艺术化滚动图形逐像素同源。戳印外围方格为基于原配图方向和疏密绘制的弱化衬纹，向外渐隐。",
-  "originalInkVerified": 49,
-  "stampSurroundings": 17,
-  "historicalMatchingRecords": "保存在本地历史备份中，当前主页不使用旧转换参数。",
-  "records": []
+  "status": "same-ink-comparison",
+  "originalBrushInksUnchanged": 49,
+  "counts": {
+    "reference": 24,
+    "schematic": 4,
+    "registered": 21
+  },
+  "method": "小窗只引用每项现有ink路径。21项同源图像位置叠印，4项明确标注形态叠印示意，24项仅作原图与形态并列参考；不另画荧光纹样。",
+  "noNewMotifPaths": true
 }

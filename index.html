@@ -8,9 +8,10 @@
   <title>纹饰漫游</title>
   <link rel="icon" type="image/png" sizes="1254x1254" href="assets/site-icon.png?v=icon-20261029-1">
   <link rel="apple-touch-icon" href="assets/site-icon.png?v=icon-20261029-1">
-  <link rel="preload" href="assets/huiwen.woff2?v=periods-20261029-1" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=brush-20261030-2">
-  <script src="app.js?v=brush-20261030-2" defer></script>
+  <link rel="preload" href="assets/huiwen.woff2?v=sameink-20261030-1" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css?v=sameink-20261030-1">
+  <script src="artifact-comparison.js?v=sameink-20261030-1" defer></script>
+  <script src="app.js?v=sameink-20261030-1" defer></script>
 </head>
 <body>
   <main id="experience" data-style="ink" data-flow="moving">
@@ -28,6 +29,8 @@
       <p id="pattern-period"></p>
       <figure id="pattern-artifact" class="pattern-artifact" hidden>
         <img id="artifact-image" alt="" decoding="async">
+        <canvas id="artifact-comparison" role="img" hidden></canvas>
+        <div class="artifact-comparison-tools"><span id="artifact-comparison-method"></span><button id="toggle-artifact-comparison" type="button" aria-pressed="true" hidden>查看原图</button></div>
       </figure>
       <p id="pattern-discovery-note" class="pattern-discovery-note" hidden></p>
     </section>
