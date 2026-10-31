@@ -1,7 +1,7 @@
 {
-  "version": "rice-trace-20261031-3",
+  "version": "rice-unit-20261031-4",
   "date": "2026-10-31",
-  "scope": "仅迭代米字纹（1）文物上的描线样式",
+  "scope": "仅修正米字纹的实物代表及四格交叉骨架描线",
   "sourcePhotoTraces": 28,
   "lockedSameSourceMasks": 21,
   "genericPlacementsRemoved": true,
@@ -9,8 +9,8 @@
   "densityUnchanged": true,
   "catalogCount": 49,
   "sourceAssetsUnchanged": true,
-  "patternsSha256": "88e1e833ec60972b8f92e6c9f0d8b467f30213c5dffb40ca02a513ebaedda28c",
-  "appSha256": "961799c1b9c1466af6803f064299a51ced12ac4306be562c9716f4548f56002f",
+  "patternsSha256": "d06e850e9259f99fc3c93692e3b2460562262618795f15a2ed0e95167e77787c",
+  "appSha256": "40dc74216083cf10a47b64cea00340e32430fded978c2b2e3b144f5b12d1848a",
   "focus": [
     1
   ],
@@ -19,8 +19,8 @@
     {
       "id": 1,
       "kind": "source-lines",
-      "source": "assets/artifacts/composite-1.webp",
-      "sha256": "4e524b5a6a7eed15148c0718e2de30551e8e4d3c7e122d6e0dd596014c501d47"
+      "source": "assets/artifacts/composite-3.webp",
+      "sha256": "2b8d670b503fe4c520037e80b62f2aa9faeff2f05999a699ef119f22871eb5e7"
     },
     {
       "id": 7,
@@ -329,12 +329,13 @@
     "reference": "小窗使用同一组原位坐标描线；漫游页保留文献线图。"
   },
   "riceCorrection": {
-    "closedFramesRemoved": 7,
-    "openSourceContours": 6,
-    "strokeWidth": 1.8,
-    "haloBlur": 1.8,
-    "referenceUnchanged": true,
-    "description": "沿原图可辨三角刻痕的斜边与转折作开放细线，取消封闭多边形框。暖金色保留，减轻暗边和光晕。",
-    "limits": "标示原物局部刻痕，不补作照片中不可辨的完整米字单元。"
+    "photoChangedFrom": "assets/artifacts/composite-1.webp",
+    "photoChangedTo": "assets/artifacts/composite-3.webp",
+    "sourceUnitCount": 4,
+    "sourcePathCount": 12,
+    "openCurvesRemoved": true,
+    "sourcePhotoMatched": true,
+    "roamingInkUnchanged": true,
+    "sourceNote": "综合图第3项同样标为米字纹、战国晚期；仅换代表配图，不改名称和时期。"
   }
 }

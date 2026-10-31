@@ -1,0 +1,119 @@
+{
+  "version": "rice-unit-20261031-4",
+  "date": "2026-10-31",
+  "id": 1,
+  "name": "米字纹",
+  "period": "战国晚期",
+  "previousPhoto": "assets/artifacts/composite-1.webp",
+  "sourcePhoto": "assets/artifacts/composite-3.webp",
+  "source": "用户提供的广东地区出土印纹硬陶纹饰综合图第3项：米字纹，战国晚期",
+  "existingAssetReused": true,
+  "sourceSize": [
+    256,
+    275
+  ],
+  "sourceSha256": "2b8d670b503fe4c520037e80b62f2aa9faeff2f05999a699ef119f22871eb5e7",
+  "outlineSource": "本件照片的四个相邻方格及各自交叉棱线，逐格定义四角和交点",
+  "cells": [
+    {
+      "corners": [
+        [
+          38.5,
+          101.6
+        ],
+        [
+          57.2,
+          101.8
+        ],
+        [
+          57,
+          117.4
+        ],
+        [
+          37,
+          117.2
+        ]
+      ],
+      "center": [
+        47.8,
+        109.9
+      ]
+    },
+    {
+      "corners": [
+        [
+          63.5,
+          101.5
+        ],
+        [
+          83.8,
+          101
+        ],
+        [
+          84.2,
+          119.1
+        ],
+        [
+          62.8,
+          118.5
+        ]
+      ],
+      "center": [
+        73.8,
+        110.2
+      ]
+    },
+    {
+      "corners": [
+        [
+          35,
+          122.3
+        ],
+        [
+          57,
+          121.9
+        ],
+        [
+          56.8,
+          139.6
+        ],
+        [
+          34.5,
+          140.2
+        ]
+      ],
+      "center": [
+        46.6,
+        130.7
+      ]
+    },
+    {
+      "corners": [
+        [
+          62.2,
+          123.1
+        ],
+        [
+          83.7,
+          122.3
+        ],
+        [
+          83.6,
+          140.9
+        ],
+        [
+          61.2,
+          140.5
+        ]
+      ],
+      "center": [
+        72.7,
+        131.6
+      ]
+    }
+  ],
+  "sourcePathCount": 12,
+  "roamingReference": "任诗仪论文图3-20米字纹单元分解，既有漫游图形保持不变",
+  "sameReferenceStructure": true,
+  "limits": "原物四格之间的距离与倾斜保留，不把文献图直接变形覆盖到实物。"
+}
