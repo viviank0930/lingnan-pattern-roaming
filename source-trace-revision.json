@@ -1,7 +1,7 @@
 {
-  "version": "kui-source-20261031-2",
+  "version": "rice-trace-20261031-3",
   "date": "2026-10-31",
-  "scope": "只修正夔纹（11）原位描线与同源局部参考",
+  "scope": "仅迭代米字纹（1）文物上的描线样式",
   "sourcePhotoTraces": 28,
   "lockedSameSourceMasks": 21,
   "genericPlacementsRemoved": true,
@@ -12,7 +12,7 @@
   "patternsSha256": "88e1e833ec60972b8f92e6c9f0d8b467f30213c5dffb40ca02a513ebaedda28c",
   "appSha256": "961799c1b9c1466af6803f064299a51ced12ac4306be562c9716f4548f56002f",
   "focus": [
-    11
+    1
   ],
   "limits": "夔纹根据当前低清照片可辨的刻槽整理局部线描；同源描线与文献类型图分开，不作为器物纹样的精确复原。",
   "sourceValidation": [
@@ -327,5 +327,14 @@
       "内侧支路"
     ],
     "reference": "小窗使用同一组原位坐标描线；漫游页保留文献线图。"
+  },
+  "riceCorrection": {
+    "closedFramesRemoved": 7,
+    "openSourceContours": 6,
+    "strokeWidth": 1.8,
+    "haloBlur": 1.8,
+    "referenceUnchanged": true,
+    "description": "沿原图可辨三角刻痕的斜边与转折作开放细线，取消封闭多边形框。暖金色保留，减轻暗边和光晕。",
+    "limits": "标示原物局部刻痕，不补作照片中不可辨的完整米字单元。"
   }
 }
