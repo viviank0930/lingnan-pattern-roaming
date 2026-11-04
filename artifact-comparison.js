@@ -20,10 +20,11 @@
    const sourcePath=new Path2D(mark.paths.join(' ')),weight=mark.strokeWidth/Math.sqrt((iw*displayScale/100)*(ih*displayScale/100));
    g.save();g.scale(w/100,h/100);g.lineCap='round';g.lineJoin='round';g.strokeStyle='#684820';g.globalAlpha=mark.edgeOpacity??.64;g.lineWidth=weight*1.7;g.stroke(sourcePath);g.strokeStyle='#ffe08b';g.globalAlpha=mark.strokeOpacity??.94;g.lineWidth=weight;g.stroke(sourcePath);g.restore();
   }else if(mark.kind==='same-source-mask'){
-   const m=mark.registration,b=m.inkBounds,path=pathFor(p);g.fillStyle='#ffe08b';
+   const m=mark.registration,b=m.inkBounds,path=pathFor(p);g.save();g.fillStyle='#ffe08b';g.globalAlpha=mark.fillOpacity??1;
    if(m.mesh){const a=m.mesh;for(let y=0;y<a.ys.length-1;y++)for(let x=0;x<a.xs.length-1;x++){const f=[[a.xs[x],a.ys[y]],[a.xs[x+1],a.ys[y]],[a.xs[x+1],a.ys[y+1]],[a.xs[x],a.ys[y+1]]],t=[a.points[y][x],a.points[y][x+1],a.points[y+1][x+1],a.points[y+1][x]].map(([x,y])=>[x*w/100,y*h/100]);triangle(g,path,[f[0],f[1],f[2]],[t[0],t[1],t[2]]);triangle(g,path,[f[0],f[2],f[3]],[t[0],t[2],t[3]]);}}
    else if(m.quad){const[x,y,bw,bh]=m.inkClip||[b[0],b[1],b[2]-b[0],b[3]-b[1]],f=[[x,y],[x+bw,y],[x+bw,y+bh],[x,y+bh]],t=m.quad.map(([x,y])=>[x*w/100,y*h/100]);triangle(g,path,[f[0],f[1],f[2]],[t[0],t[1],t[2]]);triangle(g,path,[f[0],f[2],f[3]],[t[0],t[2],t[3]]);}
-   else if(m.box){const[x,y,bw,bh]=m.box,sx=bw*w/100/(b[2]-b[0]),sy=bh*h/100/(b[3]-b[1]);g.save();g.setTransform(sx,0,0,sy,x*w/100-b[0]*sx,y*h/100-b[1]*sy);g.globalAlpha=.72;g.fill(path);g.restore();}
+   else if(m.box){const[x,y,bw,bh]=m.box,sx=bw*w/100/(b[2]-b[0]),sy=bh*h/100/(b[3]-b[1]);g.save();g.setTransform(sx,0,0,sy,x*w/100-b[0]*sx,y*h/100-b[1]*sy);g.globalAlpha=mark.fillOpacity??.72;g.fill(path);g.restore();}
+   g.restore();
   }else throw Error('Unsupported source marking');
   g.globalCompositeOperation='destination-in';g.drawImage(image,0,0,w,h);g.globalCompositeOperation='source-over';
   if(mark.omitRestoration){const raw=makeCanvas(w,h),r=raw.getContext('2d',{willReadFrequently:true});r.drawImage(image,0,0,w,h);const src=r.getImageData(0,0,w,h).data,pix=g.getImageData(0,0,w,h);for(let i=0;i<src.length;i+=4){const hi=Math.max(src[i],src[i+1],src[i+2]),lo=Math.min(src[i],src[i+1],src[i+2]);if(lo>180&&hi-lo<28)pix.data[i+3]=0;}g.putImageData(pix,0,0);}
