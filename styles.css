@@ -33,8 +33,8 @@
 
 .detail .pattern-discovery-note{font-size:12px;line-height:1.75;color:var(--muted);margin:16px 0 0;overflow-wrap:anywhere}
 
-.browse-patterns{pointer-events:auto;border:1px solid rgba(118,100,64,.85);border-radius:0;padding:12px 20px;min-height:44px;background:rgba(229,209,154,.82);color:var(--paper);font-size:15px;line-height:1.2;white-space:nowrap;transition:background-color .15s,border-color .15s}
-.browse-patterns:hover{background:rgba(229,209,154,.9);border-color:rgba(118,100,64,.95)}
+.browse-patterns{pointer-events:auto;border:1px solid rgba(118,100,64,.85);border-radius:0;padding:12px 20px;min-height:44px;background:rgba(229,209,154,.72);color:var(--paper);font-size:15px;line-height:1.2;white-space:nowrap;transition:background-color .15s,border-color .15s}
+.browse-patterns:hover{background:rgba(229,209,154,.8);border-color:rgba(118,100,64,.95)}
 .pattern-catalog{width:min(680px,calc(100vw - 40px));max-width:none;max-height:calc(100dvh - 48px);padding:0;margin:auto;border:1px solid rgba(199,175,111,.5);background:#1b1810;color:var(--gold);box-shadow:0 22px 80px rgba(0,0,0,.4)}
 .pattern-catalog[open]{display:flex;flex-direction:column;animation:reveal .18s ease-out}
 .pattern-catalog::backdrop{background:rgba(8,8,5,.73)}
