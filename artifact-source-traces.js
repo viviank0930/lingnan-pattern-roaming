@@ -329,21 +329,58 @@ window.ArtifactSourceTraces={
         142
       ],
       "sourceSha256": "6f2cd62a64eb47d58e68ba9c5cf28dddc66878a11a8c85f17617036e184684b6",
-      "kind": "source-lines",
-      "paths": [
-        "M36.5 28.8L29.1 51.6L10.1 46.5",
-        "M42.9 31L35.4 55.1L11.7 48.6",
-        "M21.9 60.3L47.9 66L44.6 85.4",
-        "M19.5 64.6L44.8 70L41.8 89",
-        "M17.5 69L41.7 74.8L39.2 91.7"
-      ],
+      "kind": "same-source-mask",
+      "inkFingerprint": "943b456c",
+      "registration": {
+        "inkBounds": [
+          5.000000476837158,
+          5.932039260864258,
+          101,
+          100.06796264648438
+        ],
+        "box": [
+          8.275862068965518,
+          21.83098591549296,
+          71.0344827586207,
+          71.12676056338029
+        ]
+      },
       "anchor": [
-        47.2,
-        66.1
+        65.4,
+        67.7
       ],
-      "strokeWidth": 2.4,
-      "note": "选择中央相邻两组可辨认的完整转折：上组两道斜竖线转向左，下组三道横线转向下，保留陶片原有斜度与取样范围。",
-      "omitRestoration": true
+      "fillOpacity": 0.82,
+      "haloBlur": 1.2,
+      "omitRestoration": true,
+      "note": "由同一陶片可见刻纹直接取样，包含多组互换方向的折线及右侧交叠线群；使用原图像素位置原位注册，替换只画两组孤立折角的旧标记，不补缺失纹路。",
+      "sourceUnit": {
+        "sourceDocument": "第二节 陶瓷技术",
+        "sourceFigure": "图版95 广东地区出土的印纹硬陶纹饰，第14项",
+        "sourceNumberInComposite": 14,
+        "method": "原实物照片局部明暗差取样，去除孤立小噪点，保持交叠关系；不是独立标准线图或考古复原。",
+        "sourcePixelBounds": [
+          12,
+          31,
+          115,
+          132
+        ],
+        "samplingRoi": {
+          "x": 12,
+          "y": 31,
+          "w": 104,
+          "h": 101
+        },
+        "contrastThreshold": 11,
+        "minComponentArea": 5,
+        "unitTransform": {
+          "a": 0.9320388349514563,
+          "b": 0,
+          "c": 0,
+          "d": 0.9320388349514563,
+          "e": -6.184466019417478,
+          "f": -22.96116504854369
+        }
+      }
     },
     "18": {
       "source": "assets/artifacts/composite-18.webp",
