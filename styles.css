@@ -33,8 +33,8 @@
 
 .detail .pattern-discovery-note{font-size:12px;line-height:1.75;color:var(--muted);margin:16px 0 0;overflow-wrap:anywhere}
 
-.browse-patterns{pointer-events:auto;border:1px solid #8d7b4d;border-radius:0;padding:12px 20px;min-height:44px;background:linear-gradient(180deg,#262116 0%,#443a25 56%,#aa9461 100%);color:var(--light);font-size:15px;line-height:1.2;white-space:nowrap;transition:filter .15s,border-color .15s}
-.browse-patterns:hover{filter:brightness(1.08);border-color:var(--gold)}
+.browse-patterns{pointer-events:auto;border:1px solid var(--light);border-radius:0;padding:12px 20px;min-height:44px;background:var(--light);color:var(--paper);font-size:15px;line-height:1.2;white-space:nowrap;transition:filter .15s}
+.browse-patterns:hover{filter:brightness(1.06)}
 .pattern-catalog{width:min(680px,calc(100vw - 40px));max-width:none;max-height:calc(100dvh - 48px);padding:0;margin:auto;border:1px solid rgba(199,175,111,.5);background:#1b1810;color:var(--gold);box-shadow:0 22px 80px rgba(0,0,0,.4)}
 .pattern-catalog[open]{display:flex;flex-direction:column;animation:reveal .18s ease-out}
 .pattern-catalog::backdrop{background:rgba(8,8,5,.73)}
