@@ -1180,35 +1180,6 @@ window.ArtifactSourceTraces={
       ],
       "note": "保留同一原图取样蒙版的原始注册位置；只允许该原图和未改变的原取样ink使用此映射。"
     },
-    "5007": {
-      "source": "assets/artifacts/pottery-doc-50.webp",
-      "sourceSize": [
-        926,
-        1000
-      ],
-      "sourceSha256": "a12098d1ffbcba99cbbbce5de037fea6e41d1331d294180dd606a4f545c1d944",
-      "kind": "same-source-mask",
-      "inkFingerprint": "6e9da2e9",
-      "registration": {
-        "inkBounds": [
-          22.7242431640625,
-          5,
-          83.2757568359375,
-          101
-        ],
-        "box": [
-          46.74972914409534,
-          44.583751253761285,
-          12.459371614301192,
-          18.304914744232697
-        ]
-      },
-      "anchor": [
-        55.98000030517578,
-        48.86000003814697
-      ],
-      "note": "保留同一原图取样蒙版的原始注册位置；只允许该原图和未改变的原取样ink使用此映射。"
-    },
     "6001": {
       "source": "assets/artifacts/han-figure-6001.webp",
       "sourceSize": [
