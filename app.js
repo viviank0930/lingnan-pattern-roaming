@@ -17,12 +17,13 @@
   let patterns = [], nodes = [], screenNodes = [], selected = null, hover = null;
   let width = innerWidth, height = innerHeight, dpr = 1, clock = 0, lastFrame = 0, lastTrace = 0;
   let drag = null, pinch = null, dirty = true, raf = 0, ready = false, texture = null, focusedIndex = -1;
+  let dance = null;
   let seed = 47219;
   const random = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   const wrap = (v, span) => ((v + span / 2) % span + span) % span - span / 2;
   const fit = () => width < 700 ? Math.max(.6, Math.min(width / 1150, height / 860)) : Math.min(width / 1440, height / 860);
-  const paused = () => selected !== null || catalog.open || pointers.size > 0 || reducedMotion.matches;
+  const paused = () => selected !== null || dance !== null || catalog.open || pointers.size > 0 || reducedMotion.matches;
 
   function resize() {
     width = root.clientWidth; height = root.clientHeight; dpr = Math.min(devicePixelRatio || 1, 2);
@@ -270,6 +271,7 @@
 
   function openCatalog() {
     if (!ready || catalog.open) return;
+    dance = null;
     browseButton.focus({preventScroll:true});
     catalog.showModal(); browseButton.setAttribute('aria-expanded', 'true');
     updateState(); document.querySelector('#catalog-title').focus({preventScroll:true});
@@ -281,7 +283,7 @@
     const point = project(node), scale = fit() * camera.zoom;
     camera.x += (point.x - width / 2) / scale;
     camera.y += (point.y - height / 2 - 24) / scale;
-    selected = node; hover = null;
+    dance = null; selected = node; hover = null;
     catalog.close(); updateState(); canvas.focus({preventScroll:true});
   }
 
@@ -306,14 +308,14 @@
     const x = wrap(node.x + clock * (node.primary?11:7) + Math.sin(clock*.13+node.phase)*14 - camera.x*node.depth, world.width);
     const y = wrap(node.y + Math.cos(clock*.11+node.phase)*16 - camera.y*node.depth, world.height);
     return { node, x: width / 2 + x * scale, y: height / 2 + 24 + y * scale,
-      size: node.size * scale, angle: node.turn + Math.sin(clock * .15 + node.phase) * .018 };
+      size: node.size * scale, angle: node.pattern.sourceNumber === 2005 ? 0 : node.turn + Math.sin(clock * .15 + node.phase) * .018 };
   }
 
   function drawSprite(item) {
     const n = item.node, sprite = sprites.get(n.pattern.sourceNumber);
     if (!sprite) return;
     ctx.save(); ctx.translate(item.x, item.y); ctx.rotate(item.angle);
-    ctx.globalAlpha = n.opacity * (selected && selected !== n ? .5 : 1);
+    ctx.globalAlpha = n.opacity * (dance ? .45 : selected && selected !== n ? .5 : 1);
     if (selected === n || hover === n) { ctx.filter = 'brightness(1.4)'; ctx.shadowColor = 'rgba(218,192,121,.35)'; ctx.shadowBlur = selected === n ? 15 : 7; }
     ctx.drawImage(sprite, -item.size / 2, -item.size / 2, item.size, item.size);
     ctx.restore();
@@ -342,7 +344,8 @@
         screenNodes.push({ ...item, x: item.x + x * spanX, y: item.y + y * spanY });
       }
     }
-    for (const item of screenNodes) drawSprite(item);
+    for (const item of screenNodes) if (item.node !== dance?.node) drawSprite(item);
+    if (dance) drawDance();
     const chosen = screenNodes.find(n => n.node === selected);
     if (chosen) drawFocus(chosen);
     if (selected) updateDetail(chosen);
@@ -351,6 +354,11 @@
   function frame(now) {
     const dt = lastFrame ? Math.min((now - lastFrame) / 1000, .05) : 0; lastFrame = now;
     if (ready && !paused()) { clock += dt; dirty = true; }
+    if (dance) {
+      dance.elapsed += dt;
+      if (dance.elapsed >= window.FigureDance.duration) { dance = null; updateState(); }
+      dirty = true;
+    }
     if (ready && dirty) { draw(); dirty = false; }
     if (now - lastTrace > 350) { canvas.dataset.phase = clock.toFixed(3); lastTrace = now; }
     raf = requestAnimationFrame(frame);
@@ -360,6 +368,7 @@
     const bounds = canvas.getBoundingClientRect();
     x = (x - bounds.left) * width / bounds.width;
     y = (y - bounds.top) * height / bounds.height;
+    if (dance?.box && Math.abs(x-dance.box.x)<dance.box.size*.48 && Math.abs(y-dance.box.y)<dance.box.size*.54) return dance.node;
     const options = screenNodes.filter(s => Math.hypot(s.x - x, s.y - y) < Math.max(s.size * .75 + tolerance, 19));
     options.sort((a, b) => Math.hypot(a.x-x,a.y-y)/a.size - Math.hypot(b.x-x,b.y-y)/b.size);
     for (const item of options) {
@@ -378,9 +387,11 @@
 
   function updateState() {
     const stopped = selected !== null || catalog.open;
-    root.dataset.flow = stopped ? 'paused' : 'moving'; canvas.dataset.selected = selected ? String(selected.pattern.sourceNumber) : '';
-    flowEl.textContent = stopped ? '已停驻' : reducedMotion.matches ? '静态浏览' : '缓缓流动';
-    hintEl.innerHTML = stopped ? '点击空白处 <span>·</span> 继续漫游' : '拖动浏览 <span>·</span> 点击纹饰停驻';
+    root.dataset.flow = dance ? 'dancing' : stopped ? 'paused' : 'moving';
+    canvas.dataset.selected = selected ? String(selected.pattern.sourceNumber) : '';
+    canvas.dataset.dancing = dance ? '2005' : '';
+    flowEl.textContent = dance ? '小人起舞' : stopped ? '已停驻' : reducedMotion.matches ? '静态浏览' : '缓缓流动';
+    hintEl.innerHTML = dance ? '再点小人重跳 <span>·</span> 点击空白继续漫游' : stopped ? '点击空白处 <span>·</span> 继续漫游' : '拖动浏览 <span>·</span> 点击小人起舞';
     if (selected) {
       const p = selected.pattern, displayPeriod = p.displayPeriod || p.period;
       nameEl.textContent = p.name; periodEl.textContent = displayPeriod;
@@ -401,7 +412,7 @@
       } else { artifactImage.removeAttribute('src'); artifactImage.alt = ''; }
       detail.hidden = false; updateDetail();
       announcement.textContent = p.name + '，' + displayPeriod + '。' + '所有纹饰已暂停。';
-    } else { detail.hidden = true; announcement.textContent = '已取消选中，继续漫游。'; }
+    } else { detail.hidden = true; announcement.textContent = dance ? '人形舞蹈纹开始跳舞，结束后继续漫游。' : '已取消选中，继续漫游。'; }
     dirty = true;
   }
 
@@ -416,8 +427,28 @@
     detail.style.top = clamp(y, 110, Math.max(110, height - boxHeight - 75)) + 'px';
   }
 
-  function select(node) { selected = selected === node ? null : node; hover = null; updateState(); }
-  function cancel() { selected = null; updateState(); }
+  function drawDance() {
+    const source=project(dance.node),t=dance.elapsed,duration=window.FigureDance.duration;
+    const smooth=v=>{v=clamp(v,0,1);return v*v*(3-2*v);};
+    const envelope=smooth(t/.2)*smooth((duration-t)/.2);
+    const targetSize=Math.min(290,Math.max(210,source.size*2.1),height*.55,width*.7);
+    const size=source.size+(targetSize-source.size)*envelope;
+    const margin=targetSize*.56;
+    const x=source.x+(clamp(source.x,margin,width-margin)-source.x)*envelope;
+    const y=source.y+(clamp(source.y,130+margin,height-75-margin)-source.y)*envelope;
+    dance.box={x,y,size};
+    const sprite=window.FigureDance.render(t,texture,gold);
+    ctx.save();ctx.translate(x,y);ctx.globalAlpha=1;ctx.filter='brightness(1.4)';
+    ctx.shadowColor='rgba(218,192,121,.25)';ctx.shadowBlur=8;
+    ctx.drawImage(sprite,-size/2,-size/2,size,size);ctx.restore();
+  }
+  function select(node) {
+    if (node.pattern.sourceNumber===2005 && window.FigureDance) {
+      selected=null;hover=null;dance={node,elapsed:0,box:null};updateState();return;
+    }
+    dance=null; selected = selected === node ? null : node; hover = null; updateState();
+  }
+  function cancel() { dance = null; selected = null; updateState(); }
 
   canvas.addEventListener('pointerdown', e => {
     if (!ready || (e.pointerType === 'mouse' && e.button !== 0)) return;
@@ -467,10 +498,10 @@
   canvas.addEventListener('keydown',e=>{
     if (!['ArrowRight','ArrowLeft','ArrowUp','ArrowDown','Enter',' '].includes(e.key)) return;
     e.preventDefault();
-    if(e.key==='Enter'||e.key===' '){if(selected)cancel();else{const first=screenNodes.find(s=>s.node.primary);if(first)select(first.node);}return;}
+    if(e.key==='Enter'||e.key===' '){if(dance)select(dance.node);else if(selected)select(selected);else{const first=screenNodes.find(s=>s.node.primary);if(first)select(first.node);}return;}
     const visible=screenNodes.filter(s=>s.node.primary).sort((a,b)=>a.x-b.x||a.y-b.y);
     if(!visible.length)return; focusedIndex=(focusedIndex+(e.key==='ArrowLeft'||e.key==='ArrowUp'?-1:1)+visible.length)%visible.length;
-    selected=visible[focusedIndex].node;updateState();
+    dance=null; selected=visible[focusedIndex].node;updateState();
   });
   reducedMotion.addEventListener('change',()=>{dirty=true;updateState();});
   document.addEventListener('visibilitychange',()=>{lastFrame=0;});
@@ -490,10 +521,13 @@
   async function start() {
     try {
       const [response, image] = await Promise.all([
-        fetch('patterns.json?v=ring197-guide-20261105-1').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
+        fetch('patterns.json?v=figure-dance-20261106-1').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
         new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>resolve(null);img.src='assets/ink-pigment.png';})
       ]);
-      patterns=response; texture=image; makeNodes(); prepareSprites(); resize();
+      patterns=response; texture=image;
+      const figure=patterns.find(p=>p.sourceNumber===2005);
+      if (figure && window.FigureDance?.ink) figure.ink=window.FigureDance.ink;
+      makeNodes(); prepareSprites(); resize();
       ready=true; buildCatalog(); document.querySelector('#loading').hidden=true;
       // Old specimen links resolve to the single retained representative.
       const legacyPatternIds = new Map([[3, 1], [6, 1], [4, 11], [12, 11], [5, 10], [4015, 8], [4016, 8], [22, 18], [16, 26], [4017, 13], [6005, 3004], [6006, 3004], [6008, 6007], [6010, 6009]]);
