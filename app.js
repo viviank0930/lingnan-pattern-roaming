@@ -385,8 +385,8 @@
   }
 
   function patternMotion(pattern) {
-    if(pattern?.sourceNumber===2005&&window.FigureDance)return{rig:window.FigureDance,label:'点我跳舞',action:'点击文物上的小人起舞',hint:'点击文物上的小人纹饰，让它跳舞',status:'小人起舞',replay:'再点纹饰重跳',announcement:'文物上的人形舞蹈纹开始跳舞，结束后恢复原标记。'};
-    if(pattern?.sourceNumber===2007&&window.HuntingMotion)return{rig:window.HuntingMotion,label:'点我狩猎',action:'点击文物上的狩猎纹，观看鹿群奔跑',hint:'点击文物上的狩猎纹，看鹿群奔跑、猎人追逐',status:'狩猎纹跃动',replay:'再点纹饰重播',announcement:'狩猎纹中的六只鹿开始奔跑，两名猎人追逐拉弓，结束后恢复原标记。'};
+    if(pattern?.sourceNumber===2005&&window.FigureDance)return{rig:window.FigureDance,action:'点击文物上的小人起舞',hint:'点击文物上的小人纹饰，让它跳舞',status:'小人起舞',replay:'再点纹饰重跳',announcement:'文物上的人形舞蹈纹开始跳舞，结束后恢复原标记。'};
+    if(pattern?.sourceNumber===2007&&window.HuntingMotion)return{rig:window.HuntingMotion,action:'点击文物上的狩猎纹，观看鹿群奔跑',hint:'点击文物上的狩猎纹，看鹿群奔跑、猎人追逐',status:'狩猎纹跃动',replay:'再点纹饰重播',announcement:'狩猎纹中的六只鹿开始奔跑，两名猎人追逐拉弓，结束后恢复原标记。'};
     return null;
   }
 
@@ -444,7 +444,6 @@
     const point=motion&&!dance&&!catalog.open&&!comparisonCanvas.hidden&&window.MotifComparison.figureGuidePosition?.(comparisonCanvas);
     figureGesture.hidden=!point;
     if(!point)return;
-    figureGesture.querySelector('.gesture-label').textContent=motion.label;
     figureGesture.setAttribute('aria-label',motion.action);
     const bounds=comparisonCanvas.getBoundingClientRect(),parent=artifactEl.getBoundingClientRect();
     figureGesture.style.left=(bounds.left-parent.left+point.x)+'px';

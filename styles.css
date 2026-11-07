@@ -24,11 +24,10 @@
 .gesture-hand svg{display:block;width:100%;height:100%;overflow:visible;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;animation:gesture-tap 2.4s ease-in-out infinite}
 .gesture-hand svg path:first-child{fill:rgba(31,27,17,.9)}
 .gesture-tap-ring{position:absolute;left:7px;top:6px;width:15px;height:15px;border:1px solid currentColor;border-radius:50%;transform:translate(-50%,-50%);animation:gesture-ring 2.4s ease-out infinite;pointer-events:none}
-.gesture-label{font-size:13px;line-height:1.5;letter-spacing:.04em;padding:2px 5px;background:rgba(27,24,16,.85);text-shadow:0 1px 2px #17140c}
 .figure-dance-gesture:hover{color:#fff0bb}
 @keyframes gesture-tap{0%,35%,100%{transform:translate(2px,2px)}48%,60%{transform:translate(-1px,-1px)}75%{transform:translate(2px,2px)}}
 @keyframes gesture-ring{0%,35%,100%{opacity:0;transform:translate(-50%,-50%) scale(.6)}48%{opacity:.9;transform:translate(-50%,-50%) scale(.7)}80%{opacity:0;transform:translate(-50%,-50%) scale(1.8)}}
-@media(max-width:700px){.gesture-hand{width:30px;height:36px}.gesture-label{font-size:12px;padding:2px 4px}.gesture-tap-ring{left:5px;top:5px;width:12px;height:12px}.figure-dance-gesture{transform:translate(-5px,-5px)}}
+@media(max-width:700px){.gesture-hand{width:30px;height:36px}.gesture-tap-ring{left:5px;top:5px;width:12px;height:12px}.figure-dance-gesture{transform:translate(-5px,-5px)}}
 .pattern-artifact img{display:block;width:100%;height:210px;object-fit:contain}
 .pattern-artifact[data-shape=wide] img{height:120px}
 @media(max-width:700px){.detail.has-artifact{width:280px;max-height:calc(100dvh - 190px)}.pattern-artifact{margin-top:14px}.pattern-artifact img{height:185px}.pattern-artifact[data-shape=wide] img{height:105px}}
