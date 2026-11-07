@@ -9,11 +9,11 @@
   <link rel="icon" type="image/png" sizes="1254x1254" href="assets/site-icon.png?v=icon-20261029-1">
   <link rel="apple-touch-icon" href="assets/site-icon.png?v=icon-20261029-1">
   <link rel="preload" href="assets/huiwen.woff2?v=documentink-20261031-1" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="styles.css?v=browse-yellow-20261105-1">
+  <link rel="stylesheet" href="styles.css?v=figure-gesture-20261107-1">
   <script src="artifact-source-traces.js?v=ring197-guide-20261105-1" defer></script>
-  <script src="artifact-comparison.js?v=figure-popup-dance-20261107-1" defer></script>
+  <script src="artifact-comparison.js?v=figure-gesture-20261107-1" defer></script>
   <script src="figure-dance.js?v=figure-dance-20261106-1" defer></script>
-  <script src="app.js?v=figure-popup-dance-20261107-1" defer></script>
+  <script src="app.js?v=figure-gesture-20261107-1" defer></script>
 </head>
 <body>
   <main id="experience" data-style="ink" data-flow="moving">
@@ -32,6 +32,16 @@
       <figure id="pattern-artifact" class="pattern-artifact" hidden>
         <img id="artifact-image" alt="" decoding="async">
         <canvas id="artifact-comparison" role="img" hidden></canvas>
+        <button id="figure-dance-gesture" class="figure-dance-gesture" type="button" aria-label="点击让文物上的小人跳舞" hidden>
+          <span class="gesture-hand" aria-hidden="true">
+            <span class="gesture-tap-ring"></span>
+            <svg viewBox="0 0 44 48" fill="none">
+              <path d="m17 26-11-18c-2-4 3-7 5-3l11 17-3-6c-2-4 3-6 5-3l4 7-2-4c-2-4 3-6 5-2l4 7-1-2c-1-4 4-5 6-1l3 9c2 5 0 10-5 13l-6 3c-4 2-8 1-11-2l-12-10c-4-3 0-8 4-5l4 3Z"/>
+              <path d="m22 22 3 5m3-7 3 6m4-5 2 5"/>
+            </svg>
+          </span>
+          <span class="gesture-label">点我跳舞</span>
+        </button>
       </figure>
       <p id="figure-dance-hint" class="pattern-discovery-note" hidden>点击文物上的小人纹饰，让它跳舞</p>
       <p id="pattern-discovery-note" class="pattern-discovery-note" hidden></p>

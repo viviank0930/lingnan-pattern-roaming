@@ -5,6 +5,7 @@
   const nameEl = document.querySelector('#pattern-name'), periodEl = document.querySelector('#pattern-period');
   const artifactEl = document.querySelector('#pattern-artifact'), artifactImage = document.querySelector('#artifact-image');
   const comparisonCanvas = document.querySelector('#artifact-comparison');
+  const figureGesture = document.querySelector('#figure-dance-gesture');
   const flowEl = document.querySelector('#flow-state'), hintEl = document.querySelector('#interaction-hint');
   const announcement = document.querySelector('#selection-announcement');
   const discoveryNote = document.querySelector('#pattern-discovery-note');
@@ -390,7 +391,10 @@
     canvas.dataset.dancing = dance ? '2005' : '';
     flowEl.textContent = dance ? '小人起舞' : stopped ? '已停驻' : reducedMotion.matches ? '静态浏览' : '缓缓流动';
     hintEl.innerHTML = dance ? '再点纹饰重跳 <span>·</span> 点击空白继续漫游' : selected?.pattern.sourceNumber===2005 ? '点击文物上的小人起舞 <span>·</span> 点击空白继续漫游' : stopped ? '点击空白处 <span>·</span> 继续漫游' : '拖动浏览 <span>·</span> 点击纹饰停驻';
-    document.querySelector('#figure-dance-hint').hidden=selected?.pattern.sourceNumber!==2005;
+    const figureHint=document.querySelector('#figure-dance-hint');
+    figureHint.hidden=selected?.pattern.sourceNumber!==2005;
+    figureHint.style.visibility=dance?'hidden':'visible';
+    figureGesture.hidden=true;
     if (selected) {
       const p = selected.pattern, displayPeriod = p.displayPeriod || p.period;
       nameEl.textContent = p.name; periodEl.textContent = displayPeriod;
@@ -424,6 +428,16 @@
     if (width < 700) { x = (width - boxWidth) / 2; y = height - boxHeight - 82; }
     detail.style.left = clamp(x, 20, Math.max(20, width - boxWidth - 20)) + 'px';
     detail.style.top = clamp(y, 110, Math.max(110, height - boxHeight - 75)) + 'px';
+    updateFigureGuide();
+  }
+
+  function updateFigureGuide() {
+    const point=selected?.pattern.sourceNumber===2005&&!dance&&!catalog.open&&!comparisonCanvas.hidden&&window.MotifComparison.figureGuidePosition?.(comparisonCanvas);
+    figureGesture.hidden=!point;
+    if(!point)return;
+    const bounds=comparisonCanvas.getBoundingClientRect(),parent=artifactEl.getBoundingClientRect();
+    figureGesture.style.left=(bounds.left-parent.left+point.x)+'px';
+    figureGesture.style.top=(bounds.top-parent.top+point.y)+'px';
   }
 
   function startFigureDance() {
@@ -504,6 +518,7 @@
     if (selected) updateDetail();
   }
   comparisonCanvas.addEventListener('click',e=>{if(selected?.pattern.sourceNumber===2005&&window.MotifComparison.figureAt(comparisonCanvas,e.clientX,e.clientY))startFigureDance();});
+  figureGesture.addEventListener('click',startFigureDance);
   comparisonCanvas.addEventListener('keydown',e=>{if(selected?.pattern.sourceNumber===2005&&(e.key==='Enter'||e.key===' ')){e.preventDefault();startFigureDance();}});
   artifactImage.addEventListener('load', () => { if (selected) updateArtifactComparison(); });
   document.fonts?.ready.then(() => { if (selected) updateArtifactComparison(); });

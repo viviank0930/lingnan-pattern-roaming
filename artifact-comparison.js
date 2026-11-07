@@ -52,6 +52,12 @@
   const px=(x-a.ix)/a.w*100,py=(y-a.iy)/a.h*100;
   return px>=16&&px<=87&&py>=29&&py<=89;
  }
+ function figureGuidePosition(canvas){
+  const a=figureLayouts.get(canvas);if(!a)return null;
+  const b=canvas.getBoundingClientRect(),s=Math.min(b.width/canvas.width,b.height/canvas.height);
+  if(!s)return null;
+  return{x:(b.width-canvas.width*s)/2+(a.ix+a.w*.565)*s,y:(b.height-canvas.height*s)/2+(a.iy+a.h*.54)*s};
+ }
  function animateFigure(canvas,seconds,texture){
   const a=figureLayouts.get(canvas),rig=global.FigureDance;if(!a||!rig)return false;
   const smooth=v=>{v=Math.max(0,Math.min(1,v));return v*v*(3-2*v);};
@@ -64,5 +70,5 @@
   g.globalAlpha=alpha;g.drawImage(rig.render(seconds,texture,'#ffe08b'),x,y,320/2.72*.98/100*a.w,320/2.72*.56/100*a.h);g.restore();
   return true;
  }
- global.MotifComparison={render,figureAt,animateFigure};
+ global.MotifComparison={render,figureAt,figureGuidePosition,animateFigure};
 })(typeof window==='undefined'?globalThis:window);
