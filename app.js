@@ -356,7 +356,7 @@
     if (ready && !paused()) { clock += dt; dirty = true; }
     if (dance) {
       dance.elapsed += dt;
-      if (dance.elapsed >= window.FigureDance.duration) { dance = null; updateState(); }
+      if (dance.elapsed >= dance.duration) { dance = null; updateState(); }
       else window.MotifComparison.animateFigure(comparisonCanvas,dance.elapsed,texture);
     }
     if (ready && dirty) { draw(); dirty = false; }
@@ -384,15 +384,23 @@
     return null;
   }
 
+  function patternMotion(pattern) {
+    if(pattern?.sourceNumber===2005&&window.FigureDance)return{rig:window.FigureDance,label:'点我跳舞',action:'点击文物上的小人起舞',hint:'点击文物上的小人纹饰，让它跳舞',status:'小人起舞',replay:'再点纹饰重跳',announcement:'文物上的人形舞蹈纹开始跳舞，结束后恢复原标记。'};
+    if(pattern?.sourceNumber===2007&&window.HuntingMotion)return{rig:window.HuntingMotion,label:'点我狩猎',action:'点击文物上的狩猎纹，观看鹿群奔跑',hint:'点击文物上的狩猎纹，看鹿群奔跑、猎人追逐',status:'狩猎纹跃动',replay:'再点纹饰重播',announcement:'狩猎纹中的六只鹿开始奔跑，两名猎人追逐拉弓，结束后恢复原标记。'};
+    return null;
+  }
+
   function updateState() {
     const stopped = selected !== null || catalog.open;
+    const motion=patternMotion(selected?.pattern);
     root.dataset.flow = dance ? 'dancing' : stopped ? 'paused' : 'moving';
     canvas.dataset.selected = selected ? String(selected.pattern.sourceNumber) : '';
-    canvas.dataset.dancing = dance ? '2005' : '';
-    flowEl.textContent = dance ? '小人起舞' : stopped ? '已停驻' : reducedMotion.matches ? '静态浏览' : '缓缓流动';
-    hintEl.innerHTML = dance ? '再点纹饰重跳 <span>·</span> 点击空白继续漫游' : selected?.pattern.sourceNumber===2005 ? '点击文物上的小人起舞 <span>·</span> 点击空白继续漫游' : stopped ? '点击空白处 <span>·</span> 继续漫游' : '拖动浏览 <span>·</span> 点击纹饰停驻';
+    canvas.dataset.dancing = dance ? String(selected.pattern.sourceNumber) : '';
+    flowEl.textContent = dance ? motion.status : stopped ? '已停驻' : reducedMotion.matches ? '静态浏览' : '缓缓流动';
+    hintEl.innerHTML = dance ? motion.replay+' <span>·</span> 点击空白继续漫游' : motion ? motion.action+' <span>·</span> 点击空白继续漫游' : stopped ? '点击空白处 <span>·</span> 继续漫游' : '拖动浏览 <span>·</span> 点击纹饰停驻';
     const figureHint=document.querySelector('#figure-dance-hint');
-    figureHint.hidden=selected?.pattern.sourceNumber!==2005;
+    figureHint.hidden=!motion;
+    if(motion)figureHint.textContent=motion.hint;
     figureHint.style.visibility=dance?'hidden':'visible';
     figureGesture.hidden=true;
     if (selected) {
@@ -414,7 +422,7 @@
         artifactEl.dataset.shape = artifact.shape || 'portrait';
       } else { artifactImage.removeAttribute('src'); artifactImage.alt = ''; }
       detail.hidden = false; updateDetail();
-      announcement.textContent = dance ? '文物上的人形舞蹈纹开始跳舞，结束后恢复原标记。' : p.name + '，' + displayPeriod + '。' + '所有纹饰已暂停。';
+      announcement.textContent = dance ? motion.announcement : p.name + '，' + displayPeriod + '。' + '所有纹饰已暂停。';
     } else { detail.hidden = true; announcement.textContent = '已取消选中，继续漫游。'; }
     dirty = true;
   }
@@ -432,17 +440,21 @@
   }
 
   function updateFigureGuide() {
-    const point=selected?.pattern.sourceNumber===2005&&!dance&&!catalog.open&&!comparisonCanvas.hidden&&window.MotifComparison.figureGuidePosition?.(comparisonCanvas);
+    const motion=patternMotion(selected?.pattern);
+    const point=motion&&!dance&&!catalog.open&&!comparisonCanvas.hidden&&window.MotifComparison.figureGuidePosition?.(comparisonCanvas);
     figureGesture.hidden=!point;
     if(!point)return;
+    figureGesture.querySelector('.gesture-label').textContent=motion.label;
+    figureGesture.setAttribute('aria-label',motion.action);
     const bounds=comparisonCanvas.getBoundingClientRect(),parent=artifactEl.getBoundingClientRect();
     figureGesture.style.left=(bounds.left-parent.left+point.x)+'px';
     figureGesture.style.top=(bounds.top-parent.top+point.y)+'px';
   }
 
   function startFigureDance() {
-    if(selected?.pattern.sourceNumber!==2005 || !window.FigureDance || !artifactImage.complete || !artifactImage.naturalWidth)return;
-    dance={node:selected,elapsed:0};updateState();
+    const motion=patternMotion(selected?.pattern);
+    if(!motion || !artifactImage.complete || !artifactImage.naturalWidth)return;
+    dance={node:selected,elapsed:0,duration:motion.rig.duration};updateState();
   }
   function select(node) {
     dance=null; selected = selected === node ? null : node; hover = null; updateState();
@@ -510,16 +522,16 @@
     const pattern = selected?.pattern, comparison = pattern?.artifact?.comparison;
     if (!comparison || !artifactImage.complete || !artifactImage.naturalWidth) return;
     window.MotifComparison.render(comparisonCanvas, pattern, artifactImage, texture);
-    const canDance=pattern.sourceNumber===2005&&!!window.FigureDance;
-    comparisonCanvas.setAttribute('aria-label', pattern.name + (canDance?'，点击文物上的小人起舞':'，纹饰位置'));
+    const motion=patternMotion(pattern),canDance=!!motion;
+    comparisonCanvas.setAttribute('aria-label', pattern.name + (canDance?'，'+motion.action:'，纹饰位置'));
     comparisonCanvas.setAttribute('role',canDance?'button':'img');
     comparisonCanvas.tabIndex=canDance?0:-1;comparisonCanvas.style.cursor=canDance?'pointer':'default';
     comparisonCanvas.hidden = false; artifactImage.hidden = true;
     if (selected) updateDetail();
   }
-  comparisonCanvas.addEventListener('click',e=>{if(selected?.pattern.sourceNumber===2005&&window.MotifComparison.figureAt(comparisonCanvas,e.clientX,e.clientY))startFigureDance();});
+  comparisonCanvas.addEventListener('click',e=>{if(patternMotion(selected?.pattern)&&window.MotifComparison.figureAt(comparisonCanvas,e.clientX,e.clientY))startFigureDance();});
   figureGesture.addEventListener('click',startFigureDance);
-  comparisonCanvas.addEventListener('keydown',e=>{if(selected?.pattern.sourceNumber===2005&&(e.key==='Enter'||e.key===' ')){e.preventDefault();startFigureDance();}});
+  comparisonCanvas.addEventListener('keydown',e=>{if(patternMotion(selected?.pattern)&&(e.key==='Enter'||e.key===' ')){e.preventDefault();startFigureDance();}});
   artifactImage.addEventListener('load', () => { if (selected) updateArtifactComparison(); });
   document.fonts?.ready.then(() => { if (selected) updateArtifactComparison(); });
 
@@ -532,6 +544,8 @@
       patterns=response; texture=image;
       const figure=patterns.find(p=>p.sourceNumber===2005);
       if (figure && window.FigureDance?.ink) figure.ink=window.FigureDance.ink;
+      const hunting=patterns.find(p=>p.sourceNumber===2007);
+      if (hunting && window.HuntingMotion?.ink) hunting.ink=window.HuntingMotion.ink;
       makeNodes(); prepareSprites(); resize();
       ready=true; buildCatalog(); document.querySelector('#loading').hidden=true;
       // Old specimen links resolve to the single retained representative.

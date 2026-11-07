@@ -8,8 +8,11 @@
  function affine(from,to){const[p,q,r]=from,[u,v,w]=to,x=q[0]-p[0],y=q[1]-p[1],xx=r[0]-p[0],yy=r[1]-p[1],det=x*yy-xx*y;if(Math.abs(det)<1e-8)return null;const a=((v[0]-u[0])*yy-(w[0]-u[0])*y)/det,c=((w[0]-u[0])*x-(v[0]-u[0])*xx)/det,b=((v[1]-u[1])*yy-(w[1]-u[1])*y)/det,d=((w[1]-u[1])*x-(v[1]-u[1])*xx)/det;return[a,b,c,d,u[0]-a*p[0]-c*p[1],u[1]-b*p[0]-d*p[1]];}
  function triangle(g,path,from,to){const m=affine(from,to);if(!m)return;g.save();g.beginPath();g.moveTo(...to[0]);g.lineTo(...to[1]);g.lineTo(...to[2]);g.closePath();g.clip();g.transform(...m);g.fill(path);g.restore();}
  function sourceMark(p,image){
-  const mark=global.ArtifactSourceTraces?.traces[p.sourceNumber],iw=image.naturalWidth||image.width,ih=image.naturalHeight||image.height;
+  let mark=global.ArtifactSourceTraces?.traces[p.sourceNumber];const iw=image.naturalWidth||image.width,ih=image.naturalHeight||image.height;
   if(!mark||mark.source!==p.artifact.src||mark.sourceSize[0]!==iw||mark.sourceSize[1]!==ih)throw Error('Source marking does not match its photograph');
+  // The clean hunting tracing is shared by the drifting sprite and this photo.
+  // Keep its existing source-photo registration; accept only this exact rig ink.
+  if(p.sourceNumber===2007&&global.HuntingMotion?.ink===p.ink)mark={...mark,inkFingerprint:fingerprint(p.ink),registration:{...mark.registration,inkBounds:global.HuntingMotion.bounds}};
   if(mark.kind==='same-source-mask'&&mark.inkFingerprint!==fingerprint(p.ink))throw Error('Original source mask has changed');
   if(mark.kind==='source-lines'&&!mark.paths?.length)throw Error('Missing original groove traces');
   return mark;
@@ -35,13 +38,14 @@
   const iw=image.naturalWidth||image.width,ih=image.naturalHeight||image.height,mark=sourceMark(p,image),portrait=iw/ih<.85;canvas.width=portrait?1000:1200;canvas.height=portrait?1100:800;const g=canvas.getContext('2d'),displayWidth=canvas.parentElement?.clientWidth||canvas.clientWidth||540,labelSize=Math.max(33,Math.ceil(12*canvas.width/displayWidth)),labelWidth=labelSize*4+20,areaW=canvas.width-labelWidth-40,areaH=canvas.height-60,s=Math.min(areaW/iw,areaH/ih),ix=20+(areaW-iw*s)/2,iy=30+(areaH-ih*s)/2,labelY=portrait?185:125;
   g.clearRect(0,0,canvas.width,canvas.height);g.drawImage(image,ix,iy,iw*s,ih*s);const layer=layerFor(p,image,mark,s),anchor=anchorFor(layer,mark);g.save();g.shadowColor='#e9ac3e';g.shadowBlur=mark.haloBlur??4;g.drawImage(layer,ix,iy,iw*s,ih*s);g.restore();
   const start=[ix+anchor.point[0]/layer.width*iw*s,iy+anchor.point[1]/layer.height*ih*s],end=[canvas.width-labelWidth-10,labelY];g.save();g.strokeStyle='#ffe08b';g.lineWidth=1.4;g.globalAlpha=.75;g.beginPath();g.moveTo(...start);g.lineTo(...end);g.stroke();g.globalAlpha=1;g.fillStyle='#ffe08b';g.beginPath();g.arc(...start,3.5,0,Math.PI*2);g.fill();g.fillStyle='#e6d39f';g.font=labelSize+'px Huiwen,serif';g.fillText('纹饰位置',end[0]+10,end[1]-15,labelWidth-20);g.restore();
-  if(p.sourceNumber===2005){
+  if(p.sourceNumber===2005||p.sourceNumber===2007){
    // Retain the original photo, tracing and leader in their exact popup layout.
    // Only the gold figure layer changes while the user-triggered dance plays.
    const base=makeCanvas(canvas.width,canvas.height),b=base.getContext('2d');
    b.drawImage(image,ix,iy,iw*s,ih*s);
    b.strokeStyle='#ffe08b';b.lineWidth=1.4;b.globalAlpha=.75;b.beginPath();b.moveTo(...start);b.lineTo(...end);b.stroke();b.globalAlpha=1;b.fillStyle='#ffe08b';b.beginPath();b.arc(...start,3.5,0,Math.PI*2);b.fill();b.fillStyle='#e6d39f';b.font=labelSize+'px Huiwen,serif';b.fillText('纹饰位置',end[0]+10,end[1]-15,labelWidth-20);
-   figureLayouts.set(canvas,{base,layer,ix,iy,w:iw*s,h:ih*s});
+   const rest=makeCanvas(canvas.width,canvas.height);rest.getContext('2d').drawImage(canvas,0,0);
+   figureLayouts.set(canvas,{base,rest,layer,ix,iy,w:iw*s,h:ih*s,sourceNumber:p.sourceNumber,mark,motionLayer:makeCanvas(canvas.width,canvas.height),photo:image});
   }else figureLayouts.delete(canvas);
   canvas.dataset.comparisonMode=mark.kind;return{mode:mark.kind,sourceBound:true,overlayPixels:anchor.pixels,sourceSize:[iw,ih],outputSize:[canvas.width,canvas.height],sourcePathCount:mark.paths?.length||0};
  }
@@ -50,24 +54,36 @@
   const b=canvas.getBoundingClientRect(),s=Math.min(b.width/canvas.width,b.height/canvas.height);
   const x=(clientX-b.left-(b.width-canvas.width*s)/2)/s,y=(clientY-b.top-(b.height-canvas.height*s)/2)/s;
   const px=(x-a.ix)/a.w*100,py=(y-a.iy)/a.h*100;
+  if(a.sourceNumber===2007){const[x,y,w,h]=a.mark.registration.box;return px>=x&&px<=x+w&&py>=y&&py<=y+h;}
   return px>=16&&px<=87&&py>=29&&py<=89;
  }
  function figureGuidePosition(canvas){
   const a=figureLayouts.get(canvas);if(!a)return null;
   const b=canvas.getBoundingClientRect(),s=Math.min(b.width/canvas.width,b.height/canvas.height);
   if(!s)return null;
-  return{x:(b.width-canvas.width*s)/2+(a.ix+a.w*.565)*s,y:(b.height-canvas.height*s)/2+(a.iy+a.h*.54)*s};
+  const [px,py]=a.sourceNumber===2007?[.57,.79]:[.565,.54];
+  return{x:(b.width-canvas.width*s)/2+(a.ix+a.w*px)*s,y:(b.height-canvas.height*s)/2+(a.iy+a.h*py)*s};
  }
  function animateFigure(canvas,seconds,texture){
-  const a=figureLayouts.get(canvas),rig=global.FigureDance;if(!a||!rig)return false;
+  const a=figureLayouts.get(canvas);if(!a)return false;const rig=a.sourceNumber===2007?global.HuntingMotion:global.FigureDance;if(!rig)return false;
   const smooth=v=>{v=Math.max(0,Math.min(1,v));return v*v*(3-2*v);};
   const alpha=smooth(seconds/.2)*smooth((rig.duration-seconds)/.2),g=canvas.getContext('2d');
+  if(alpha===0){g.clearRect(0,0,canvas.width,canvas.height);g.drawImage(a.rest,0,0);return true;}
   g.clearRect(0,0,canvas.width,canvas.height);g.drawImage(a.base,0,0);
-  g.save();g.shadowColor='#e9ac3e';g.shadowBlur=4;if(alpha<.999){g.globalAlpha=1-alpha;g.drawImage(a.layer,a.ix,a.iy,a.w,a.h);}
+  g.save();g.shadowColor='#e9ac3e';g.shadowBlur=a.mark.haloBlur??4;if(alpha<.999){g.globalAlpha=1-alpha;g.drawImage(a.layer,a.ix,a.iy,a.w,a.h);}
   // Registration keeps the three belly circles over the original marked
   // circles (source percentages approximately 51.5/46.5, 53.3, 61.0).
-  const x=a.ix+(-.5-16/2.72*.98)/100*a.w,y=a.iy+(30.5-16/2.72*.56)/100*a.h;
-  g.globalAlpha=alpha;g.drawImage(rig.render(seconds,texture,'#ffe08b'),x,y,320/2.72*.98/100*a.w,320/2.72*.56/100*a.h);g.restore();
+  g.globalAlpha=alpha;
+  if(a.sourceNumber===2007){
+   const [bx,by,bw,bh]=a.mark.registration.box,[ix0,iy0,ix1,iy1]=a.mark.registration.inkBounds,[rx,ry,rw,rh]=rig.renderBounds;
+   const x=a.ix+(bx+(rx-ix0)*bw/(ix1-ix0))/100*a.w,y=a.iy+(by+(ry-iy0)*bh/(iy1-iy0))/100*a.h;
+   const m=a.motionLayer.getContext('2d');m.clearRect(0,0,canvas.width,canvas.height);m.drawImage(rig.render(seconds,texture,'#ffe08b'),x,y,rw*bw/(ix1-ix0)/100*a.w,rh*bh/(iy1-iy0)/100*a.h);
+   m.globalCompositeOperation='destination-in';m.drawImage(a.photo,a.ix,a.iy,a.w,a.h);m.globalCompositeOperation='source-over';g.drawImage(a.motionLayer,0,0);
+  }else{
+   const x=a.ix+(-.5-16/2.72*.98)/100*a.w,y=a.iy+(30.5-16/2.72*.56)/100*a.h;
+   g.drawImage(rig.render(seconds,texture,'#ffe08b'),x,y,320/2.72*.98/100*a.w,320/2.72*.56/100*a.h);
+  }
+  g.restore();
   return true;
  }
  global.MotifComparison={render,figureAt,figureGuidePosition,animateFigure};
