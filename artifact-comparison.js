@@ -1,7 +1,7 @@
 /* Artifact popups show only the photograph and source-aligned location markings. */
 (function(global){
  'use strict';
- const cache=new Map();
+ const cache=new Map(),figureLayouts=new WeakMap();
  function makeCanvas(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;return c;}
  function fingerprint(str){let h=2166136261;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619);}return(h>>>0).toString(16);}
  function pathFor(p){const old=cache.get(p.sourceNumber);if(old?.ink===p.ink)return old.path;const path=new Path2D(p.ink);cache.set(p.sourceNumber,{ink:p.ink,path});return path;}
@@ -35,7 +35,34 @@
   const iw=image.naturalWidth||image.width,ih=image.naturalHeight||image.height,mark=sourceMark(p,image),portrait=iw/ih<.85;canvas.width=portrait?1000:1200;canvas.height=portrait?1100:800;const g=canvas.getContext('2d'),displayWidth=canvas.parentElement?.clientWidth||canvas.clientWidth||540,labelSize=Math.max(33,Math.ceil(12*canvas.width/displayWidth)),labelWidth=labelSize*4+20,areaW=canvas.width-labelWidth-40,areaH=canvas.height-60,s=Math.min(areaW/iw,areaH/ih),ix=20+(areaW-iw*s)/2,iy=30+(areaH-ih*s)/2,labelY=portrait?185:125;
   g.clearRect(0,0,canvas.width,canvas.height);g.drawImage(image,ix,iy,iw*s,ih*s);const layer=layerFor(p,image,mark,s),anchor=anchorFor(layer,mark);g.save();g.shadowColor='#e9ac3e';g.shadowBlur=mark.haloBlur??4;g.drawImage(layer,ix,iy,iw*s,ih*s);g.restore();
   const start=[ix+anchor.point[0]/layer.width*iw*s,iy+anchor.point[1]/layer.height*ih*s],end=[canvas.width-labelWidth-10,labelY];g.save();g.strokeStyle='#ffe08b';g.lineWidth=1.4;g.globalAlpha=.75;g.beginPath();g.moveTo(...start);g.lineTo(...end);g.stroke();g.globalAlpha=1;g.fillStyle='#ffe08b';g.beginPath();g.arc(...start,3.5,0,Math.PI*2);g.fill();g.fillStyle='#e6d39f';g.font=labelSize+'px Huiwen,serif';g.fillText('纹饰位置',end[0]+10,end[1]-15,labelWidth-20);g.restore();
+  if(p.sourceNumber===2005){
+   // Retain the original photo, tracing and leader in their exact popup layout.
+   // Only the gold figure layer changes while the user-triggered dance plays.
+   const base=makeCanvas(canvas.width,canvas.height),b=base.getContext('2d');
+   b.drawImage(image,ix,iy,iw*s,ih*s);
+   b.strokeStyle='#ffe08b';b.lineWidth=1.4;b.globalAlpha=.75;b.beginPath();b.moveTo(...start);b.lineTo(...end);b.stroke();b.globalAlpha=1;b.fillStyle='#ffe08b';b.beginPath();b.arc(...start,3.5,0,Math.PI*2);b.fill();b.fillStyle='#e6d39f';b.font=labelSize+'px Huiwen,serif';b.fillText('纹饰位置',end[0]+10,end[1]-15,labelWidth-20);
+   figureLayouts.set(canvas,{base,layer,ix,iy,w:iw*s,h:ih*s});
+  }else figureLayouts.delete(canvas);
   canvas.dataset.comparisonMode=mark.kind;return{mode:mark.kind,sourceBound:true,overlayPixels:anchor.pixels,sourceSize:[iw,ih],outputSize:[canvas.width,canvas.height],sourcePathCount:mark.paths?.length||0};
  }
- global.MotifComparison={render};
+ function figureAt(canvas,clientX,clientY){
+  const a=figureLayouts.get(canvas);if(!a)return false;
+  const b=canvas.getBoundingClientRect(),s=Math.min(b.width/canvas.width,b.height/canvas.height);
+  const x=(clientX-b.left-(b.width-canvas.width*s)/2)/s,y=(clientY-b.top-(b.height-canvas.height*s)/2)/s;
+  const px=(x-a.ix)/a.w*100,py=(y-a.iy)/a.h*100;
+  return px>=16&&px<=87&&py>=29&&py<=89;
+ }
+ function animateFigure(canvas,seconds,texture){
+  const a=figureLayouts.get(canvas),rig=global.FigureDance;if(!a||!rig)return false;
+  const smooth=v=>{v=Math.max(0,Math.min(1,v));return v*v*(3-2*v);};
+  const alpha=smooth(seconds/.2)*smooth((rig.duration-seconds)/.2),g=canvas.getContext('2d');
+  g.clearRect(0,0,canvas.width,canvas.height);g.drawImage(a.base,0,0);
+  g.save();g.shadowColor='#e9ac3e';g.shadowBlur=4;if(alpha<.999){g.globalAlpha=1-alpha;g.drawImage(a.layer,a.ix,a.iy,a.w,a.h);}
+  // Registration keeps the three belly circles over the original marked
+  // circles (source percentages approximately 51.5/46.5, 53.3, 61.0).
+  const x=a.ix+(-.5-16/2.72*.98)/100*a.w,y=a.iy+(30.5-16/2.72*.56)/100*a.h;
+  g.globalAlpha=alpha;g.drawImage(rig.render(seconds,texture,'#ffe08b'),x,y,320/2.72*.98/100*a.w,320/2.72*.56/100*a.h);g.restore();
+  return true;
+ }
+ global.MotifComparison={render,figureAt,animateFigure};
 })(typeof window==='undefined'?globalThis:window);

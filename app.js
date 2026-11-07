@@ -315,7 +315,7 @@
     const n = item.node, sprite = sprites.get(n.pattern.sourceNumber);
     if (!sprite) return;
     ctx.save(); ctx.translate(item.x, item.y); ctx.rotate(item.angle);
-    ctx.globalAlpha = n.opacity * (dance ? .45 : selected && selected !== n ? .5 : 1);
+    ctx.globalAlpha = n.opacity * (selected && selected !== n ? .5 : 1);
     if (selected === n || hover === n) { ctx.filter = 'brightness(1.4)'; ctx.shadowColor = 'rgba(218,192,121,.35)'; ctx.shadowBlur = selected === n ? 15 : 7; }
     ctx.drawImage(sprite, -item.size / 2, -item.size / 2, item.size, item.size);
     ctx.restore();
@@ -344,8 +344,7 @@
         screenNodes.push({ ...item, x: item.x + x * spanX, y: item.y + y * spanY });
       }
     }
-    for (const item of screenNodes) if (item.node !== dance?.node) drawSprite(item);
-    if (dance) drawDance();
+    for (const item of screenNodes) drawSprite(item);
     const chosen = screenNodes.find(n => n.node === selected);
     if (chosen) drawFocus(chosen);
     if (selected) updateDetail(chosen);
@@ -357,7 +356,7 @@
     if (dance) {
       dance.elapsed += dt;
       if (dance.elapsed >= window.FigureDance.duration) { dance = null; updateState(); }
-      dirty = true;
+      else window.MotifComparison.animateFigure(comparisonCanvas,dance.elapsed,texture);
     }
     if (ready && dirty) { draw(); dirty = false; }
     if (now - lastTrace > 350) { canvas.dataset.phase = clock.toFixed(3); lastTrace = now; }
@@ -368,7 +367,6 @@
     const bounds = canvas.getBoundingClientRect();
     x = (x - bounds.left) * width / bounds.width;
     y = (y - bounds.top) * height / bounds.height;
-    if (dance?.box && Math.abs(x-dance.box.x)<dance.box.size*.48 && Math.abs(y-dance.box.y)<dance.box.size*.54) return dance.node;
     const options = screenNodes.filter(s => Math.hypot(s.x - x, s.y - y) < Math.max(s.size * .75 + tolerance, 19));
     options.sort((a, b) => Math.hypot(a.x-x,a.y-y)/a.size - Math.hypot(b.x-x,b.y-y)/b.size);
     for (const item of options) {
@@ -391,7 +389,8 @@
     canvas.dataset.selected = selected ? String(selected.pattern.sourceNumber) : '';
     canvas.dataset.dancing = dance ? '2005' : '';
     flowEl.textContent = dance ? '小人起舞' : stopped ? '已停驻' : reducedMotion.matches ? '静态浏览' : '缓缓流动';
-    hintEl.innerHTML = dance ? '再点小人重跳 <span>·</span> 点击空白继续漫游' : stopped ? '点击空白处 <span>·</span> 继续漫游' : '拖动浏览 <span>·</span> 点击小人起舞';
+    hintEl.innerHTML = dance ? '再点纹饰重跳 <span>·</span> 点击空白继续漫游' : selected?.pattern.sourceNumber===2005 ? '点击文物上的小人起舞 <span>·</span> 点击空白继续漫游' : stopped ? '点击空白处 <span>·</span> 继续漫游' : '拖动浏览 <span>·</span> 点击纹饰停驻';
+    document.querySelector('#figure-dance-hint').hidden=selected?.pattern.sourceNumber!==2005;
     if (selected) {
       const p = selected.pattern, displayPeriod = p.displayPeriod || p.period;
       nameEl.textContent = p.name; periodEl.textContent = displayPeriod;
@@ -411,8 +410,8 @@
         artifactEl.dataset.shape = artifact.shape || 'portrait';
       } else { artifactImage.removeAttribute('src'); artifactImage.alt = ''; }
       detail.hidden = false; updateDetail();
-      announcement.textContent = p.name + '，' + displayPeriod + '。' + '所有纹饰已暂停。';
-    } else { detail.hidden = true; announcement.textContent = dance ? '人形舞蹈纹开始跳舞，结束后继续漫游。' : '已取消选中，继续漫游。'; }
+      announcement.textContent = dance ? '文物上的人形舞蹈纹开始跳舞，结束后恢复原标记。' : p.name + '，' + displayPeriod + '。' + '所有纹饰已暂停。';
+    } else { detail.hidden = true; announcement.textContent = '已取消选中，继续漫游。'; }
     dirty = true;
   }
 
@@ -427,25 +426,11 @@
     detail.style.top = clamp(y, 110, Math.max(110, height - boxHeight - 75)) + 'px';
   }
 
-  function drawDance() {
-    const source=project(dance.node),t=dance.elapsed,duration=window.FigureDance.duration;
-    const smooth=v=>{v=clamp(v,0,1);return v*v*(3-2*v);};
-    const envelope=smooth(t/.2)*smooth((duration-t)/.2);
-    const targetSize=Math.min(290,Math.max(210,source.size*2.1),height*.55,width*.7);
-    const size=source.size+(targetSize-source.size)*envelope;
-    const margin=targetSize*.56;
-    const x=source.x+(clamp(source.x,margin,width-margin)-source.x)*envelope;
-    const y=source.y+(clamp(source.y,130+margin,height-75-margin)-source.y)*envelope;
-    dance.box={x,y,size};
-    const sprite=window.FigureDance.render(t,texture,gold);
-    ctx.save();ctx.translate(x,y);ctx.globalAlpha=1;ctx.filter='brightness(1.4)';
-    ctx.shadowColor='rgba(218,192,121,.25)';ctx.shadowBlur=8;
-    ctx.drawImage(sprite,-size/2,-size/2,size,size);ctx.restore();
+  function startFigureDance() {
+    if(selected?.pattern.sourceNumber!==2005 || !window.FigureDance || !artifactImage.complete || !artifactImage.naturalWidth)return;
+    dance={node:selected,elapsed:0};updateState();
   }
   function select(node) {
-    if (node.pattern.sourceNumber===2005 && window.FigureDance) {
-      selected=null;hover=null;dance={node,elapsed:0,box:null};updateState();return;
-    }
     dance=null; selected = selected === node ? null : node; hover = null; updateState();
   }
   function cancel() { dance = null; selected = null; updateState(); }
@@ -498,7 +483,7 @@
   canvas.addEventListener('keydown',e=>{
     if (!['ArrowRight','ArrowLeft','ArrowUp','ArrowDown','Enter',' '].includes(e.key)) return;
     e.preventDefault();
-    if(e.key==='Enter'||e.key===' '){if(dance)select(dance.node);else if(selected)select(selected);else{const first=screenNodes.find(s=>s.node.primary);if(first)select(first.node);}return;}
+    if(e.key==='Enter'||e.key===' '){if(selected)cancel();else{const first=screenNodes.find(s=>s.node.primary);if(first)select(first.node);}return;}
     const visible=screenNodes.filter(s=>s.node.primary).sort((a,b)=>a.x-b.x||a.y-b.y);
     if(!visible.length)return; focusedIndex=(focusedIndex+(e.key==='ArrowLeft'||e.key==='ArrowUp'?-1:1)+visible.length)%visible.length;
     dance=null; selected=visible[focusedIndex].node;updateState();
@@ -511,17 +496,22 @@
     const pattern = selected?.pattern, comparison = pattern?.artifact?.comparison;
     if (!comparison || !artifactImage.complete || !artifactImage.naturalWidth) return;
     window.MotifComparison.render(comparisonCanvas, pattern, artifactImage, texture);
-    comparisonCanvas.setAttribute('aria-label', pattern.name + '，纹饰位置');
+    const canDance=pattern.sourceNumber===2005&&!!window.FigureDance;
+    comparisonCanvas.setAttribute('aria-label', pattern.name + (canDance?'，点击文物上的小人起舞':'，纹饰位置'));
+    comparisonCanvas.setAttribute('role',canDance?'button':'img');
+    comparisonCanvas.tabIndex=canDance?0:-1;comparisonCanvas.style.cursor=canDance?'pointer':'default';
     comparisonCanvas.hidden = false; artifactImage.hidden = true;
     if (selected) updateDetail();
   }
+  comparisonCanvas.addEventListener('click',e=>{if(selected?.pattern.sourceNumber===2005&&window.MotifComparison.figureAt(comparisonCanvas,e.clientX,e.clientY))startFigureDance();});
+  comparisonCanvas.addEventListener('keydown',e=>{if(selected?.pattern.sourceNumber===2005&&(e.key==='Enter'||e.key===' ')){e.preventDefault();startFigureDance();}});
   artifactImage.addEventListener('load', () => { if (selected) updateArtifactComparison(); });
   document.fonts?.ready.then(() => { if (selected) updateArtifactComparison(); });
 
   async function start() {
     try {
       const [response, image] = await Promise.all([
-        fetch('patterns.json?v=figure-dance-20261106-1').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
+        fetch('patterns.json?v=figure-popup-dance-20261107-1').then(r=>{if(!r.ok)throw Error('patterns');return r.json();}),
         new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>resolve(null);img.src='assets/ink-pigment.png';})
       ]);
       patterns=response; texture=image;
