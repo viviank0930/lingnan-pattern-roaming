@@ -1,5 +1,5 @@
 /* Six deer and two archers, traced from the user's clear hunting pictograph.
- * The deer, archers and stationary tree retain the asymmetric reference marks.
+ * The deer, archers and swaying tree retain the asymmetric reference marks.
  * Source coordinates are normalized to the existing sourceNumber 2007 bounds. */
 (function(global){
  'use strict';
@@ -11,10 +11,20 @@
  const rotate=(p,c,angle)=>{const x=p[0]-c[0],y=p[1]-c[1];return[c[0]+x*Math.cos(angle)-y*Math.sin(angle),c[1]+x*Math.sin(angle)+y*Math.cos(angle)];};
  function envelope(t){return smooth(t/.36)*smooth((duration-t)/.46);}
  function deform(p,entity,part,t){
-  if(entity.kind==='tree'||t<=0||t>=duration)return p;
+  if(t<=0||t>=duration)return p;
   const e=envelope(t),cycle=t*2*Math.PI/(entity.kind==='hunter'?.74:.66)+entity.phase,wave=Math.sin(cycle),opposite=Math.sin(cycle+Math.PI),speed=Math.sin(t*Math.PI/duration);
   let [x,y]=p;
-  if(entity.kind==='deer'){
+  if(entity.kind==='tree'){
+   // Bend from the rooted base; connected branch tips flutter with the trunk.
+   // The shared envelope starts and settles with the hunting animation.
+   const tip=smooth((361-y)/215),sway=Math.sin(t*2*Math.PI/1.6);
+   x+=24*sway*tip*e;
+   y-=3*(1-Math.cos(t*2*Math.PI/1.6))*tip*e;
+   if(part==='branch'){
+    const reach=Math.min(1,Math.abs(p[0]-954)/49);
+    y+=4*Math.sin(t*2*Math.PI/.78+.5)*reach*tip*e;
+   }
+  }else if(entity.kind==='deer'){
    // Smooth weighting articulates the open pictographic limbs without cuts.
    const leg=smooth((y-entity.legY)/70),side=x<entity.center[0]?-1:1;
    x+=leg*(side<0?wave:opposite)*36*e;
