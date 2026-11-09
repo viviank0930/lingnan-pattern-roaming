@@ -14,12 +14,15 @@
   // Keep its existing source-photo registration; accept only this exact rig ink.
   if(p.sourceNumber===2007&&global.HuntingMotion?.ink===p.ink)mark={...mark,inkFingerprint:fingerprint(p.ink),registration:{...mark.registration,inkBounds:global.HuntingMotion.bounds}};
   if(mark.kind==='same-source-mask'&&mark.inkFingerprint!==fingerprint(p.ink))throw Error('Original source mask has changed');
-  if(mark.kind==='source-lines'&&!mark.paths?.length)throw Error('Missing original groove traces');
+  if((mark.kind==='source-lines'||mark.kind==='source-fill')&&!mark.paths?.length)throw Error('Missing original groove traces');
   return mark;
  }
  function layerFor(p,image,mark,displayScale){
   const iw=image.naturalWidth||image.width,ih=image.naturalHeight||image.height,s=1600/Math.max(iw,ih),w=Math.round(iw*s),h=Math.round(ih*s),c=makeCanvas(w,h),g=c.getContext('2d',{willReadFrequently:true});
-  if(mark.kind==='source-lines'){
+  if(mark.kind==='source-fill'){
+   // Photo-derived ridge boundaries retain their original source coordinates.
+   g.save();g.scale(w/100,h/100);g.fillStyle='#ffe08b';g.globalAlpha=mark.fillOpacity??.62;g.fill(new Path2D(mark.paths.join(' ')));g.restore();
+  }else if(mark.kind==='source-lines'){
    const sourcePath=new Path2D(mark.paths.join(' ')),weight=mark.strokeWidth/Math.sqrt((iw*displayScale/100)*(ih*displayScale/100));
    g.save();g.scale(w/100,h/100);g.lineCap='round';g.lineJoin='round';g.strokeStyle='#684820';g.globalAlpha=mark.edgeOpacity??.64;g.lineWidth=weight*1.7;g.stroke(sourcePath);g.strokeStyle='#ffe08b';g.globalAlpha=mark.strokeOpacity??.94;g.lineWidth=weight;g.stroke(sourcePath);g.restore();
   }else if(mark.kind==='same-source-mask'){
