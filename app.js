@@ -553,6 +553,8 @@
       const zigzag=patterns.find(p=>p.sourceNumber===26);
       const zigzagPhoto=window.ArtifactSourceTraces?.traces[26]?.artifactOverride;
       if (zigzag && zigzagPhoto) zigzag.artifact={...zigzag.artifact,...zigzagPhoto};
+      const zigzagInk=window.ArtifactSourceTraces?.traces[26]?.roamingInk;
+      if (zigzag && zigzagInk) zigzag.ink=zigzagInk;
       makeNodes(); prepareSprites(); resize();
       ready=true; buildCatalog(); document.querySelector('#loading').hidden=true;
       // Old specimen links resolve to the single retained representative.
