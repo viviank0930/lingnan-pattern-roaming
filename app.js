@@ -545,6 +545,10 @@
       if (figure && window.FigureDance?.ink) figure.ink=window.FigureDance.ink;
       const hunting=patterns.find(p=>p.sourceNumber===2007);
       if (hunting && window.HuntingMotion?.ink) hunting.ink=window.HuntingMotion.ink;
+      // The floating leaf and its photograph share one source-aligned tracing.
+      const leaf=patterns.find(p=>p.sourceNumber===4001);
+      const leafInk=window.ArtifactSourceTraces?.traces[4001]?.roamingInk;
+      if (leaf && leafInk) leaf.ink=leafInk;
       makeNodes(); prepareSprites(); resize();
       ready=true; buildCatalog(); document.querySelector('#loading').hidden=true;
       // Old specimen links resolve to the single retained representative.
