@@ -1,6 +1,6 @@
 /* Source-bound markings; no generic motif placement. */
 window.ArtifactSourceTraces={
-  "version": "leaf-stripes-source-match-20261110-1",
+  "version": "zigzag-source-unit-20261110-1",
   "traces": {
     "1": {
       "source": "assets/artifacts/composite-3.webp",
@@ -487,24 +487,48 @@ window.ArtifactSourceTraces={
         157
       ],
       "sourceSha256": "48a2b2f56161fb97f23f51939c1c9d2808ea1d382442c1974d1fbd3902155ce8",
-      "kind": "source-lines",
-      "paths": [
-        "M31.2 17.5Q33.4 22.3 38.4 26.9",
-        "M40 14.4Q42.6 19.1 49.2 24.6",
-        "M48.9 11.8Q52.2 17.6 59.3 22.5",
-        "M58.1 10.5Q62 15.7 69.7 20.5",
-        "M15.9 60.9Q21.4 64.2 28.3 68.1",
-        "M26 58.4Q31.5 61.8 39.9 66.5",
-        "M40 57.6Q46 60.5 53.3 64.4",
-        "M52.6 56.1Q60.1 59.7 67 63.1"
-      ],
+      "kind": "same-source-mask",
+      "inkFingerprint": "9c3e542d",
+      "registration": {
+        "inkBounds": [
+          5,
+          21.652999877929688,
+          101,
+          84.34700012207031
+        ],
+        "inkClip": [
+          20,
+          21.652999877929688,
+          28,
+          26
+        ],
+        "quad": [
+          [
+            26.82926829268293,
+            24.522292993630572
+          ],
+          [
+            64.39024390243904,
+            7.579617834394906
+          ],
+          [
+            64.39024390243904,
+            35.40127388535033
+          ],
+          [
+            26.82926829268293,
+            52.34394904458599
+          ]
+        ]
+      },
       "anchor": [
-        65,
-        62
+        45,
+        32
       ],
-      "strokeWidth": 2.7,
-      "note": "原先连续折线跨过磨蚀区，已删去推测的中间连接；改为上下两组仍可辨的斜刻线，保留缺失范围。",
-      "omitRestoration": true
+      "fillOpacity": 0.72,
+      "haloBlur": 0.6,
+      "omitRestoration": false,
+      "note": "直接使用漫游中的同一组曲折纹路径，选取连续的一组曲折单元；按陶片左上部可辨折线的方向、间距和转折位置调整四角配准。"
     },
     "2001": {
       "source": "assets/artifacts/fu-91.webp",
