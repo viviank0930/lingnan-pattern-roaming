@@ -1,6 +1,6 @@
 /* Source-bound markings; no generic motif placement. */
 window.ArtifactSourceTraces={
-  "version": "fu91-three-bands-20261110-1",
+  "version": "zigzag-exhibit277-20261110-1",
   "traces": {
     "1": {
       "source": "assets/artifacts/composite-3.webp",
@@ -481,12 +481,12 @@ window.ArtifactSourceTraces={
       "note": "选择原照片中右部可连续辨认的两列两行长方格，三道横纹与三道纵纹沿实物纹脊描出；保留原有斜度、收拢方向和不等间距，不再叠印缩小的规整网格。"
     },
     "26": {
-      "source": "assets/artifacts/composite-26.webp",
+      "source": "assets/artifacts/pottery-doc-5.webp",
       "sourceSize": [
-        123,
-        157
+        1000,
+        828
       ],
-      "sourceSha256": "48a2b2f56161fb97f23f51939c1c9d2808ea1d382442c1974d1fbd3902155ce8",
+      "sourceSha256": "3d3c37e4112df96a39ecb97b118fcf0d1ca10cf8457dece12d1d6c8c7b120b8d",
       "kind": "same-source-mask",
       "inkFingerprint": "9c3e542d",
       "registration": {
@@ -496,39 +496,50 @@ window.ArtifactSourceTraces={
           101,
           84.34700012207031
         ],
-        "inkClip": [
-          20,
-          21.652999877929688,
-          28,
-          26
-        ],
-        "quad": [
-          [
-            26.82926829268293,
-            24.522292993630572
-          ],
-          [
-            64.39024390243904,
-            7.579617834394906
-          ],
-          [
-            64.39024390243904,
-            35.40127388535033
-          ],
-          [
-            26.82926829268293,
-            52.34394904458599
-          ]
+        "parts": [
+          {
+            "subpaths": [
+              12
+            ],
+            "transform": [
+              0.8710015002638102,
+              -0.006172099124847188,
+              0.15298006031662226,
+              0.8808281579716267,
+              -4.523631137404584,
+              1.580008598638403
+            ]
+          },
+          {
+            "subpaths": [
+              12
+            ],
+            "transform": [
+              0.8536639928817749,
+              0.07990370378019694,
+              0.12881019581109285,
+              0.7072580295529415,
+              2.5446944078989304,
+              31.99376114263933
+            ]
+          }
         ]
       },
       "anchor": [
-        45,
-        32
+        56,
+        50
       ],
       "fillOpacity": 0.72,
       "haloBlur": 0.6,
       "omitRestoration": false,
-      "note": "直接使用漫游中的同一组曲折纹路径，选取连续的一组曲折单元；按陶片左上部可辨折线的方向、间距和转折位置调整四角配准。"
+      "note": "替换为用户选择的展品277清晰实物照片。直接取漫游原始矢量中的完整曲折单元（第12子路径），配准陶片中部两处可辨折线；不重绘通用曲折符号。",
+      "artifactOverride": {
+        "src": "assets/artifacts/pottery-doc-5.webp",
+        "alt": "从化狮象遗址曲折纹附加堆纹陶片，展品277，用户指定的清晰实物照片",
+        "shape": "square",
+        "kind": "photo",
+        "caption": "实物照片"
+      }
     },
     "2001": {
       "source": "assets/artifacts/fu-91.webp",

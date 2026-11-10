@@ -549,6 +549,10 @@
       const leaf=patterns.find(p=>p.sourceNumber===4001);
       const leafInk=window.ArtifactSourceTraces?.traces[4001]?.roamingInk;
       if (leaf && leafInk) leaf.ink=leafInk;
+      // The selected clear specimen and its source registration are one pair.
+      const zigzag=patterns.find(p=>p.sourceNumber===26);
+      const zigzagPhoto=window.ArtifactSourceTraces?.traces[26]?.artifactOverride;
+      if (zigzag && zigzagPhoto) zigzag.artifact={...zigzag.artifact,...zigzagPhoto};
       makeNodes(); prepareSprites(); resize();
       ready=true; buildCatalog(); document.querySelector('#loading').hidden=true;
       // Old specimen links resolve to the single retained representative.
