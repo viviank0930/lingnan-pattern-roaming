@@ -350,10 +350,11 @@
     const shimmer = featured && roaming && !active;
     const light = shimmer ? .5 + .5 * Math.cos(clock * 2 * Math.PI / 2.8 + n.phase) : 1;
     const opacity = featured ? Math.max(n.opacity, prominentHunt ? 1 : .97) : n.opacity;
-    ctx.globalAlpha = opacity * (.84 + .16 * light) * (selected && selected !== n ? .5 : 1);
+    ctx.globalAlpha = opacity * (.68 + .32 * light) * (selected && selected !== n ? .5 : 1);
     if (active) ctx.filter = 'brightness(1.3)';
+    else if (shimmer) ctx.filter = `brightness(${1 + .28 * light})`;
     if (featured) {
-      const glow = (prominentHunt ? .78 : .66) + (shimmer ? .36 * (light - .65) : 0);
+      const glow = shimmer ? .28 + .68 * light : prominentHunt ? .78 : .66;
       ctx.shadowColor = prominentHunt ? `rgba(255,211,128,${glow})` : `rgba(255,216,126,${glow})`;
       ctx.shadowBlur = selected === n ? 15 : prominentHunt ? 10 : 8;
     } else if (active) {
