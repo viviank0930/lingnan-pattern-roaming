@@ -12,10 +12,11 @@
   const catalog = document.querySelector('#pattern-catalog'), browseButton = document.querySelector('#browse-patterns');
   const catalogRows = document.querySelector('#catalog-rows');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-  const featuredGold = '#f3d78e';
+  const featuredGold = '#f8dfa0', huntingGold = '#ffe4a2';
   const isDancer = pattern => !!pattern && (pattern.sourceNumber === 2005 || pattern.sourceNumber === window.RaisedFigureDance?.sourceNumber);
-  const isFeatured = pattern => isDancer(pattern) || pattern?.motifRole === 'hunting';
-  const baseSize = pattern => pattern.motifRole === 'hunting' ? 160 : isDancer(pattern) ? 109 : 90;
+  const isHunting = pattern => pattern?.motifRole === 'hunting';
+  const isFeatured = pattern => isDancer(pattern) || isHunting(pattern);
+  const baseSize = pattern => isHunting(pattern) ? 160 : isDancer(pattern) ? 109 : 90;
   const gold = '#c5ae72', sprites = new Map(), hitMasks = new Map(), pointers = new Map();
   const world = { width: 2800, height: 1900 };
   const camera = { x: 0, y: 0, zoom: 1 };
@@ -200,7 +201,8 @@
       g.drawImage(window.RaisedFigureDance.render(0, texture, featuredGold, true), 0, 0, 320, 320);
       return c;
     }
-    const pigment = isFeatured(pattern) ? featuredGold : gold;
+    const hunting = isHunting(pattern);
+    const pigment = hunting ? huntingGold : isDancer(pattern) ? featuredGold : gold;
     const path = normalizePath(pattern.ink);
     const render = weight => {
       g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, 320, 320);
@@ -227,7 +229,7 @@
       g.globalCompositeOperation = 'source-in'; g.fillStyle = pigment; g.fillRect(0, 0, 320, 320);
       // A light, solid impression under the grain keeps fine incisions legible
       // at the existing display size without blurring the space between them.
-      g.globalCompositeOperation = 'destination-over'; g.globalAlpha = .18;
+      g.globalCompositeOperation = 'destination-over'; g.globalAlpha = hunting ? .36 : .18;
       g.setTransform(2.72, 0, 0, 2.72, 16, 16); g.fill(path, 'nonzero');
       g.globalAlpha = 1;
       g.globalCompositeOperation = 'source-over';
@@ -342,11 +344,17 @@
     if (!sprite) return;
     ctx.save(); ctx.translate(item.x, item.y); ctx.rotate(item.angle);
     const featured = n.primary && isFeatured(n.pattern);
-    ctx.globalAlpha = (featured ? Math.max(n.opacity, .94) : n.opacity) * (selected && selected !== n ? .5 : 1);
-    if (featured || selected === n || hover === n) {
-      if (selected === n || hover === n) ctx.filter = 'brightness(1.3)';
-      ctx.shadowColor = featured ? 'rgba(255,216,126,.58)' : 'rgba(218,192,121,.35)';
-      ctx.shadowBlur = selected === n ? 15 : featured ? 7 : 5;
+    const prominentHunt = featured && isHunting(n.pattern);
+    const active = selected === n || hover === n;
+    const opacity = featured ? Math.max(n.opacity, prominentHunt ? 1 : .97) : n.opacity;
+    ctx.globalAlpha = opacity * (selected && selected !== n ? .5 : 1);
+    if (active) ctx.filter = 'brightness(1.3)';
+    if (featured) {
+      ctx.shadowColor = prominentHunt ? 'rgba(255,211,128,.78)' : 'rgba(255,216,126,.66)';
+      ctx.shadowBlur = selected === n ? 15 : prominentHunt ? 10 : 8;
+    } else if (active) {
+      ctx.shadowColor = 'rgba(218,192,121,.35)';
+      ctx.shadowBlur = selected === n ? 15 : 5;
     }
     ctx.drawImage(sprite, -item.size / 2, -item.size / 2, item.size, item.size);
     ctx.restore();

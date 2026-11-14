@@ -13,7 +13,7 @@
   const render = (seconds, texture, color) => base.render(seconds, texture, color, true);
   const pattern = {
     sourceNumber,
-    name: '人形舞蹈纹（双手上举）',
+    name: '人形舞蹈纹',
     period: '新石器时代晚期',
     isNew: true,
     artifact: { src: source, alt: '用户提供的双手上举人形舞蹈纹陶鼓形器照片', shape: 'portrait', comparison: true, silhouette },
