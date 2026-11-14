@@ -68,15 +68,30 @@
     }
     return rows;
   }
+  function raisedLeftArm(pose) {
+    const mirroredPose = [...pose];
+    mirroredPose[2] = pose[0] * -.7;
+    mirroredPose[3] = pose[1] * .56;
+    const rows = arm(1, mirroredPose).map(row => ({
+      width: row.width,
+      lines: row.lines.map(line => line.map(([x, y]) => [106-x, y]))
+    }));
+    const outline = rows[0].lines[0];
+    outline[0] = [49.6, 22.2];
+    outline[outline.length-1] = [44.6, 31.8];
+    return rows;
+  }
   let buffer, g;
-  function render(seconds, texture, color='#c5ae72') {
+  function render(seconds, texture, color='#c5ae72', bothArmsRaised=false) {
     if(!buffer){buffer=document.createElement('canvas');buffer.width=buffer.height=320;g=buffer.getContext('2d');}
     g.setTransform(1,0,0,1,0,0);g.globalAlpha=1;g.globalCompositeOperation='source-over';g.clearRect(0,0,320,320);
     const pose=poseAt(seconds);
+    const leftArm = bothArmsRaised ? raisedLeftArm(pose) : arm(0, pose);
+    const rightArm = arm(1, pose);
     function lines(alpha) {
       g.setTransform(2.72,0,0,2.72,16,16);g.globalAlpha=alpha;
       g.strokeStyle=color;g.lineCap='round';g.lineJoin='round';
-      for(const row of [...geometry,...arm(0,pose),...arm(1,pose)]){
+      for(const row of [...geometry,...leftArm,...rightArm]){
         g.beginPath();g.lineWidth=row.width+.06;
         for(const line of row.lines){
           line.forEach((p,i)=>{const q=deform(p,pose);i?g.lineTo(...q):g.moveTo(...q);});

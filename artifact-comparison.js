@@ -8,7 +8,7 @@
  function affine(from,to){const[p,q,r]=from,[u,v,w]=to,x=q[0]-p[0],y=q[1]-p[1],xx=r[0]-p[0],yy=r[1]-p[1],det=x*yy-xx*y;if(Math.abs(det)<1e-8)return null;const a=((v[0]-u[0])*yy-(w[0]-u[0])*y)/det,c=((w[0]-u[0])*x-(v[0]-u[0])*xx)/det,b=((v[1]-u[1])*yy-(w[1]-u[1])*y)/det,d=((w[1]-u[1])*x-(v[1]-u[1])*xx)/det;return[a,b,c,d,u[0]-a*p[0]-c*p[1],u[1]-b*p[0]-d*p[1]];}
  function triangle(g,path,from,to){const m=affine(from,to);if(!m)return;g.save();g.beginPath();g.moveTo(...to[0]);g.lineTo(...to[1]);g.lineTo(...to[2]);g.closePath();g.clip();g.transform(...m);g.fill(path);g.restore();}
  function sourceMark(p,image){
-  let mark=global.ArtifactSourceTraces?.traces[p.sourceNumber];const iw=image.naturalWidth||image.width,ih=image.naturalHeight||image.height;
+  let mark=p.sourceMark||global.ArtifactSourceTraces?.traces[p.sourceNumber];const iw=image.naturalWidth||image.width,ih=image.naturalHeight||image.height;
   if(!mark||mark.source!==p.artifact.src||mark.sourceSize[0]!==iw||mark.sourceSize[1]!==ih)throw Error('Source marking does not match its photograph');
   // The clean hunting tracing is shared by the drifting sprite and this photo.
   // Keep its existing source-photo registration; accept only this exact rig ink.
@@ -19,12 +19,16 @@
  }
  function layerFor(p,image,mark,displayScale){
   const iw=image.naturalWidth||image.width,ih=image.naturalHeight||image.height,s=1600/Math.max(iw,ih),w=Math.round(iw*s),h=Math.round(ih*s),c=makeCanvas(w,h),g=c.getContext('2d',{willReadFrequently:true});
-  if(mark.kind==='source-fill'){
+  if(mark.kind==='figure-lines'){
+   const rig=global.RaisedFigureDance,[bx,by,bw,bh]=rig.renderBounds;
+   g.drawImage(rig.render(0,null,'#ffe08b'),bx/iw*w,by/ih*h,bw/iw*w,bh/ih*h);
+  }else if(mark.kind==='source-fill'){
    // Photo-derived ridge boundaries retain their original source coordinates.
    g.save();g.scale(w/100,h/100);g.fillStyle='#ffe08b';g.globalAlpha=mark.fillOpacity??.62;g.fill(new Path2D(mark.paths.join(' ')));g.restore();
   }else if(mark.kind==='source-lines'){
-   const sourcePath=new Path2D(mark.paths.join(' ')),weight=mark.strokeWidth/Math.sqrt((iw*displayScale/100)*(ih*displayScale/100));
-   g.save();g.scale(w/100,h/100);g.lineCap='round';g.lineJoin='round';g.strokeStyle='#684820';g.globalAlpha=mark.edgeOpacity??.64;g.lineWidth=weight*1.7;g.stroke(sourcePath);g.strokeStyle='#ffe08b';g.globalAlpha=mark.strokeOpacity??.94;g.lineWidth=weight;g.stroke(sourcePath);g.restore();
+   const [unitsX,unitsY]=mark.sourceCoordinates||[100,100];
+   const sourcePath=new Path2D(mark.paths.join(' ')),weight=mark.strokeWidth/Math.sqrt((iw*displayScale/unitsX)*(ih*displayScale/unitsY));
+   g.save();g.scale(w/unitsX,h/unitsY);g.lineCap='round';g.lineJoin='round';g.strokeStyle='#684820';g.globalAlpha=mark.edgeOpacity??.64;g.lineWidth=weight*1.7;g.stroke(sourcePath);g.strokeStyle='#ffe08b';g.globalAlpha=mark.strokeOpacity??.94;g.lineWidth=weight;g.stroke(sourcePath);g.restore();
   }else if(mark.kind==='same-source-mask'){
    const m=mark.registration,b=m.inkBounds,path=pathFor(p);g.save();g.fillStyle='#ffe08b';g.globalAlpha=mark.fillOpacity??1;
    if(m.parts){const contours=p.ink.match(/[mM][^mM]*/g)||[];for(const part of m.parts){const selected=new Path2D(part.subpaths.map(i=>{if(!contours[i])throw Error('Missing original ink contour');return contours[i];}).join(' '));g.save();const[a,b,c,d,e,f]=part.transform;g.transform(a*w/100,b*h/100,c*w/100,d*h/100,e*w/100,f*h/100);g.fill(selected);g.restore();}}
@@ -38,18 +42,24 @@
   return c;
  }
  function anchorFor(layer,mark){const tx=mark.anchor[0]*layer.width/100,ty=mark.anchor[1]*layer.height/100,a=layer.getContext('2d').getImageData(0,0,layer.width,layer.height).data;let best=[tx,ty],distance=Infinity,pixels=0;for(let y=0;y<layer.height;y++)for(let x=0;x<layer.width;x++){const i=(y*layer.width+x)*4;if(a[i+3]<100||a[i]<200)continue;pixels++;const d=(x-tx)**2+(y-ty)**2;if(d<distance){distance=d;best=[x,y];}}return{point:best,pixels};}
+ function makePhotograph(image,silhouette,iw,ih){
+  if(!silhouette)return image;
+  const photo=makeCanvas(iw,ih),g=photo.getContext('2d');
+  g.clip(new Path2D(silhouette));g.drawImage(image,0,0);
+  return photo;
+ }
  function render(canvas,p,image,texture){
   const iw=image.naturalWidth||image.width,ih=image.naturalHeight||image.height,mark=sourceMark(p,image),portrait=iw/ih<.85;canvas.width=portrait?1000:1200;canvas.height=portrait?1100:800;const g=canvas.getContext('2d'),displayWidth=canvas.parentElement?.clientWidth||canvas.clientWidth||540,labelSize=Math.max(33,Math.ceil(12*canvas.width/displayWidth)),labelWidth=labelSize*4+20,areaW=canvas.width-labelWidth-40,areaH=canvas.height-60,s=Math.min(areaW/iw,areaH/ih),ix=20+(areaW-iw*s)/2,iy=30+(areaH-ih*s)/2,labelY=portrait?185:125;
-  g.clearRect(0,0,canvas.width,canvas.height);g.drawImage(image,ix,iy,iw*s,ih*s);const layer=layerFor(p,image,mark,s),anchor=anchorFor(layer,mark);g.save();g.shadowColor='#e9ac3e';g.shadowBlur=mark.haloBlur??4;g.drawImage(layer,ix,iy,iw*s,ih*s);g.restore();
+  const photo=makePhotograph(image,p.artifact.silhouette,iw,ih);
+  g.clearRect(0,0,canvas.width,canvas.height);g.drawImage(photo,ix,iy,iw*s,ih*s);const layer=layerFor(p,photo,mark,s),anchor=anchorFor(layer,mark);g.save();g.shadowColor='#e9ac3e';g.shadowBlur=mark.haloBlur??4;g.drawImage(layer,ix,iy,iw*s,ih*s);g.restore();
   const start=[ix+anchor.point[0]/layer.width*iw*s,iy+anchor.point[1]/layer.height*ih*s],end=[canvas.width-labelWidth-10,labelY];g.save();g.strokeStyle='#ffe08b';g.lineWidth=1.4;g.globalAlpha=.75;g.beginPath();g.moveTo(...start);g.lineTo(...end);g.stroke();g.globalAlpha=1;g.fillStyle='#ffe08b';g.beginPath();g.arc(...start,3.5,0,Math.PI*2);g.fill();g.fillStyle='#e6d39f';g.font=labelSize+'px Huiwen,serif';g.fillText('纹饰位置',end[0]+10,end[1]-15,labelWidth-20);g.restore();
-  if(p.sourceNumber===2005||p.sourceNumber===2007){
-   // Retain the original photo, tracing and leader in their exact popup layout.
-   // Only the gold figure layer changes while the user-triggered dance plays.
-   const base=makeCanvas(canvas.width,canvas.height),b=base.getContext('2d');
-   b.drawImage(image,ix,iy,iw*s,ih*s);
-   b.strokeStyle='#ffe08b';b.lineWidth=1.4;b.globalAlpha=.75;b.beginPath();b.moveTo(...start);b.lineTo(...end);b.stroke();b.globalAlpha=1;b.fillStyle='#ffe08b';b.beginPath();b.arc(...start,3.5,0,Math.PI*2);b.fill();b.fillStyle='#e6d39f';b.font=labelSize+'px Huiwen,serif';b.fillText('纹饰位置',end[0]+10,end[1]-15,labelWidth-20);
+  const raised=p.sourceNumber===global.RaisedFigureDance?.sourceNumber;
+  const hunting=p.sourceNumber===2007;
+  const rig=raised?global.RaisedFigureDance:hunting?global.HuntingMotion:p.sourceNumber===2005?global.FigureDance:null;
+  if(rig){
    const rest=makeCanvas(canvas.width,canvas.height);rest.getContext('2d').drawImage(canvas,0,0);
-   figureLayouts.set(canvas,{base,rest,layer,ix,iy,w:iw*s,h:ih*s,sourceNumber:p.sourceNumber,mark,motionLayer:makeCanvas(canvas.width,canvas.height),photo:image});
+   figureLayouts.set(canvas,{rest,layer,ix,iy,w:iw*s,h:ih*s,mark,rig,raised,hunting,motionLayer:hunting?makeCanvas(canvas.width,canvas.height):null,photo});
+   canvas.dataset.photoOpacity='1';
   }else figureLayouts.delete(canvas);
   canvas.dataset.comparisonMode=mark.kind;return{mode:mark.kind,sourceBound:true,overlayPixels:anchor.pixels,sourceSize:[iw,ih],outputSize:[canvas.width,canvas.height],sourcePathCount:mark.paths?.length||0};
  }
@@ -58,27 +68,36 @@
   const b=canvas.getBoundingClientRect(),s=Math.min(b.width/canvas.width,b.height/canvas.height);
   const x=(clientX-b.left-(b.width-canvas.width*s)/2)/s,y=(clientY-b.top-(b.height-canvas.height*s)/2)/s;
   const px=(x-a.ix)/a.w*100,py=(y-a.iy)/a.h*100;
-  if(a.sourceNumber===2007){const[x,y,w,h]=a.mark.registration.box;return px>=x&&px<=x+w&&py>=y&&py<=y+h;}
+  if(a.raised)return px>=29&&px<=71&&py>=33&&py<=83;
+  if(a.hunting){const[x,y,w,h]=a.mark.registration.box;return px>=x&&px<=x+w&&py>=y&&py<=y+h;}
   return px>=16&&px<=87&&py>=29&&py<=89;
  }
  function figureGuidePosition(canvas){
   const a=figureLayouts.get(canvas);if(!a)return null;
   const b=canvas.getBoundingClientRect(),s=Math.min(b.width/canvas.width,b.height/canvas.height);
   if(!s)return null;
-  const [px,py]=a.sourceNumber===2007?[.57,.79]:[.565,.54];
+  const [px,py]=a.hunting?[.57,.79]:a.raised?[.55,.49]:[.565,.54];
   return{x:(b.width-canvas.width*s)/2+(a.ix+a.w*px)*s,y:(b.height-canvas.height*s)/2+(a.iy+a.h*py)*s};
  }
- function animateFigure(canvas,seconds,texture){
-  const a=figureLayouts.get(canvas);if(!a)return false;const rig=a.sourceNumber===2007?global.HuntingMotion:global.FigureDance;if(!rig)return false;
+ function animateFigure(canvas,seconds,texture,reducedMotion){
+  const a=figureLayouts.get(canvas);if(!a)return false;const {rig}=a;
   const smooth=v=>{v=Math.max(0,Math.min(1,v));return v*v*(3-2*v);};
   const alpha=smooth(seconds/.2)*smooth((rig.duration-seconds)/.2),g=canvas.getContext('2d');
-  if(alpha===0){g.clearRect(0,0,canvas.width,canvas.height);g.drawImage(a.rest,0,0);return true;}
-  g.clearRect(0,0,canvas.width,canvas.height);g.drawImage(a.base,0,0);
-  g.save();g.shadowColor='#e9ac3e';g.shadowBlur=a.mark.haloBlur??4;if(alpha<.999){g.globalAlpha=1-alpha;g.drawImage(a.layer,a.ix,a.iy,a.w,a.h);}
+  g.clearRect(0,0,canvas.width,canvas.height);
+  const photoOpacity=1-.74*alpha;
+  canvas.dataset.photoOpacity=photoOpacity.toFixed(2);
+  if(alpha===0){g.drawImage(a.rest,0,0);return true;}
+  g.save();g.globalAlpha=photoOpacity;g.drawImage(a.photo,a.ix,a.iy,a.w,a.h);g.restore();
+  g.save();g.shadowColor='#e9ac3e';g.shadowBlur=7;
+  if(reducedMotion){g.drawImage(a.layer,a.ix,a.iy,a.w,a.h);g.restore();return true;}
+  if(alpha<.999){g.globalAlpha=1-alpha;g.drawImage(a.layer,a.ix,a.iy,a.w,a.h);}
   // Registration keeps the three belly circles over the original marked
   // circles (source percentages approximately 51.5/46.5, 53.3, 61.0).
   g.globalAlpha=alpha;
-  if(a.sourceNumber===2007){
+  if(a.raised){
+   const [bx,by,bw,bh]=rig.renderBounds,[iw,ih]=a.mark.sourceSize;
+   g.drawImage(rig.render(seconds,texture,'#ffe4a0'),a.ix+bx/iw*a.w,a.iy+by/ih*a.h,bw/iw*a.w,bh/ih*a.h);
+  }else if(a.hunting){
    const [bx,by,bw,bh]=a.mark.registration.box,[ix0,iy0,ix1,iy1]=a.mark.registration.inkBounds,[rx,ry,rw,rh]=rig.renderBounds;
    const x=a.ix+(bx+(rx-ix0)*bw/(ix1-ix0))/100*a.w,y=a.iy+(by+(ry-iy0)*bh/(iy1-iy0))/100*a.h;
    const m=a.motionLayer.getContext('2d');m.clearRect(0,0,canvas.width,canvas.height);m.drawImage(rig.render(seconds,texture,'#ffe08b'),x,y,rw*bw/(ix1-ix0)/100*a.w,rh*bh/(iy1-iy0)/100*a.h);

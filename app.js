@@ -12,6 +12,10 @@
   const catalog = document.querySelector('#pattern-catalog'), browseButton = document.querySelector('#browse-patterns');
   const catalogRows = document.querySelector('#catalog-rows');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const featuredGold = '#f3d78e';
+  const isDancer = pattern => !!pattern && (pattern.sourceNumber === 2005 || pattern.sourceNumber === window.RaisedFigureDance?.sourceNumber);
+  const isFeatured = pattern => isDancer(pattern) || pattern?.motifRole === 'hunting';
+  const baseSize = pattern => pattern.motifRole === 'hunting' ? 160 : isDancer(pattern) ? 109 : 90;
   const gold = '#c5ae72', sprites = new Map(), hitMasks = new Map(), pointers = new Map();
   const world = { width: 2800, height: 1900 };
   const camera = { x: 0, y: 0, zoom: 1 };
@@ -50,20 +54,26 @@
       return bag[bagIndex++];
     };
     const main = [];
+    const featuredSlots = [
+      {id:2005, x:-250, y:-120, extra:[-720, 360]},
+      {id:2007, x:240, y:135, extra:[670, -350]},
+      {id:2011, x:235, y:-200, extra:[560, 505]},
+    ];
     const distance = (a, b) => {
       const dx = Math.min(Math.abs(a.x - b.x), world.width - Math.abs(a.x - b.x));
       const dy = Math.min(Math.abs(a.y - b.y), world.height - Math.abs(a.y - b.y));
       return Math.hypot(dx, dy);
     };
     for (let i = 0; i < 182; i++) {
-      let best = i === 0 ? {x:-175,y:-90} : i === 1 ? {x:205,y:125} : null, bestDistance = -1;
+      const featured = featuredSlots[i];
+      let best = featured ? {x:featured.x,y:featured.y} : null, bestDistance = -1;
       if (!best) for (let k = 0; k < 65; k++) {
         const point = {x:(random()-.5)*world.width,y:(random()-.5)*world.height};
         const nearest = Math.min(...main.map(n=>distance(point,n)));
         if (nearest > bestDistance) { best = point; bestDistance = nearest; }
       }
-      const pattern = i < 2 ? patterns.find(p=>p.sourceNumber===(i===0?2005:2007)) || nextPattern() : nextPattern();
-      main.push({...best,id:i,pattern,size:(pattern.motifRole==='hunting'?143:90)+random()*31,
+      const pattern = (featured && patterns.find(p => p.sourceNumber === featured.id)) || nextPattern();
+      main.push({...best,id:i,pattern,size:baseSize(pattern)+random()*31,
         phase:random()*Math.PI*2,turn:(random()-.5)*.24,opacity:.7+random()*.27,depth:1,primary:true});
     }
     // Keep the latest five stamps in the opening view, using existing anchors.
@@ -72,13 +82,23 @@
       [3001, -130, -310], [3002, 130, -175], [3003, -80, 70],
       [3004, 110, 210], [3005, -120, 330]
     ];
-    const openingAnchors = main.filter(n => n.id > 1 && Math.abs(n.x) < 180 && n.y > -360 && n.y < 360);
+    const openingAnchors = main.filter(n => n.id >= featuredSlots.length && Math.abs(n.x) < 180 && n.y > -360 && n.y < 360);
     const assigned = new Set();
     for (const [id, x, y] of openingSamples) {
       const pattern = patterns.find(p => p.sourceNumber === id);
       const node = openingAnchors.filter(n => !assigned.has(n)).sort((a, b) => Math.hypot(a.x-x, a.y-y) - Math.hypot(b.x-x, b.y-y))[0];
       if (!pattern || !node) continue;
-      node.size += 90 - (node.pattern.motifRole === 'hunting' ? 143 : 90);
+      node.size += baseSize(pattern) - baseSize(node.pattern);
+      node.pattern = pattern;
+      assigned.add(node);
+    }
+    // Add one more instance of each interactive motif at a different anchor.
+    for (const {id, extra:[x, y]} of featuredSlots) {
+      const pattern = patterns.find(p => p.sourceNumber === id);
+      const node = main.filter(n => n.id >= featuredSlots.length && !assigned.has(n) && !isFeatured(n.pattern))
+        .sort((a,b) => Math.hypot(a.x-x,a.y-y) - Math.hypot(b.x-x,b.y-y))[0];
+      if (!pattern || !node) continue;
+      node.size += baseSize(pattern) - baseSize(node.pattern);
       node.pattern = pattern;
       assigned.add(node);
     }
@@ -176,11 +196,16 @@
   function buildSprite(pattern) {
     const c = document.createElement('canvas'); c.width = c.height = 320;
     const g = c.getContext('2d', {willReadFrequently:true});
+    if (pattern.sourceNumber === window.RaisedFigureDance?.sourceNumber) {
+      g.drawImage(window.RaisedFigureDance.render(0, texture, featuredGold, true), 0, 0, 320, 320);
+      return c;
+    }
+    const pigment = isFeatured(pattern) ? featuredGold : gold;
     const path = normalizePath(pattern.ink);
     const render = weight => {
       g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, 320, 320);
       g.translate(16, 16); g.scale(2.72, 2.72);
-      g.fillStyle = gold; g.strokeStyle = gold; g.lineJoin = 'round'; g.lineCap = 'round';
+      g.fillStyle = pigment; g.strokeStyle = pigment; g.lineJoin = 'round'; g.lineCap = 'round';
       g.fill(path, 'nonzero');
       if (weight) { g.lineWidth = weight; g.stroke(path); }
     };
@@ -199,7 +224,7 @@
       g.globalCompositeOperation = 'destination-in';
       const w = texture.naturalWidth, h = texture.naturalHeight;
       g.drawImage(texture, w * .11, h * .11, w * .78, h * .78, 0, 0, 320, 320);
-      g.globalCompositeOperation = 'source-in'; g.fillStyle = gold; g.fillRect(0, 0, 320, 320);
+      g.globalCompositeOperation = 'source-in'; g.fillStyle = pigment; g.fillRect(0, 0, 320, 320);
       // A light, solid impression under the grain keeps fine incisions legible
       // at the existing display size without blurring the space between them.
       g.globalCompositeOperation = 'destination-over'; g.globalAlpha = .18;
@@ -309,15 +334,20 @@
     const x = wrap(node.x + clock * (node.primary?11:7) + Math.sin(clock*.13+node.phase)*14 - camera.x*node.depth, world.width);
     const y = wrap(node.y + Math.cos(clock*.11+node.phase)*16 - camera.y*node.depth, world.height);
     return { node, x: width / 2 + x * scale, y: height / 2 + 24 + y * scale,
-      size: node.size * scale, angle: node.pattern.sourceNumber === 2005 ? 0 : node.turn + Math.sin(clock * .15 + node.phase) * .018 };
+      size: node.size * scale, angle: isDancer(node.pattern) ? 0 : node.turn + Math.sin(clock * .15 + node.phase) * .018 };
   }
 
   function drawSprite(item) {
     const n = item.node, sprite = sprites.get(n.pattern.sourceNumber);
     if (!sprite) return;
     ctx.save(); ctx.translate(item.x, item.y); ctx.rotate(item.angle);
-    ctx.globalAlpha = n.opacity * (selected && selected !== n ? .5 : 1);
-    if (selected === n || hover === n) { ctx.filter = 'brightness(1.4)'; ctx.shadowColor = 'rgba(218,192,121,.35)'; ctx.shadowBlur = selected === n ? 15 : 7; }
+    const featured = n.primary && isFeatured(n.pattern);
+    ctx.globalAlpha = (featured ? Math.max(n.opacity, .94) : n.opacity) * (selected && selected !== n ? .5 : 1);
+    if (featured || selected === n || hover === n) {
+      if (selected === n || hover === n) ctx.filter = 'brightness(1.3)';
+      ctx.shadowColor = featured ? 'rgba(255,216,126,.58)' : 'rgba(218,192,121,.35)';
+      ctx.shadowBlur = selected === n ? 15 : featured ? 7 : 5;
+    }
     ctx.drawImage(sprite, -item.size / 2, -item.size / 2, item.size, item.size);
     ctx.restore();
   }
@@ -357,7 +387,7 @@
     if (dance) {
       dance.elapsed += dt;
       if (dance.elapsed >= dance.duration) { dance = null; updateState(); }
-      else window.MotifComparison.animateFigure(comparisonCanvas,dance.elapsed,texture);
+      else if (!comparisonCanvas.hidden) window.MotifComparison.animateFigure(comparisonCanvas,dance.elapsed,texture,reducedMotion.matches);
     }
     if (ready && dirty) { draw(); dirty = false; }
     if (now - lastTrace > 350) { canvas.dataset.phase = clock.toFixed(3); lastTrace = now; }
@@ -385,7 +415,7 @@
   }
 
   function patternMotion(pattern) {
-    if(pattern?.sourceNumber===2005&&window.FigureDance)return{rig:window.FigureDance,action:'点击文物上的小人起舞',hint:'点击文物上的小人纹饰，让它跳舞',status:'小人起舞',replay:'再点纹饰重跳',announcement:'文物上的人形舞蹈纹开始跳舞，结束后恢复原标记。'};
+    if(isDancer(pattern)&&window.FigureDance)return{rig:pattern.sourceNumber===2005?window.FigureDance:window.RaisedFigureDance,action:'点击文物上的小人起舞',hint:'点击文物上的小人纹饰，让它跳舞',status:'小人起舞',replay:'再点纹饰重跳',announcement:'文物上的人形舞蹈纹开始跳舞，结束后恢复原标记。'};
     if(pattern?.sourceNumber===2007&&window.HuntingMotion)return{rig:window.HuntingMotion,action:'点击文物上的狩猎纹，观看鹿群奔跑',hint:'点击文物上的狩猎纹，看鹿群奔跑、猎人追逐',status:'狩猎纹跃动',replay:'再点纹饰重播',announcement:'狩猎纹中的六只鹿开始奔跑，两名猎人追逐拉弓，结束后恢复原标记。'};
     return null;
   }
@@ -415,7 +445,7 @@
       detail.classList.toggle('has-annotation', !!artifact?.comparison);
       if (artifact) {
         artifactImage.hidden = false; comparisonCanvas.hidden = true;
-        artifactImage.src = artifact.src;
+        if (artifactImage.getAttribute('src') !== artifact.src) artifactImage.src = artifact.src;
         artifactImage.alt = artifact.alt;
         if (artifactImage.complete && artifactImage.naturalWidth) updateArtifactComparison();
         artifactEl.classList.toggle('is-annotated', !!artifact.comparison);
@@ -452,7 +482,7 @@
 
   function startFigureDance() {
     const motion=patternMotion(selected?.pattern);
-    if(!motion || !artifactImage.complete || !artifactImage.naturalWidth)return;
+    if(!motion || comparisonCanvas.hidden || !artifactImage.complete || !artifactImage.naturalWidth)return;
     dance={node:selected,elapsed:0,duration:motion.rig.duration};updateState();
   }
   function select(node) {
@@ -541,6 +571,11 @@
         new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>resolve(null);img.src='assets/ink-pigment.png';})
       ]);
       patterns=response; texture=image;
+      const raised = window.RaisedFigureDance?.pattern;
+      if (raised && !patterns.some(p => p.sourceNumber === raised.sourceNumber)) {
+        const originalIndex = patterns.findIndex(p => p.sourceNumber === 2005);
+        patterns.splice(originalIndex + 1, 0, raised);
+      }
       const figure=patterns.find(p=>p.sourceNumber===2005);
       if (figure && window.FigureDance?.ink) figure.ink=window.FigureDance.ink;
       const hunting=patterns.find(p=>p.sourceNumber===2007);
