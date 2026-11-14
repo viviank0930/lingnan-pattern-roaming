@@ -24,6 +24,9 @@
   let width = innerWidth, height = innerHeight, dpr = 1, clock = 0, lastFrame = 0, lastTrace = 0;
   let drag = null, pinch = null, dirty = true, raf = 0, ready = false, texture = null, focusedIndex = -1;
   let dance = null;
+  let roamingPreview = null, nextPreviewAt = 1.8 + Math.random();
+  const previewedPatterns = new Set();
+  let previewCanvas, previewPixels = null;
   let seed = 47219;
   const random = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -114,6 +117,11 @@
       y:(random()-.5)*world.height,size:28+random()*42,depth:.45+random()*.3,phase:random()*Math.PI*2,
       turn:(random()-.5)*.28,opacity:.12+random()*.2,primary:false}));
     nodes=[...ambient,...main,...companions];
+    // The opening examples can move. Keep the extra featured copies as click-only examples.
+    for (const node of nodes) {
+      if (!node.primary || !isFeatured(node.pattern)) continue;
+      node.canPreview = node.id < featuredSlots.length || (!assigned.has(node) && Math.random() < .5);
+    }
   }
 
   function normalizePath(path) {
@@ -339,8 +347,64 @@
       size: node.size * scale, angle: isDancer(node.pattern) ? 0 : node.turn + Math.sin(clock * .15 + node.phase) * .018 };
   }
 
-  function drawSprite(item, roaming) {
-    const n = item.node, sprite = sprites.get(n.pattern.sourceNumber);
+  function renderRoamingPreview(roaming) {
+    if (roamingPreview && (!roaming || clock - roamingPreview.started >= roamingPreview.duration)) {
+      roamingPreview = null;
+      nextPreviewAt = clock + 3 + Math.random() * 3;
+    }
+    if (!roaming || clock < nextPreviewAt) return null;
+    if (!roamingPreview) {
+      const candidates = screenNodes.filter(({ node, x, y, size }) => node.canPreview
+        && x > size / 2 && x < width - size / 2 && y > size / 2 + 70 && y < height - size / 2 - 50);
+      let choices = candidates.filter(({ node }) => !previewedPatterns.has(node.pattern.sourceNumber));
+      if (!choices.length && candidates.length) {
+        previewedPatterns.clear();
+        choices = candidates;
+      }
+      const node = choices[Math.floor(Math.random() * choices.length)]?.node;
+      const rig = patternMotion(node?.pattern)?.rig;
+      if (!rig) {
+        nextPreviewAt = clock + 1;
+        return null;
+      }
+      const hunting = isHunting(node.pattern);
+      roamingPreview = { node, rig, hunting, started: clock, duration: hunting ? 1.65 : 1.35, frame: -1 };
+      previewedPatterns.add(node.pattern.sourceNumber);
+    }
+
+    const preview = roamingPreview;
+    const seconds = clock - preview.started;
+    const frame = Math.floor(seconds * 24);
+    if (frame === preview.frame) return previewCanvas;
+    preview.frame = frame;
+    if (!previewCanvas) {
+      previewCanvas = document.createElement('canvas');
+      previewCanvas.width = previewCanvas.height = 320;
+    }
+    const g = previewCanvas.getContext('2d', {willReadFrequently:true});
+    const mix = Math.min(seconds / .16, (preview.duration - seconds) / .24, 1);
+    g.clearRect(0, 0, 320, 320);
+    g.globalAlpha = 1 - mix;
+    g.drawImage(sprites.get(preview.node.pattern.sourceNumber), 0, 0);
+    g.globalAlpha = mix;
+    g.globalCompositeOperation = 'lighter';
+    const pose = preview.rig.render(frame / 24, texture, preview.hunting ? huntingGold : featuredGold);
+    if (preview.hunting) {
+      const [x, y, w, h] = preview.rig.renderBounds;
+      g.drawImage(pose, 16 + x * 2.72, 16 + y * 2.72, w * 2.72, h * 2.72);
+    } else {
+      g.drawImage(pose, 0, 0, 320, 320);
+    }
+    g.globalAlpha = 1;
+    g.globalCompositeOperation = 'source-over';
+    previewPixels = null;
+    return previewCanvas;
+  }
+
+  function drawSprite(item, roaming, previewSprite) {
+    const n = item.node;
+    const previewing = previewSprite && roamingPreview.node === n;
+    const sprite = previewing ? previewSprite : sprites.get(n.pattern.sourceNumber);
     if (!sprite) return;
     ctx.save(); ctx.translate(item.x, item.y); ctx.rotate(item.angle);
     const featured = n.primary && isFeatured(n.pattern);
@@ -348,7 +412,7 @@
     const active = selected === n || hover === n;
     // Use the drift clock and offset each motif so the gold catches the eye at different times.
     const shimmer = featured && roaming && !active;
-    const light = shimmer ? .5 + .5 * Math.cos(clock * 2 * Math.PI / 2.8 + n.phase) : 1;
+    const light = shimmer ? Math.max(previewing ? .72 : 0, .5 + .5 * Math.cos(clock * 2 * Math.PI / 2.8 + n.phase)) : 1;
     const opacity = featured ? Math.max(n.opacity, prominentHunt ? 1 : .97) : n.opacity;
     ctx.globalAlpha = opacity * (.68 + .32 * light) * (selected && selected !== n ? .5 : 1);
     if (active) ctx.filter = 'brightness(1.3)';
@@ -389,7 +453,8 @@
       }
     }
     const roaming = !paused();
-    for (const item of screenNodes) drawSprite(item, roaming);
+    const previewSprite = renderRoamingPreview(roaming);
+    for (const item of screenNodes) drawSprite(item, roaming, previewSprite);
     const chosen = screenNodes.find(n => n.node === selected);
     if (chosen) drawFocus(chosen);
     if (selected) updateDetail(chosen);
@@ -419,9 +484,13 @@
       const px = 160 + (dx * cos + dy * sin) * 320 / item.size;
       const py = 160 + (-dx * sin + dy * cos) * 320 / item.size;
       const radius = tolerance * 320 / item.size, mask = hitMasks.get(item.node.pattern.sourceNumber);
+      const livePixels = roamingPreview?.node === item.node && previewCanvas
+        ? (previewPixels ||= previewCanvas.getContext('2d').getImageData(0, 0, 320, 320).data)
+        : null;
       for (let yy = Math.max(0, Math.floor(py - radius)); yy <= Math.min(319, py + radius); yy += 2) {
         for (let xx = Math.max(0, Math.floor(px - radius)); xx <= Math.min(319, px + radius); xx += 2) {
-          if (mask[yy * 320 + xx] > 32) return item.node;
+          const pixel = yy * 320 + xx;
+          if ((livePixels ? livePixels[pixel * 4 + 3] : mask[pixel]) > 32) return item.node;
         }
       }
     }
@@ -506,8 +575,11 @@
 
   canvas.addEventListener('pointerdown', e => {
     if (!ready || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    const previewHit = roamingPreview && hitAt(e.clientX, e.clientY, e.pointerType === 'touch' ? 9 : 5);
     canvas.setPointerCapture(e.pointerId); pointers.set(e.pointerId, { x:e.clientX, y:e.clientY });
-    if (pointers.size === 1) drag = { x:e.clientX, y:e.clientY, cameraX:camera.x, cameraY:camera.y, moved:false, pinched:false };
+    dirty = true;
+    if (pointers.size === 1) drag = { x:e.clientX, y:e.clientY, cameraX:camera.x, cameraY:camera.y, moved:false, pinched:false,
+      previewTarget: previewHit === roamingPreview?.node ? previewHit : null };
     else if (pointers.size === 2) {
       const [a,b] = [...pointers.values()]; pinch = { distance:Math.hypot(a.x-b.x,a.y-b.y), zoom:camera.zoom };
       if (drag) drag.pinched = true;
@@ -533,7 +605,7 @@
     if (!pointers.has(e.pointerId)) return;
     const shouldClick=!cancelled && drag && !drag.moved && !drag.pinched && pointers.size===1;
     pointers.delete(e.pointerId);
-    if (shouldClick) { const hit=hitAt(e.clientX,e.clientY,e.pointerType==='touch'?9:5); hit ? select(hit) : cancel(); }
+    if (shouldClick) { const hit=drag.previewTarget || hitAt(e.clientX,e.clientY,e.pointerType==='touch'?9:5); hit ? select(hit) : cancel(); }
     if (!pointers.size) {drag=null;pinch=null;canvas.classList.remove('is-dragging');}
     dirty=true;
   }
