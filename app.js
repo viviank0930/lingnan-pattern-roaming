@@ -339,18 +339,22 @@
       size: node.size * scale, angle: isDancer(node.pattern) ? 0 : node.turn + Math.sin(clock * .15 + node.phase) * .018 };
   }
 
-  function drawSprite(item) {
+  function drawSprite(item, roaming) {
     const n = item.node, sprite = sprites.get(n.pattern.sourceNumber);
     if (!sprite) return;
     ctx.save(); ctx.translate(item.x, item.y); ctx.rotate(item.angle);
     const featured = n.primary && isFeatured(n.pattern);
     const prominentHunt = featured && isHunting(n.pattern);
     const active = selected === n || hover === n;
+    // Use the drift clock and offset each motif so the gold catches the eye at different times.
+    const shimmer = featured && roaming && !active;
+    const light = shimmer ? .5 + .5 * Math.cos(clock * 2 * Math.PI / 2.8 + n.phase) : 1;
     const opacity = featured ? Math.max(n.opacity, prominentHunt ? 1 : .97) : n.opacity;
-    ctx.globalAlpha = opacity * (selected && selected !== n ? .5 : 1);
+    ctx.globalAlpha = opacity * (.84 + .16 * light) * (selected && selected !== n ? .5 : 1);
     if (active) ctx.filter = 'brightness(1.3)';
     if (featured) {
-      ctx.shadowColor = prominentHunt ? 'rgba(255,211,128,.78)' : 'rgba(255,216,126,.66)';
+      const glow = (prominentHunt ? .78 : .66) + (shimmer ? .36 * (light - .65) : 0);
+      ctx.shadowColor = prominentHunt ? `rgba(255,211,128,${glow})` : `rgba(255,216,126,${glow})`;
       ctx.shadowBlur = selected === n ? 15 : prominentHunt ? 10 : 8;
     } else if (active) {
       ctx.shadowColor = 'rgba(218,192,121,.35)';
@@ -383,7 +387,8 @@
         screenNodes.push({ ...item, x: item.x + x * spanX, y: item.y + y * spanY });
       }
     }
-    for (const item of screenNodes) drawSprite(item);
+    const roaming = !paused();
+    for (const item of screenNodes) drawSprite(item, roaming);
     const chosen = screenNodes.find(n => n.node === selected);
     if (chosen) drawFocus(chosen);
     if (selected) updateDetail(chosen);
