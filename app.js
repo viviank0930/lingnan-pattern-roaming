@@ -60,7 +60,7 @@
     const main = [];
     const featuredSlots = [
       {id:2005, x:-250, y:-120, extra:[-720, 360]},
-      {id:2007, x:240, y:135, extra:[670, -350]},
+      {id:2007, x:132, y:135, extra:[670, -350]},
       {id:2011, x:235, y:-200, extra:[560, 505]},
     ];
     const distance = (a, b) => {
@@ -357,6 +357,10 @@
       const candidates = screenNodes.filter(({ node, x, y, size }) => node.canPreview
         && x > size / 2 && x < width - size / 2 && y > size / 2 + 70 && y < height - size / 2 - 50);
       let choices = candidates.filter(({ node }) => !previewedPatterns.has(node.pattern.sourceNumber));
+      if (!previewedPatterns.size) {
+        const openingHunt = choices.find(({ node }) => isHunting(node.pattern));
+        if (openingHunt) choices = [openingHunt];
+      }
       if (!choices.length && candidates.length) {
         previewedPatterns.clear();
         choices = candidates;
@@ -368,7 +372,7 @@
         return null;
       }
       const hunting = isHunting(node.pattern);
-      roamingPreview = { node, rig, hunting, started: clock, duration: hunting ? 1.65 : 1.35, frame: -1 };
+      roamingPreview = { node, rig, hunting, started: clock, duration: hunting ? 3.2 : 1.35, frame: -1 };
       previewedPatterns.add(node.pattern.sourceNumber);
     }
 
@@ -388,11 +392,12 @@
     g.drawImage(sprites.get(preview.node.pattern.sourceNumber), 0, 0);
     g.globalAlpha = mix;
     g.globalCompositeOperation = 'lighter';
-    const pose = preview.rig.render(frame / 24, texture, preview.hunting ? huntingGold : featuredGold);
     if (preview.hunting) {
       const [x, y, w, h] = preview.rig.renderBounds;
+      const pose = preview.rig.render(frame / 24, texture, huntingGold, 1.95);
       g.drawImage(pose, 16 + x * 2.72, 16 + y * 2.72, w * 2.72, h * 2.72);
     } else {
+      const pose = preview.rig.render(frame / 24, texture, featuredGold);
       g.drawImage(pose, 0, 0, 320, 320);
     }
     g.globalAlpha = 1;
@@ -412,7 +417,8 @@
     const active = selected === n || hover === n;
     // Use the drift clock and offset each motif so the gold catches the eye at different times.
     const shimmer = featured && roaming && !active;
-    const light = shimmer ? Math.max(previewing ? .72 : 0, .5 + .5 * Math.cos(clock * 2 * Math.PI / 2.8 + n.phase)) : 1;
+    const previewLight = previewing ? (prominentHunt ? .88 : .72) : 0;
+    const light = shimmer ? Math.max(previewLight, .5 + .5 * Math.cos(clock * 2 * Math.PI / 2.8 + n.phase)) : 1;
     const opacity = featured ? Math.max(n.opacity, prominentHunt ? 1 : .97) : n.opacity;
     ctx.globalAlpha = opacity * (.68 + .32 * light) * (selected && selected !== n ? .5 : 1);
     if (active) ctx.filter = 'brightness(1.3)';
