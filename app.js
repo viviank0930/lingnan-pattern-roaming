@@ -515,7 +515,9 @@
     root.dataset.flow = dance ? 'dancing' : stopped ? 'paused' : 'moving';
     canvas.dataset.selected = selected ? String(selected.pattern.sourceNumber) : '';
     canvas.dataset.dancing = dance ? String(selected.pattern.sourceNumber) : '';
-    flowEl.textContent = dance ? motion.status : stopped ? '已停驻' : reducedMotion.matches ? '静态浏览' : '缓缓流动';
+    const flowStatus = dance ? motion.status : stopped ? '已停驻' : reducedMotion.matches ? '静态浏览' : '';
+    flowEl.hidden = !flowStatus;
+    flowEl.textContent = flowStatus;
     hintEl.innerHTML = dance ? motion.replay+' <span>·</span> 点击空白继续漫游' : motion ? motion.action+' <span>·</span> 点击空白继续漫游' : stopped ? '点击空白处 <span>·</span> 继续漫游' : '拖动浏览 <span>·</span> 点击纹饰停驻';
     const figureHint=document.querySelector('#figure-dance-hint');
     figureHint.hidden=!motion;

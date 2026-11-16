@@ -59,6 +59,8 @@
 .masthead:before,.controls:before{content:"";position:absolute;z-index:-1;pointer-events:none;left:-42px;right:-42px}
 .masthead:before{top:-30px;bottom:-25px;background:linear-gradient(rgba(22,20,14,.98),rgba(22,20,14,.78) 58%,transparent)}
 .controls:before{top:-25px;bottom:-40px;background:linear-gradient(transparent,rgba(22,20,14,.86) 55%,rgba(22,20,14,.98))}
+#interaction-hint{max-width:30em;font-size:clamp(16px,1.5vw,22px);line-height:1.45;color:#c9b88c}
+#interaction-hint>span{color:inherit}
 
 .pattern-artifact figcaption{font-size:12px;line-height:1.5;color:var(--muted);text-align:center;margin-top:9px}
 
