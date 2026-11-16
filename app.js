@@ -454,16 +454,17 @@
     const active = selected === n || hover === n;
     // Use the drift clock and offset each motif so the gold catches the eye at different times.
     const shimmer = featured && roaming && !active;
-    const previewLight = previewing ? (prominentHunt ? .88 : .72) : 0;
+    const previewLight = previewing ? (prominentHunt ? .95 : .88) : 0;
     const light = shimmer ? Math.max(previewLight, .5 + .5 * Math.cos(clock * 2 * Math.PI / 2.8 + n.phase)) : 1;
     const opacity = featured ? Math.max(n.opacity, prominentHunt ? 1 : .97) : n.opacity;
-    ctx.globalAlpha = opacity * (.68 + .32 * light) * (selected && selected !== n ? .5 : 1);
+    ctx.globalAlpha = opacity * (.81 + .19 * light) * (selected && selected !== n ? .5 : 1);
     if (active) ctx.filter = 'brightness(1.3)';
-    else if (shimmer) ctx.filter = `brightness(${1 + .28 * light})`;
+    else if (shimmer) ctx.filter = `brightness(${1.12 + .30 * light})`;
     if (featured) {
-      const glow = shimmer ? .28 + .68 * light : prominentHunt ? .78 : .66;
-      ctx.shadowColor = prominentHunt ? `rgba(255,211,128,${glow})` : `rgba(255,216,126,${glow})`;
-      ctx.shadowBlur = selected === n ? 15 : prominentHunt ? 10 : 8;
+      const glow = shimmer ? .56 + .44 * light : prominentHunt ? .78 : .66;
+      const halo = shimmer ? '255,224,155' : prominentHunt ? '255,211,128' : '255,216,126';
+      ctx.shadowColor = `rgba(${halo},${glow})`;
+      ctx.shadowBlur = selected === n ? 15 : prominentHunt ? 11 : 9;
     } else if (active) {
       ctx.shadowColor = 'rgba(218,192,121,.35)';
       ctx.shadowBlur = selected === n ? 15 : 5;
