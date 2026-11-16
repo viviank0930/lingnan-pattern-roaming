@@ -28,7 +28,8 @@
   let catalogDrag = null, suppressCatalogClick = false;
   let dance = null;
   let roamingPreview = null, nextPreviewAt = 1.8 + Math.random();
-  const previewedPatterns = new Set();
+  let nextHuntAt = nextPreviewAt, lastHuntNode = null;
+  const previewedDancers = new Set();
   let previewCanvas, previewPixels = null;
   let seed = 47219;
   const random = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
@@ -64,7 +65,7 @@
     const main = [];
     const featuredSlots = [
       {id:2005, x:-250, y:-120, extra:[-720, 360]},
-      {id:2007, x:132, y:135, extra:[670, -350]},
+      {id:2007, x:132, y:135, extra:[-145, -405]},
       {id:2011, x:235, y:-200, extra:[560, 505]},
     ];
     const distance = (a, b) => {
@@ -100,8 +101,9 @@
       node.pattern = pattern;
       assigned.add(node);
     }
-    // Add one more instance of each interactive motif at a different anchor.
-    for (const {id, extra:[x, y]} of featuredSlots) {
+    // Use existing anchors so several hunts can enter view as the field drifts.
+    const extraSlots = [...featuredSlots, {id:2007, extra:[-565, 265]}];
+    for (const {id, extra:[x, y]} of extraSlots) {
       const pattern = patterns.find(p => p.sourceNumber === id);
       const node = main.filter(n => n.id >= featuredSlots.length && !assigned.has(n) && !isFeatured(n.pattern))
         .sort((a,b) => Math.hypot(a.x-x,a.y-y) - Math.hypot(b.x-x,b.y-y))[0];
@@ -121,10 +123,10 @@
       y:(random()-.5)*world.height,size:28+random()*42,depth:.45+random()*.3,phase:random()*Math.PI*2,
       turn:(random()-.5)*.28,opacity:.12+random()*.2,primary:false}));
     nodes=[...ambient,...main,...companions];
-    // The opening examples can move. Keep the extra featured copies as click-only examples.
+    // Foreground hunts can enter the rotation. Extra dancer copies can stay click-only.
     for (const node of nodes) {
       if (!node.primary || !isFeatured(node.pattern)) continue;
-      node.canPreview = node.id < featuredSlots.length || (!assigned.has(node) && Math.random() < .5);
+      node.canPreview = isHunting(node.pattern) || node.id < featuredSlots.length || (!assigned.has(node) && Math.random() < .5);
     }
   }
 
@@ -387,20 +389,25 @@
   function renderRoamingPreview(roaming) {
     if (roamingPreview && (!roaming || clock - roamingPreview.started >= roamingPreview.duration)) {
       roamingPreview = null;
-      nextPreviewAt = clock + 3 + Math.random() * 3;
+      nextPreviewAt = clock + 1.9 + Math.random() * 1.1;
     }
     if (!roaming || clock < nextPreviewAt) return null;
     if (!roamingPreview) {
-      const candidates = screenNodes.filter(({ node, x, y, size }) => node.canPreview
-        && x > size / 2 && x < width - size / 2 && y > size / 2 + 70 && y < height - size / 2 - 50);
-      let choices = candidates.filter(({ node }) => !previewedPatterns.has(node.pattern.sourceNumber));
-      if (!previewedPatterns.size) {
-        const openingHunt = choices.find(({ node }) => isHunting(node.pattern));
-        if (openingHunt) choices = [openingHunt];
-      }
-      if (!choices.length && candidates.length) {
-        previewedPatterns.clear();
-        choices = candidates;
+      const candidates = screenNodes.filter(({ node, x, y, size }) => {
+        if (!node.canPreview || x < size / 2 || x > width - size / 2) return false;
+        const halfHeight = size * (isHunting(node.pattern) ? .24 : .5);
+        return y > halfHeight + 70 && y < height - halfHeight - 50;
+      });
+      const hunts = clock >= nextHuntAt ? candidates.filter(({ node }) => isHunting(node.pattern)) : [];
+      const otherHunts = hunts.filter(({ node }) => node !== lastHuntNode);
+      let choices = otherHunts.length ? otherHunts : hunts;
+      if (!choices.length) {
+        const dancers = candidates.filter(({ node }) => isDancer(node.pattern));
+        choices = dancers.filter(({ node }) => !previewedDancers.has(node.pattern.sourceNumber));
+        if (!choices.length && dancers.length) {
+          previewedDancers.clear();
+          choices = dancers;
+        }
       }
       const node = choices[Math.floor(Math.random() * choices.length)]?.node;
       const rig = patternMotion(node?.pattern)?.rig;
@@ -410,7 +417,12 @@
       }
       const hunting = isHunting(node.pattern);
       roamingPreview = { node, rig, hunting, started: clock, duration: hunting ? 3.2 : 1.35, frame: -1 };
-      previewedPatterns.add(node.pattern.sourceNumber);
+      if (hunting) {
+        lastHuntNode = node;
+        nextHuntAt = clock + 6.5 + Math.random() * 3;
+      } else {
+        previewedDancers.add(node.pattern.sourceNumber);
+      }
     }
 
     const preview = roamingPreview;
