@@ -10,6 +10,7 @@
   const announcement = document.querySelector('#selection-announcement');
   const discoveryNote = document.querySelector('#pattern-discovery-note');
   const catalog = document.querySelector('#pattern-catalog'), browseButton = document.querySelector('#browse-patterns');
+  const catalogScroll = document.querySelector('.catalog-scroll');
   const catalogRows = document.querySelector('#catalog-rows');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const featuredGold = '#f8dfa0', huntingGold = '#ffe4a2';
@@ -23,6 +24,7 @@
   let patterns = [], nodes = [], screenNodes = [], selected = null, hover = null;
   let width = innerWidth, height = innerHeight, dpr = 1, clock = 0, lastFrame = 0, lastTrace = 0;
   let drag = null, pinch = null, dirty = true, raf = 0, ready = false, texture = null, focusedIndex = -1;
+  let catalogDrag = null, suppressCatalogClick = false;
   let dance = null;
   let roamingPreview = null, nextPreviewAt = 1.8 + Math.random();
   const previewedPatterns = new Set();
@@ -326,8 +328,40 @@
   browseButton.addEventListener('click', openCatalog);
   document.querySelector('#close-catalog').addEventListener('click', () => catalog.close());
   catalog.addEventListener('close', () => {
+    finishCatalogDrag();
     browseButton.setAttribute('aria-expanded', 'false'); updateState();
   });
+  catalog.addEventListener('pointerdown', e => {
+    if (!e.isPrimary) return;
+    suppressCatalogClick = false;
+    if (e.pointerType === 'touch' || e.button !== 0 || !catalogScroll.contains(e.target)) return;
+    catalogDrag = { id: e.pointerId, x: e.clientX, y: e.clientY, scrollTop: catalogScroll.scrollTop };
+  });
+  catalog.addEventListener('pointermove', e => {
+    if (catalogDrag?.id !== e.pointerId) return;
+    const offset = e.clientY - catalogDrag.y;
+    if (!suppressCatalogClick) {
+      if (Math.hypot(e.clientX - catalogDrag.x, offset) < 7) return;
+      suppressCatalogClick = true;
+      catalogScroll.setPointerCapture(e.pointerId);
+      catalogScroll.classList.add('is-dragging');
+    }
+    catalogScroll.scrollTop = catalogDrag.scrollTop - offset;
+  });
+  function finishCatalogDrag(e) {
+    if (e && catalogDrag?.id !== e.pointerId) return;
+    catalogDrag = null;
+    catalogScroll.classList.remove('is-dragging');
+  }
+  catalog.addEventListener('pointerup', finishCatalogDrag);
+  catalog.addEventListener('pointercancel', finishCatalogDrag);
+  catalogScroll.addEventListener('lostpointercapture', finishCatalogDrag);
+  catalog.addEventListener('click', e => {
+    if (!suppressCatalogClick || e.detail === 0) return;
+    suppressCatalogClick = false;
+    e.preventDefault();
+    e.stopPropagation();
+  }, true);
   catalog.addEventListener('cancel', e => { e.preventDefault(); catalog.close(); });
   catalog.addEventListener('click', e => {
     if (e.target !== catalog) return;
