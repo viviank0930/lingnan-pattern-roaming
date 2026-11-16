@@ -21,6 +21,7 @@
   const gold = '#c5ae72', sprites = new Map(), hitMasks = new Map(), pointers = new Map();
   const world = { width: 2800, height: 1900 };
   const camera = { x: 0, y: 0, zoom: 1 };
+  const maxCanvasPixels = 4_200_000;
   let patterns = [], nodes = [], screenNodes = [], selected = null, hover = null;
   let width = innerWidth, height = innerHeight, dpr = 1, clock = 0, lastFrame = 0, lastTrace = 0;
   let drag = null, pinch = null, dirty = true, raf = 0, ready = false, texture = null, focusedIndex = -1;
@@ -37,7 +38,8 @@
   const paused = () => selected !== null || dance !== null || catalog.open || pointers.size > 0 || reducedMotion.matches;
 
   function resize() {
-    width = root.clientWidth; height = root.clientHeight; dpr = Math.min(devicePixelRatio || 1, 2);
+    width = root.clientWidth; height = root.clientHeight;
+    dpr = Math.min(devicePixelRatio || 1, 2, Math.sqrt(maxCanvasPixels / Math.max(1, width * height)));
     canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
     dirty = true; updateDetail();
     if (selected) updateArtifactComparison();
@@ -375,7 +377,8 @@
 
   function project(node) {
     const scale = fit() * camera.zoom;
-    const x = wrap(node.x + clock * (node.primary?11:7) + Math.sin(clock*.13+node.phase)*14 - camera.x*node.depth, world.width);
+    const driftSpeed = node.primary ? 18 : 11.5;
+    const x = wrap(node.x + clock * driftSpeed + Math.sin(clock*.13+node.phase)*14 - camera.x*node.depth, world.width);
     const y = wrap(node.y + Math.cos(clock*.11+node.phase)*16 - camera.y*node.depth, world.height);
     return { node, x: width / 2 + x * scale, y: height / 2 + 24 + y * scale,
       size: node.size * scale, angle: isDancer(node.pattern) ? 0 : node.turn + Math.sin(clock * .15 + node.phase) * .018 };
@@ -501,7 +504,8 @@
   }
 
   function frame(now) {
-    const dt = lastFrame ? Math.min((now - lastFrame) / 1000, .05) : 0; lastFrame = now;
+    // Keep the timing at lower frame rates while bounding jumps after a long stall.
+    const dt = lastFrame ? Math.min((now - lastFrame) / 1000, .15) : 0; lastFrame = now;
     if (ready && !paused()) { clock += dt; dirty = true; }
     if (dance) {
       dance.elapsed += dt;
