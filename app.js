@@ -18,10 +18,10 @@
   const isHunting = pattern => pattern?.motifRole === 'hunting';
   const isFeatured = pattern => isDancer(pattern) || isHunting(pattern);
   const baseSize = pattern => isHunting(pattern) ? 160 : isDancer(pattern) ? 109 : 90;
-  const gold = '#c5ae72', sprites = new Map(), hitMasks = new Map(), inkRadii = new Map(), pointers = new Map();
-  const world = { width: 2928, height: 2112 };
-  const sway = { x: 6, y: 8 };
-  const motifGap = 16;
+  const gold = '#c5ae72', sprites = new Map(), hitMasks = new Map(), inkExtents = new Map(), pointers = new Map();
+  const world = { width: 2688, height: 1940 };
+  const sway = { x: 5, y: 6 };
+  const motifGap = 7;
   const camera = { x: 0, y: 0, zoom: 1 };
   const maxCanvasPixels = 4_200_000;
   let patterns = [], nodes = [], screenNodes = [], selected = null, hover = null;
@@ -137,24 +137,47 @@
       return priority(a) - priority(b) || b.size - a.size;
     });
     const anchors = prioritized.map(node => {
-      // Preview frames can extend past the resting outline. Reserve the whole
-      // rotating sprite for animated figures and the visible ink for others.
-      const radius = isFeatured(node.pattern) ? Math.SQRT1_2 : inkRadii.get(node.pattern.sourceNumber);
-      node.radius = node.size * radius;
+      const ink = inkExtents.get(node.pattern.sourceNumber);
+      let halfWidth = ink.x;
+      let halfHeight = ink.y;
+      if (node.canPreview && isHunting(node.pattern)) {
+        const [x, y, w, h] = window.HuntingMotion.renderBounds;
+        halfWidth = Math.max(halfWidth, Math.abs(16 + x * 2.72 - 160), Math.abs(16 + (x + w) * 2.72 - 160));
+        halfHeight = Math.max(halfHeight, Math.abs(16 + y * 2.72 - 160), Math.abs(16 + (y + h) * 2.72 - 160));
+      } else if (node.canPreview && isDancer(node.pattern)) {
+        halfWidth = halfHeight = 160;
+      }
+      // Pad each axis for the sprite's full range of rotation.
+      const rotation = isDancer(node.pattern) ? 0 : Math.sin(Math.abs(node.turn) + .018);
+      node.halfWidth = (halfWidth + halfHeight * rotation) * node.size / 320;
+      node.halfHeight = (halfHeight + halfWidth * rotation) * node.size / 320;
       return { x: node.x, y: node.y };
     });
-    // Two motifs can sway toward one another even when their anchors are clear.
-    const clearance = motifGap + 2 * Math.hypot(sway.x, sway.y);
+    const clearanceX = motifGap + 2 * sway.x;
+    const clearanceY = motifGap + 2 * sway.y;
     for (;;) {
       const placed = [];
       for (const [i, node] of prioritized.entries()) {
         const anchor = anchors[i];
-        for (let attempt = 0; attempt < 96; attempt++) {
-          const point = attempt === 0 ? anchor : {
-            x: (random() - .5) * world.width,
-            y: (random() - .5) * world.height
-          };
-          if (placed.some(other => fieldDistance(point, other) < node.radius + other.radius + clearance)) continue;
+        for (let attempt = 0; attempt < 180; attempt++) {
+          let point = anchor;
+          if (attempt > 0 && attempt <= 24) {
+            const angle = random() * Math.PI * 2;
+            const distance = 12 + attempt * 4;
+            point = {
+              x: wrap(anchor.x + Math.cos(angle) * distance, world.width),
+              y: wrap(anchor.y + Math.sin(angle) * distance, world.height)
+            };
+          } else if (attempt > 24) {
+            point = { x: (random() - .5) * world.width, y: (random() - .5) * world.height };
+          }
+          const overlaps = placed.some(other => {
+            const dx = Math.abs(point.x - other.x);
+            if (Math.min(dx, world.width - dx) >= node.halfWidth + other.halfWidth + clearanceX) return false;
+            const dy = Math.abs(point.y - other.y);
+            return Math.min(dy, world.height - dy) < node.halfHeight + other.halfHeight + clearanceY;
+          });
+          if (overlaps) continue;
           node.x = point.x;
           node.y = point.y;
           placed.push(node);
@@ -163,9 +186,8 @@
         if (placed.length !== i + 1) break;
       }
       if (placed.length === prioritized.length) return;
-      // Preserve the complete catalogue if the field needs additional room.
-      world.width *= 1.1;
-      world.height *= 1.1;
+      world.width *= 1.04;
+      world.height *= 1.04;
     }
   }
 
@@ -296,17 +318,18 @@
       sprites.set(pattern.sourceNumber, sprite);
       const pixels = sprite.getContext('2d').getImageData(0, 0, 320, 320).data;
       const mask = new Uint8Array(320 * 320);
-      let radiusSquared = 0;
+      let extentX = 0, extentY = 0;
       for (let i = 0; i < mask.length; i++) {
         const alpha = pixels[i * 4 + 3];
         mask[i] = alpha;
         if (!alpha) continue;
         const x = Math.abs(i % 320 + .5 - 160) + .5;
         const y = Math.abs(Math.floor(i / 320) + .5 - 160) + .5;
-        radiusSquared = Math.max(radiusSquared, x * x + y * y);
+        extentX = Math.max(extentX, x);
+        extentY = Math.max(extentY, y);
       }
       hitMasks.set(pattern.sourceNumber, mask);
-      inkRadii.set(pattern.sourceNumber, Math.sqrt(radiusSquared) / 320);
+      inkExtents.set(pattern.sourceNumber, { x: extentX, y: extentY });
     }
   }
 
