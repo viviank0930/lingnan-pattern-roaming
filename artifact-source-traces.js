@@ -1518,11 +1518,11 @@ window.ArtifactSourceTraces={
           100.00751879699249
         ]
       },
-      "anchor": [
-        74.31999893188477,
-        45.689999961853026
-      ],
-      "note": "保留同一原图取样蒙版的原始注册位置；只允许该原图和未改变的原取样ink使用此映射。"
+      "anchor": [54, 59],
+      "highlightRegion": "M27 54L37 17L49 12L62 15L64 31L60 51L64 68L58 86L48 92L34 76Z",
+      "fillOpacity": 0.91,
+      "haloBlur": 0.7,
+      "note": "只高亮拓片中间一组连续席纹，周围保留原来的黑色纹路。"
     },
     "4005": {
       "source": "assets/artifacts/preqin-4005.webp",
