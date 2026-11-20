@@ -18,8 +18,10 @@
   const isHunting = pattern => pattern?.motifRole === 'hunting';
   const isFeatured = pattern => isDancer(pattern) || isHunting(pattern);
   const baseSize = pattern => isHunting(pattern) ? 160 : isDancer(pattern) ? 109 : 90;
-  const gold = '#c5ae72', sprites = new Map(), hitMasks = new Map(), pointers = new Map();
-  const world = { width: 2800, height: 1900 };
+  const gold = '#c5ae72', sprites = new Map(), hitMasks = new Map(), inkRadii = new Map(), pointers = new Map();
+  const world = { width: 2928, height: 2112 };
+  const sway = { x: 6, y: 8 };
+  const motifGap = 16;
   const camera = { x: 0, y: 0, zoom: 1 };
   const maxCanvasPixels = 4_200_000;
   let patterns = [], nodes = [], screenNodes = [], selected = null, hover = null;
@@ -46,10 +48,14 @@
     if (selected) updateArtifactComparison();
   }
 
+  function fieldDistance(a, b) {
+    const dx = Math.abs(a.x - b.x), dy = Math.abs(a.y - b.y);
+    return Math.hypot(Math.min(dx, world.width - dx), Math.min(dy, world.height - dy));
+  }
+
   function makeNodes() {
     // Irregular, evenly distributed anchors avoid very large voids without
     // turning the field into a grid. A few companions create looser clusters.
-    world.width = 2688; world.height = 1940;
     const ordered = [...patterns.filter(p => p.isNew), ...patterns.filter(p => !p.isNew)];
     let bag = [], bagIndex = 0;
     const nextPattern = () => {
@@ -68,22 +74,17 @@
       {id:2007, x:132, y:135, extra:[-145, -405]},
       {id:2011, x:235, y:-200, extra:[560, 505]},
     ];
-    const distance = (a, b) => {
-      const dx = Math.min(Math.abs(a.x - b.x), world.width - Math.abs(a.x - b.x));
-      const dy = Math.min(Math.abs(a.y - b.y), world.height - Math.abs(a.y - b.y));
-      return Math.hypot(dx, dy);
-    };
     for (let i = 0; i < 182; i++) {
       const featured = featuredSlots[i];
       let best = featured ? {x:featured.x,y:featured.y} : null, bestDistance = -1;
       if (!best) for (let k = 0; k < 65; k++) {
         const point = {x:(random()-.5)*world.width,y:(random()-.5)*world.height};
-        const nearest = Math.min(...main.map(n=>distance(point,n)));
+        const nearest = Math.min(...main.map(n=>fieldDistance(point,n)));
         if (nearest > bestDistance) { best = point; bestDistance = nearest; }
       }
       const pattern = (featured && patterns.find(p => p.sourceNumber === featured.id)) || nextPattern();
       main.push({...best,id:i,pattern,size:baseSize(pattern)+random()*31,
-        phase:random()*Math.PI*2,turn:(random()-.5)*.24,opacity:.7+random()*.27,depth:1,primary:true});
+        phase:random()*Math.PI*2,turn:(random()-.5)*.24,opacity:.7+random()*.27,primary:true});
     }
     // Keep the latest five stamps in the opening view, using existing anchors.
     // Their copies elsewhere still join the same drifting field and hit testing.
@@ -117,16 +118,54 @@
       const anchor=main[2+Math.floor(random()*(main.length-2))],angle=random()*Math.PI*2,spacing=65+random()*35;
       companions.push({id:main.length+i,pattern:nextPattern(),x:wrap(anchor.x+Math.cos(angle)*spacing,world.width),
         y:wrap(anchor.y+Math.sin(angle)*spacing,world.height),size:78+random()*28,phase:random()*Math.PI*2,
-        turn:(random()-.5)*.24,opacity:.5+random()*.27,depth:1,primary:true});
+        turn:(random()-.5)*.24,opacity:.5+random()*.27,primary:true});
     }
     const ambient = Array.from({length:84},(_,i)=>({id:main.length+companions.length+i,pattern:nextPattern(),x:(random()-.5)*world.width,
-      y:(random()-.5)*world.height,size:28+random()*42,depth:.45+random()*.3,phase:random()*Math.PI*2,
+      y:(random()-.5)*world.height,size:28+random()*42,phase:random()*Math.PI*2,
       turn:(random()-.5)*.28,opacity:.12+random()*.2,primary:false}));
     nodes=[...ambient,...main,...companions];
     // Foreground hunts can enter the rotation. Extra dancer copies can stay click-only.
     for (const node of nodes) {
       if (!node.primary || !isFeatured(node.pattern)) continue;
       node.canPreview = isHunting(node.pattern) || node.id < featuredSlots.length || (!assigned.has(node) && Math.random() < .5);
+    }
+  }
+
+  function spaceNodes() {
+    const prioritized = [...nodes].sort((a, b) => {
+      const priority = n => n.id < 3 ? 0 : n.primary ? 1 : 2;
+      return priority(a) - priority(b) || b.size - a.size;
+    });
+    const anchors = prioritized.map(node => {
+      // Preview frames can extend past the resting outline. Reserve the whole
+      // rotating sprite for animated figures and the visible ink for others.
+      const radius = isFeatured(node.pattern) ? Math.SQRT1_2 : inkRadii.get(node.pattern.sourceNumber);
+      node.radius = node.size * radius;
+      return { x: node.x, y: node.y };
+    });
+    // Two motifs can sway toward one another even when their anchors are clear.
+    const clearance = motifGap + 2 * Math.hypot(sway.x, sway.y);
+    for (;;) {
+      const placed = [];
+      for (const [i, node] of prioritized.entries()) {
+        const anchor = anchors[i];
+        for (let attempt = 0; attempt < 96; attempt++) {
+          const point = attempt === 0 ? anchor : {
+            x: (random() - .5) * world.width,
+            y: (random() - .5) * world.height
+          };
+          if (placed.some(other => fieldDistance(point, other) < node.radius + other.radius + clearance)) continue;
+          node.x = point.x;
+          node.y = point.y;
+          placed.push(node);
+          break;
+        }
+        if (placed.length !== i + 1) break;
+      }
+      if (placed.length === prioritized.length) return;
+      // Preserve the complete catalogue if the field needs additional room.
+      world.width *= 1.1;
+      world.height *= 1.1;
     }
   }
 
@@ -257,8 +296,17 @@
       sprites.set(pattern.sourceNumber, sprite);
       const pixels = sprite.getContext('2d').getImageData(0, 0, 320, 320).data;
       const mask = new Uint8Array(320 * 320);
-      for (let i = 0; i < mask.length; i++) mask[i] = pixels[i * 4 + 3];
+      let radiusSquared = 0;
+      for (let i = 0; i < mask.length; i++) {
+        const alpha = pixels[i * 4 + 3];
+        mask[i] = alpha;
+        if (!alpha) continue;
+        const x = Math.abs(i % 320 + .5 - 160) + .5;
+        const y = Math.abs(Math.floor(i / 320) + .5 - 160) + .5;
+        radiusSquared = Math.max(radiusSquared, x * x + y * y);
+      }
       hitMasks.set(pattern.sourceNumber, mask);
+      inkRadii.set(pattern.sourceNumber, Math.sqrt(radiusSquared) / 320);
     }
   }
 
@@ -379,9 +427,8 @@
 
   function project(node) {
     const scale = fit() * camera.zoom;
-    const driftSpeed = node.primary ? 18 : 11.5;
-    const x = wrap(node.x + clock * driftSpeed + Math.sin(clock*.13+node.phase)*14 - camera.x*node.depth, world.width);
-    const y = wrap(node.y + Math.cos(clock*.11+node.phase)*16 - camera.y*node.depth, world.height);
+    const x = wrap(node.x + clock * 18 + Math.sin(clock * .13 + node.phase) * sway.x - camera.x, world.width);
+    const y = wrap(node.y + Math.cos(clock * .11 + node.phase) * sway.y - camera.y, world.height);
     return { node, x: width / 2 + x * scale, y: height / 2 + 24 + y * scale,
       size: node.size * scale, angle: isDancer(node.pattern) ? 0 : node.turn + Math.sin(clock * .15 + node.phase) * .018 };
   }
@@ -735,7 +782,7 @@
       if (zigzag && zigzagPhoto) zigzag.artifact={...zigzag.artifact,...zigzagPhoto};
       const zigzagInk=window.ArtifactSourceTraces?.traces[26]?.roamingInk;
       if (zigzag && zigzagInk) zigzag.ink=zigzagInk;
-      makeNodes(); prepareSprites(); resize();
+      makeNodes(); prepareSprites(); spaceNodes(); resize();
       ready=true; buildCatalog(); document.querySelector('#loading').hidden=true;
       // Old specimen links resolve to the single retained representative.
       const legacyPatternIds = new Map([[3, 1], [6, 1], [4, 11], [12, 11], [5, 10], [4015, 8], [4016, 8], [22, 18], [16, 26], [4017, 13], [6005, 3004], [6006, 3004], [6008, 6007], [6010, 6009]]);
