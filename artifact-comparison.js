@@ -31,7 +31,7 @@
    const edgeOpacity=mark.edgeOpacity??.64;
    g.save();g.scale(w/unitsX,h/unitsY);g.lineCap='round';g.lineJoin='round';
    if(edgeOpacity>0){
-    g.strokeStyle='#684820';g.globalAlpha=edgeOpacity;g.lineWidth=weight*1.7;g.stroke(sourcePath);
+    g.strokeStyle=mark.edgeColor??'#684820';g.globalAlpha=edgeOpacity;g.lineWidth=weight*1.7;g.stroke(sourcePath);
    }
    g.strokeStyle=mark.strokeColor??'#ffe08b';g.globalAlpha=mark.strokeOpacity??.94;g.lineWidth=weight;g.stroke(sourcePath);g.restore();
   }else if(mark.kind==='same-source-mask'){

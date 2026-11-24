@@ -1613,10 +1613,11 @@ window.ArtifactSourceTraces={
       ],
       "strokeWidth": 5.15,
       "strokeColor": "#ffcf24",
-      "note": "两组重菱形采用略加粗的亮金黄色单层描线，以便在浅色陶面上辨认。",
+      "note": "两组重菱形使用亮金黄色线条配细深金黄描边，以便在浅色陶面上辨认。",
       "omitRestoration": false,
       "strokeOpacity": 1,
-      "edgeOpacity": 0,
+      "edgeOpacity": 1,
+      "edgeColor": "#aa7e00",
       "haloBlur": 0
     },
     "5005": {
