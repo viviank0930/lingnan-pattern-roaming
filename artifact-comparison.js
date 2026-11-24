@@ -28,7 +28,12 @@
   }else if(mark.kind==='source-lines'){
    const [unitsX,unitsY]=mark.sourceCoordinates||[100,100];
    const sourcePath=new Path2D(mark.paths.join(' ')),weight=mark.strokeWidth/Math.sqrt((iw*displayScale/unitsX)*(ih*displayScale/unitsY));
-   g.save();g.scale(w/unitsX,h/unitsY);g.lineCap='round';g.lineJoin='round';g.strokeStyle='#684820';g.globalAlpha=mark.edgeOpacity??.64;g.lineWidth=weight*(mark.edgeWidthFactor??1.7);g.stroke(sourcePath);g.strokeStyle='#ffe08b';g.globalAlpha=mark.strokeOpacity??.94;g.lineWidth=weight;g.stroke(sourcePath);g.restore();
+   const edgeOpacity=mark.edgeOpacity??.64;
+   g.save();g.scale(w/unitsX,h/unitsY);g.lineCap='round';g.lineJoin='round';
+   if(edgeOpacity>0){
+    g.strokeStyle='#684820';g.globalAlpha=edgeOpacity;g.lineWidth=weight*1.7;g.stroke(sourcePath);
+   }
+   g.strokeStyle=mark.strokeColor??'#ffe08b';g.globalAlpha=mark.strokeOpacity??.94;g.lineWidth=weight;g.stroke(sourcePath);g.restore();
   }else if(mark.kind==='same-source-mask'){
    const m=mark.registration,b=m.inkBounds,path=pathFor(p);g.save();g.fillStyle='#ffe08b';g.globalAlpha=mark.fillOpacity??1;
    if(mark.highlightRegion){
@@ -46,7 +51,7 @@
   if(mark.omitRestoration||mark.omitDarkCracks){const raw=makeCanvas(w,h),r=raw.getContext('2d',{willReadFrequently:true});r.drawImage(image,0,0,w,h);const src=r.getImageData(0,0,w,h).data,pix=g.getImageData(0,0,w,h);for(let i=0;i<src.length;i+=4){const hi=Math.max(src[i],src[i+1],src[i+2]),lo=Math.min(src[i],src[i+1],src[i+2]);if((mark.omitRestoration&&lo>180&&hi-lo<28)||(mark.omitDarkCracks&&.2126*src[i]+.7152*src[i+1]+.0722*src[i+2]<48))pix.data[i+3]=0;}g.putImageData(pix,0,0);}
   return c;
  }
- function anchorFor(layer,mark){const tx=mark.anchor[0]*layer.width/100,ty=mark.anchor[1]*layer.height/100,a=layer.getContext('2d').getImageData(0,0,layer.width,layer.height).data;let best=[tx,ty],distance=Infinity,pixels=0;for(let y=0;y<layer.height;y++)for(let x=0;x<layer.width;x++){const i=(y*layer.width+x)*4;if(a[i+3]<100||a[i]<200)continue;pixels++;const d=(x-tx)**2+(y-ty)**2;if(d<distance){distance=d;best=[x,y];}}return{point:best,pixels};}
+ function anchorFor(layer,mark){const tx=mark.anchor[0]*layer.width/100,ty=mark.anchor[1]*layer.height/100,a=layer.getContext('2d').getImageData(0,0,layer.width,layer.height).data;let best=[tx,ty],distance=Infinity,pixels=0;for(let y=0;y<layer.height;y++)for(let x=0;x<layer.width;x++){const i=(y*layer.width+x)*4;if(a[i+3]<100||(mark.edgeOpacity!==0&&a[i]<200))continue;pixels++;const d=(x-tx)**2+(y-ty)**2;if(d<distance){distance=d;best=[x,y];}}return{point:best,pixels};}
  // Original plate captions overlap these cutouts. Coordinates are in the
  // source image so cleanup preserves its size and motif registration.
  const plateCaptions = {
