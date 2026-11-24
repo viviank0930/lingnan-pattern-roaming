@@ -28,7 +28,7 @@
   }else if(mark.kind==='source-lines'){
    const [unitsX,unitsY]=mark.sourceCoordinates||[100,100];
    const sourcePath=new Path2D(mark.paths.join(' ')),weight=mark.strokeWidth/Math.sqrt((iw*displayScale/unitsX)*(ih*displayScale/unitsY));
-   g.save();g.scale(w/unitsX,h/unitsY);g.lineCap='round';g.lineJoin='round';g.strokeStyle='#684820';g.globalAlpha=mark.edgeOpacity??.64;g.lineWidth=weight*1.7;g.stroke(sourcePath);g.strokeStyle='#ffe08b';g.globalAlpha=mark.strokeOpacity??.94;g.lineWidth=weight;g.stroke(sourcePath);g.restore();
+   g.save();g.scale(w/unitsX,h/unitsY);g.lineCap='round';g.lineJoin='round';g.strokeStyle='#684820';g.globalAlpha=mark.edgeOpacity??.64;g.lineWidth=weight*(mark.edgeWidthFactor??1.7);g.stroke(sourcePath);g.strokeStyle='#ffe08b';g.globalAlpha=mark.strokeOpacity??.94;g.lineWidth=weight;g.stroke(sourcePath);g.restore();
   }else if(mark.kind==='same-source-mask'){
    const m=mark.registration,b=m.inkBounds,path=pathFor(p);g.save();g.fillStyle='#ffe08b';g.globalAlpha=mark.fillOpacity??1;
    if(mark.highlightRegion){
