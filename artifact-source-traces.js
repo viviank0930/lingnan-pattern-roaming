@@ -1612,12 +1612,11 @@ window.ArtifactSourceTraces={
         53.8
       ],
       "strokeWidth": 4.25,
-      "note": "两组重菱形用单层暖金线，在浅色陶面上加强辨识度。",
+      "note": "两组重菱形沿用站内的亮黄线条，使用单层描线。",
       "omitRestoration": false,
       "strokeOpacity": 1,
       "edgeOpacity": 0,
-      "haloBlur": 0,
-      "strokeColor": "#b66a11"
+      "haloBlur": 0
     },
     "5005": {
       "source": "assets/artifacts/pottery-doc-23.webp",
