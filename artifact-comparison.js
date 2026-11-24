@@ -33,7 +33,7 @@
    if(edgeOpacity>0){
     g.strokeStyle='#684820';g.globalAlpha=edgeOpacity;g.lineWidth=weight*1.7;g.stroke(sourcePath);
    }
-   g.strokeStyle='#ffe08b';g.globalAlpha=mark.strokeOpacity??.94;g.lineWidth=weight;g.stroke(sourcePath);g.restore();
+   g.strokeStyle=mark.strokeColor??'#ffe08b';g.globalAlpha=mark.strokeOpacity??.94;g.lineWidth=weight;g.stroke(sourcePath);g.restore();
   }else if(mark.kind==='same-source-mask'){
    const m=mark.registration,b=m.inkBounds,path=pathFor(p);g.save();g.fillStyle='#ffe08b';g.globalAlpha=mark.fillOpacity??1;
    if(mark.highlightRegion){

@@ -1611,8 +1611,9 @@ window.ArtifactSourceTraces={
         50.4,
         53.8
       ],
-      "strokeWidth": 4.25,
-      "note": "两组重菱形沿用站内的亮黄线条，使用单层描线。",
+      "strokeWidth": 5.15,
+      "strokeColor": "#ffcf24",
+      "note": "两组重菱形采用略加粗的亮金黄色单层描线，以便在浅色陶面上辨认。",
       "omitRestoration": false,
       "strokeOpacity": 1,
       "edgeOpacity": 0,
