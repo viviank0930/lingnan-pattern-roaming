@@ -29,10 +29,7 @@
   let drag = null, pinch = null, dirty = true, raf = 0, ready = false, texture = null, focusedIndex = -1;
   let catalogDrag = null, suppressCatalogClick = false;
   let dance = null;
-  let roamingPreview = null, nextPreviewAt = 1.8 + Math.random();
-  let nextHuntAt = nextPreviewAt, lastHuntNode = null;
-  const previewedDancers = new Set();
-  let previewCanvas, previewPixels = null;
+  const roamingFrames = new Map();
   let seed = 47219;
   const random = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -124,11 +121,7 @@
       y:(random()-.5)*world.height,size:28+random()*42,phase:random()*Math.PI*2,
       turn:(random()-.5)*.28,opacity:.12+random()*.2,primary:false}));
     nodes=[...ambient,...main,...companions];
-    // Foreground hunts can enter the rotation. Extra dancer copies can stay click-only.
-    for (const node of nodes) {
-      if (!node.primary || !isFeatured(node.pattern)) continue;
-      node.canPreview = isHunting(node.pattern) || node.id < featuredSlots.length || (!assigned.has(node) && Math.random() < .5);
-    }
+    for (const node of nodes) if (isFeatured(node.pattern)) node.size *= 4 / 3;
   }
 
   function spaceNodes() {
@@ -140,11 +133,11 @@
       const ink = inkExtents.get(node.pattern.sourceNumber);
       let halfWidth = ink.x;
       let halfHeight = ink.y;
-      if (node.canPreview && isHunting(node.pattern)) {
+      if (isHunting(node.pattern)) {
         const [x, y, w, h] = window.HuntingMotion.renderBounds;
         halfWidth = Math.max(halfWidth, Math.abs(16 + x * 2.72 - 160), Math.abs(16 + (x + w) * 2.72 - 160));
         halfHeight = Math.max(halfHeight, Math.abs(16 + y * 2.72 - 160), Math.abs(16 + (y + h) * 2.72 - 160));
-      } else if (node.canPreview && isDancer(node.pattern)) {
+      } else if (isDancer(node.pattern)) {
         halfWidth = halfHeight = 160;
       }
       // Pad each axis for the sprite's full range of rotation.
@@ -273,7 +266,7 @@
     const c = document.createElement('canvas'); c.width = c.height = 320;
     const g = c.getContext('2d', {willReadFrequently:true});
     if (pattern.sourceNumber === window.RaisedFigureDance?.sourceNumber) {
-      g.drawImage(window.RaisedFigureDance.render(0, texture, featuredGold, true), 0, 0, 320, 320);
+      g.drawImage(window.RaisedFigureDance.render(0, texture, featuredGold), 0, 0, 320, 320);
       return c;
     }
     const hunting = isHunting(pattern);
@@ -456,79 +449,43 @@
       size: node.size * scale, angle: isDancer(node.pattern) ? 0 : node.turn + Math.sin(clock * .15 + node.phase) * .018 };
   }
 
-  function renderRoamingPreview(roaming) {
-    if (roamingPreview && (!roaming || clock - roamingPreview.started >= roamingPreview.duration)) {
-      roamingPreview = null;
-      nextPreviewAt = clock + 1.9 + Math.random() * 1.1;
+  function roamingFrame(pattern) {
+    if (!isFeatured(pattern)) return null;
+    const id = pattern.sourceNumber;
+    const hunting = isHunting(pattern);
+    const rig = hunting ? window.HuntingMotion : id === 2005 ? window.FigureDance : window.RaisedFigureDance;
+    if (!rig) return null;
+    const tick = Math.floor(clock * 24);
+    let frame = roamingFrames.get(id);
+    if (frame?.tick === tick) return frame;
+    // All visible copies of a motif share one pose per tick.
+    if (!frame) {
+      const canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 320;
+      frame = { canvas, context: canvas.getContext('2d', {willReadFrequently:true}) };
+      roamingFrames.set(id, frame);
     }
-    if (!roaming || clock < nextPreviewAt) return null;
-    if (!roamingPreview) {
-      const candidates = screenNodes.filter(({ node, x, y, size }) => {
-        if (!node.canPreview || x < size / 2 || x > width - size / 2) return false;
-        const halfHeight = size * (isHunting(node.pattern) ? .24 : .5);
-        return y > halfHeight + 70 && y < height - halfHeight - 50;
-      });
-      const hunts = clock >= nextHuntAt ? candidates.filter(({ node }) => isHunting(node.pattern)) : [];
-      const otherHunts = hunts.filter(({ node }) => node !== lastHuntNode);
-      let choices = otherHunts.length ? otherHunts : hunts;
-      if (!choices.length) {
-        const dancers = candidates.filter(({ node }) => isDancer(node.pattern));
-        choices = dancers.filter(({ node }) => !previewedDancers.has(node.pattern.sourceNumber));
-        if (!choices.length && dancers.length) {
-          previewedDancers.clear();
-          choices = dancers;
-        }
-      }
-      const node = choices[Math.floor(Math.random() * choices.length)]?.node;
-      const rig = patternMotion(node?.pattern)?.rig;
-      if (!rig) {
-        nextPreviewAt = clock + 1;
-        return null;
-      }
-      const hunting = isHunting(node.pattern);
-      roamingPreview = { node, rig, hunting, started: clock, duration: hunting ? 3.2 : 1.35, frame: -1 };
-      if (hunting) {
-        lastHuntNode = node;
-        nextHuntAt = clock + 6.5 + Math.random() * 3;
-      } else {
-        previewedDancers.add(node.pattern.sourceNumber);
-      }
-    }
-
-    const preview = roamingPreview;
-    const seconds = clock - preview.started;
-    const frame = Math.floor(seconds * 24);
-    if (frame === preview.frame) return previewCanvas;
-    preview.frame = frame;
-    if (!previewCanvas) {
-      previewCanvas = document.createElement('canvas');
-      previewCanvas.width = previewCanvas.height = 320;
-    }
-    const g = previewCanvas.getContext('2d', {willReadFrequently:true});
-    const mix = Math.min(seconds / .16, (preview.duration - seconds) / .24, 1);
+    frame.tick = tick;
+    frame.pixels = null;
+    const time = tick / 24;
+    const g = frame.context;
     g.clearRect(0, 0, 320, 320);
-    g.globalAlpha = 1 - mix;
-    g.drawImage(sprites.get(preview.node.pattern.sourceNumber), 0, 0);
-    g.globalAlpha = mix;
-    g.globalCompositeOperation = 'lighter';
-    if (preview.hunting) {
-      const [x, y, w, h] = preview.rig.renderBounds;
-      const pose = preview.rig.render(frame / 24, texture, huntingGold, 1.95);
+    if (hunting) {
+      const [x, y, w, h] = rig.renderBounds;
+      const pose = rig.render(time, texture, huntingGold, 1.55, true);
       g.drawImage(pose, 16 + x * 2.72, 16 + y * 2.72, w * 2.72, h * 2.72);
     } else {
-      const pose = preview.rig.render(frame / 24, texture, featuredGold);
+      const offset = id === 2005 ? .25 : 1.35;
+      const pose = rig.render((time + offset) % rig.duration, texture, featuredGold);
       g.drawImage(pose, 0, 0, 320, 320);
     }
-    g.globalAlpha = 1;
-    g.globalCompositeOperation = 'source-over';
-    previewPixels = null;
-    return previewCanvas;
+    return frame;
   }
 
-  function drawSprite(item, roaming, previewSprite) {
+  function drawSprite(item, roaming) {
     const n = item.node;
-    const previewing = previewSprite && roamingPreview.node === n;
-    const sprite = previewing ? previewSprite : sprites.get(n.pattern.sourceNumber);
+    item.motion = roaming ? roamingFrame(n.pattern) : null;
+    const sprite = item.motion?.canvas || sprites.get(n.pattern.sourceNumber);
     if (!sprite) return;
     ctx.save(); ctx.translate(item.x, item.y); ctx.rotate(item.angle);
     const featured = n.primary && isFeatured(n.pattern);
@@ -536,8 +493,7 @@
     const active = selected === n || hover === n;
     // Use the drift clock and offset each motif so the gold catches the eye at different times.
     const shimmer = featured && roaming && !active;
-    const previewLight = previewing ? (prominentHunt ? .95 : .88) : 0;
-    const light = shimmer ? Math.max(previewLight, .5 + .5 * Math.cos(clock * 2 * Math.PI / 2.8 + n.phase)) : 1;
+    const light = shimmer ? .65 + .35 * Math.cos(clock * 2 * Math.PI / 2.8 + n.phase) : 1;
     const opacity = featured ? Math.max(n.opacity, prominentHunt ? 1 : .97) : n.opacity;
     ctx.globalAlpha = opacity * (.81 + .19 * light) * (selected && selected !== n ? .5 : 1);
     if (active) ctx.filter = 'brightness(1.3)';
@@ -579,8 +535,7 @@
       }
     }
     const roaming = !paused();
-    const previewSprite = renderRoamingPreview(roaming);
-    for (const item of screenNodes) drawSprite(item, roaming, previewSprite);
+    for (const item of screenNodes) drawSprite(item, roaming);
     const chosen = screenNodes.find(n => n.node === selected);
     if (chosen) drawFocus(chosen);
     if (selected) updateDetail(chosen);
@@ -611,9 +566,8 @@
       const px = 160 + (dx * cos + dy * sin) * 320 / item.size;
       const py = 160 + (-dx * sin + dy * cos) * 320 / item.size;
       const radius = tolerance * 320 / item.size, mask = hitMasks.get(item.node.pattern.sourceNumber);
-      const livePixels = roamingPreview?.node === item.node && previewCanvas
-        ? (previewPixels ||= previewCanvas.getContext('2d').getImageData(0, 0, 320, 320).data)
-        : null;
+      const pose = item.motion;
+      const livePixels = pose ? (pose.pixels ||= pose.context.getImageData(0, 0, 320, 320).data) : null;
       for (let yy = Math.max(0, Math.floor(py - radius)); yy <= Math.min(319, py + radius); yy += 2) {
         for (let xx = Math.max(0, Math.floor(px - radius)); xx <= Math.min(319, px + radius); xx += 2) {
           const pixel = yy * 320 + xx;
@@ -704,11 +658,11 @@
 
   canvas.addEventListener('pointerdown', e => {
     if (!ready || (e.pointerType === 'mouse' && e.button !== 0)) return;
-    const previewHit = roamingPreview && hitAt(e.clientX, e.clientY, e.pointerType === 'touch' ? 9 : 5);
+    const target = pointers.size ? null : hitAt(e.clientX, e.clientY, e.pointerType === 'touch' ? 9 : 5);
     canvas.setPointerCapture(e.pointerId); pointers.set(e.pointerId, { x:e.clientX, y:e.clientY });
     dirty = true;
     if (pointers.size === 1) drag = { x:e.clientX, y:e.clientY, cameraX:camera.x, cameraY:camera.y, moved:false, pinched:false,
-      previewTarget: previewHit === roamingPreview?.node ? previewHit : null };
+      target };
     else if (pointers.size === 2) {
       const [a,b] = [...pointers.values()]; pinch = { distance:Math.hypot(a.x-b.x,a.y-b.y), zoom:camera.zoom };
       if (drag) drag.pinched = true;
@@ -734,7 +688,7 @@
     if (!pointers.has(e.pointerId)) return;
     const shouldClick=!cancelled && drag && !drag.moved && !drag.pinched && pointers.size===1;
     pointers.delete(e.pointerId);
-    if (shouldClick) { const hit=drag.previewTarget || hitAt(e.clientX,e.clientY,e.pointerType==='touch'?9:5); hit ? select(hit) : cancel(); }
+    if (shouldClick) { const hit=drag.target || hitAt(e.clientX,e.clientY,e.pointerType==='touch'?9:5); hit ? select(hit) : cancel(); }
     if (!pointers.size) {drag=null;pinch=null;canvas.classList.remove('is-dragging');}
     dirty=true;
   }

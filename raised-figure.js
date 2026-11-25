@@ -1,4 +1,4 @@
-/* The original dancer, with its raised arm mirrored to the opposite side. */
+/* The raised-arm variant, with torso markings registered to its photograph. */
 (() => {
   'use strict';
 
@@ -10,7 +10,17 @@
   const inset = 16 / 2.72, extent = 320 / 2.72;
   const renderBounds = [originX-inset*scaleX, originY-inset*scaleY, extent*scaleX, extent*scaleY];
   const base = window.FigureDance;
-  const render = (seconds, texture, color) => base.render(seconds, texture, color, true);
+  // Trace the chest's double ring and the narrow vertical mark below it
+  // directly in the cutout's pixel coordinates, then map them to the dance rig.
+  const chest = [
+    { width: .82, lines: [[[472,674],[478,666],[487,661],[497,658],[508,660],[518,666],[526,675],[530,686],[530,701],[526,713],[519,723],[508,729],[496,730],[484,727],[476,720],[471,708],[469,695],[470,683],[472,674]]] },
+    { width: .72, lines: [[[488,688],[492,682],[501,679],[509,682],[514,688],[516,697],[513,707],[508,712],[500,713],[493,710],[489,704],[486,695],[488,688]]] },
+    { width: .72, lines: [[[484,900],[484,882],[484,861],[485,837],[487,816],[488,795],[488,780],[491,770],[498,766],[505,770],[511,779],[511,792],[508,810],[506,832],[505,854],[504,874],[504,894],[501,901],[495,905],[488,905],[484,900]]] },
+  ].map(({width, lines}) => ({
+    width,
+    lines: lines.map(line => line.map(([x, y]) => [((x-originX)/scaleX-2.65)/.95, (y-originY)/scaleY])),
+  }));
+  const render = (seconds, texture, color) => base.render(seconds, texture, color, chest);
   const pattern = {
     sourceNumber,
     name: '人形舞蹈纹',

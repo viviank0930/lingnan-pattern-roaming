@@ -10,9 +10,10 @@
  const smooth=v=>{v=Math.max(0,Math.min(1,v));return v*v*(3-2*v);};
  const rotate=(p,c,angle)=>{const x=p[0]-c[0],y=p[1]-c[1];return[c[0]+x*Math.cos(angle)-y*Math.sin(angle),c[1]+x*Math.sin(angle)+y*Math.cos(angle)];};
  function envelope(t){return smooth(t/.36)*smooth((duration-t)/.46);}
- function deform(p,entity,part,t,motionScale){
-  if(t<=0||t>=duration)return p;
-  const e=envelope(t),cycle=t*2*Math.PI/(entity.kind==='hunter'?.74:.66)+entity.phase,wave=Math.sin(cycle),opposite=Math.sin(cycle+Math.PI),speed=Math.sin(t*Math.PI/duration);
+ function deform(p,entity,part,t,motionScale,roaming){
+  if(!roaming&&(t<=0||t>=duration))return p;
+  const e=roaming?1:envelope(t),cycle=t*2*Math.PI/(entity.kind==='hunter'?.74:.66)+entity.phase;
+  const wave=Math.sin(cycle),opposite=-wave,speed=roaming?.55-.45*Math.cos(t*2*Math.PI/4.8):Math.sin(t*Math.PI/duration);
   let [x,y]=p;
   if(entity.kind==='tree'){
    // Bend from the rooted base; connected branch tips flutter with the trunk.
@@ -43,7 +44,8 @@
    }
    if(part==='arrow'){
     const release=(t+entity.phase*.22)%1.32;
-    x+=smooth((release-.64)/.35)*45*e;
+    const flight=smooth((release-.64)/.35);
+    x+=flight*(roaming?smooth((1.32-release)/.28):1)*45*e;
    }
    x+=(18*speed+3*wave)*e;y-=(3+3*Math.cos(cycle*2))*e;
   }
@@ -59,14 +61,15 @@
   g.globalAlpha=.86;g.drawImage(texture,texture.width*.11,texture.height*.11,texture.width*.78,texture.height*.78,0,0,width,height);
   g.globalAlpha=.22;g.fillStyle='#fff';g.fillRect(0,0,width,height);return textureCanvas;
  }
- function render(seconds,texture,color,motionScale=1){
-  const t=Math.max(0,Math.min(duration,Number(seconds)||0));canvas||=makeCanvas(width,height);const g=canvas.getContext('2d');
+ function render(seconds,texture,color,motionScale=1,roaming=false){
+  const t=Math.max(0,Math.min(roaming?Infinity:duration,Number(seconds)||0));
+  canvas||=makeCanvas(width,height);const g=canvas.getContext('2d');
   g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,width,height);g.save();
   g.scale(width/renderBounds[2],height/renderBounds[3]);g.translate(-renderBounds[0],-renderBounds[1]);
   g.transform(normalization.sx,0,0,normalization.sy,normalization.tx,normalization.ty);
   g.strokeStyle=color||'#ffe08b';g.lineCap='round';g.lineJoin='round';
   for(const entity of geometry)for(const path of entity.paths){
-   g.lineWidth=path.width;g.beginPath();for(const line of path.lines){const first=deform(line[0],entity,path.part,t,motionScale);g.moveTo(...first);for(let i=1;i<line.length;i++)g.lineTo(...deform(line[i],entity,path.part,t,motionScale));}g.stroke();
+   g.lineWidth=path.width;g.beginPath();for(const line of path.lines){const first=deform(line[0],entity,path.part,t,motionScale,roaming);g.moveTo(...first);for(let i=1;i<line.length;i++)g.lineTo(...deform(line[i],entity,path.part,t,motionScale,roaming));}g.stroke();
   }
   g.restore();
   const paper=pigment(texture);if(paper){g.globalCompositeOperation='destination-in';g.drawImage(paper,0,0);g.globalCompositeOperation='source-over';}
