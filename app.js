@@ -121,7 +121,7 @@
       y:(random()-.5)*world.height,size:28+random()*42,phase:random()*Math.PI*2,
       turn:(random()-.5)*.28,opacity:.12+random()*.2,primary:false}));
     nodes=[...ambient,...main,...companions];
-    for (const node of nodes) if (isFeatured(node.pattern)) node.size *= 1.5;
+    for (const node of nodes) if (isFeatured(node.pattern)) node.size *= 1.68;
   }
 
   function spaceNodes() {
